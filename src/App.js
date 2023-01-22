@@ -29,7 +29,7 @@ function App() {
       id: '3',
       type: 'income1',
       date: currentDateFormat,
-      amount: 1500
+      amount: 1200
     }
   ];
 
