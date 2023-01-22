@@ -27,7 +27,7 @@ function App() {
     },
     {
       id: '3',
-      type: 'income3',
+      type: 'income345',
       date: currentDateFormat,
       amount: 1400
     }
