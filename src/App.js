@@ -21,13 +21,13 @@ function App() {
     },
     {
       id: '2',
-      type: 'income1',
+      type: 'income2',
       date: currentDateFormat,
       amount: 2000
     },
     {
       id: '3',
-      type: 'income1',
+      type: 'income3',
       date: currentDateFormat,
       amount: 1800
     }
