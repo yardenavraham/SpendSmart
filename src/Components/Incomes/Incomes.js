@@ -82,18 +82,19 @@ import { visuallyHidden } from '@mui/utils';
 // import Income from './Income';
 import { Button, Modal } from '@mui/material';
 import './Incomes.scss';
-import AddEditModal from './AddEditModal';
+import AddEditModal from '../AddEditModal/AddEditModal';
 
-function createData(name, type, amount, frequency, date, owner) {
-  return {
-    name,
-    type,
-    amount,
-    frequency,
-    date,
-    owner
-  };
-}
+// function createData(name, type, amount, frequency, date, madeBy) {
+//   return {
+//     name,
+//     type,
+//     amount,
+//     frequency,
+//     date,
+//     madeBy
+//   };
+// }
+
 
 const style = {
     position: 'absolute',
@@ -104,30 +105,30 @@ const style = {
     bgcolor: 'background.paper',
     borderRadius: '20px',
     boxShadow: 24,
-    p: 4,
+    p: 4
 };
 
-const current = new Date();
-const tomorrow = new Date();
-tomorrow.setDate(current.getDate()+2);
-const currentDateFormat = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
-const tomorrowDateFormat = `${tomorrow.getDate()}/${tomorrow.getMonth()+1}/${tomorrow.getFullYear()}`;
+// const current = new Date();
+// const tomorrow = new Date();
+// tomorrow.setDate(current.getDate()+2);
+// const currentDateFormat = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
+// const tomorrowDateFormat = `${tomorrow.getDate()}/${tomorrow.getMonth()+1}/${tomorrow.getFullYear()}`;
 
-const rows = [
-  createData('income1', 'type1', 2000, 'every month', currentDateFormat, 'Adi'),
-  createData('income2', 'type2', 1500, 'every month', tomorrowDateFormat, 'Yarden'),
-  createData('income3', 'type3', 1000, 'every month', currentDateFormat, 'Inbal'),
-  createData('income4', 'type4', 3500, 'every month', tomorrowDateFormat, 'Adi'),
-//   createData('Gingerbread', 356, 16.0, 49, 3.9),
-//   createData('Honeycomb', 408, 3.2, 87, 6.5),
-//   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   createData('Jelly Bean', 375, 0.0, 94, 0.0),
-//   createData('KitKat', 518, 26.0, 65, 7.0),
-//   createData('Lollipop', 392, 0.2, 98, 0.0),
-//   createData('Marshmallow', 318, 0, 81, 2.0),
-//   createData('Nougat', 360, 19.0, 9, 37.0),
-//   createData('Oreo', 437, 18.0, 63, 4.0),
-];
+// const rows = [
+//   createData('income1', 'type1', 2000, 'every month', currentDateFormat, 'Adi'),
+//   createData('income2', 'type2', 1500, 'every month', tomorrowDateFormat, 'Yarden'),
+//   createData('income3', 'type3', 1000, 'every month', currentDateFormat, 'Inbal'),
+//   createData('income4', 'type4', 3500, 'every month', tomorrowDateFormat, 'Adi'),
+// //   createData('Gingerbread', 356, 16.0, 49, 3.9),
+// //   createData('Honeycomb', 408, 3.2, 87, 6.5),
+// //   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+// //   createData('Jelly Bean', 375, 0.0, 94, 0.0),
+// //   createData('KitKat', 518, 26.0, 65, 7.0),
+// //   createData('Lollipop', 392, 0.2, 98, 0.0),
+// //   createData('Marshmallow', 318, 0, 81, 2.0),
+// //   createData('Nougat', 360, 19.0, 9, 37.0),
+// //   createData('Oreo', 437, 18.0, 63, 4.0),
+// ];
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -163,16 +164,16 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: 'name',
+    id: 'description',
     numeric: false,
     disablePadding: true,
-    label: 'Income Name',
+    label: 'Description',
   },
   {
-    id: 'type',
+    id: 'category',
     numeric: true,
     disablePadding: false,
-    label: 'Income Type',
+    label: 'Income category',
   },
   {
     id: 'Amount',
@@ -193,10 +194,10 @@ const headCells = [
     label: 'Date',
   },
   {
-    id: 'owner',
+    id: 'madeBy',
     numeric: true,
     disablePadding: false,
-    label: 'Owner',
+    label: 'madeBy',
   },
 ];
 
@@ -312,6 +313,10 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function Incomes(props) {
+    const rows = props.incomesList;
+    console.log('rows ' + JSON.stringify(rows));
+
+
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('date');
   const [selected, setSelected] = React.useState([]);
@@ -327,7 +332,7 @@ export default function Incomes(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.name);
+      const newSelected = rows.map((n) => n.description);
       setSelected(newSelected);
       return;
     }
@@ -400,17 +405,17 @@ const handleClose = () => setOpen(false);
                 {stableSort(rows, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
+                    const isItemSelected = isSelected(row.description);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
                         <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.name)}
+                        onClick={(event) => handleClick(event, row.description)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
-                        key={row.name}
+                        key={row.id}
                         selected={isItemSelected}
                         >
                         <TableCell padding="checkbox">
@@ -428,13 +433,13 @@ const handleClose = () => setOpen(false);
                             scope="row"
                             padding="none"
                         >
-                            {row.name}
+                            {row.description}
                         </TableCell>
-                        <TableCell align="left">{row.type}</TableCell>
+                        <TableCell align="left">{row.category}</TableCell>
                         <TableCell align="left">{row.amount}</TableCell>
                         <TableCell align="left">{row.frequency}</TableCell>
                         <TableCell align="left">{row.date}</TableCell>
-                        <TableCell align="left">{row.owner}</TableCell>
+                        <TableCell align="left">{row.madeBy}</TableCell>
                         </TableRow>
                     );
                     })}

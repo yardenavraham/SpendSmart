@@ -13,6 +13,7 @@ import AddIcon from '@material-ui/icons/Add';
 import { incomeCategory } from '../../Consts';
 
 export default function AddEditModal(props) {
+    
     const handleSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -23,12 +24,13 @@ export default function AddEditModal(props) {
             description: data.get('description'),
             madeBy: data.get('madeBy')
         });
+        console.log('income ' + JSON.stringify(income));
         props.callbackAddIncome(income);
     };
 
     const theme = createTheme();
     const [income, setIncome] = useState({
-        id: '',
+        id: Math.random().toString(),
         type: '',
         // date: currentDateFormat,
         amount: ''
@@ -114,6 +116,7 @@ export default function AddEditModal(props) {
                                     id="description"
                                     label="Description"
                                     name="description"
+                                    onChange={e => setIncome({ ...income, description: e.target.value })}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -123,6 +126,7 @@ export default function AddEditModal(props) {
                                     id="madeBy"
                                     label="Made by"
                                     name="madeBy"
+                                    onChange={e => setIncome({ ...income, madeBy: e.target.value })} 
                                 />
                             </Grid>
                             {/* <Grid item xs={12}>
