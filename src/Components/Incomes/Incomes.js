@@ -1,8 +1,26 @@
 // import React, { useState } from 'react';
 // import Income from './Income';
+// import { Button, Modal, Box } from '@mui/material';
 // import './Incomes.scss';
+// import AddEditModal from './AddEditModal';
+
+// const style = {
+//     position: 'absolute',
+//     top: '50%',
+//     left: '50%',
+//     transform: 'translate(-50%, -50%)',
+//     width: 600,
+//     bgcolor: 'background.paper',
+//     borderRadius: '20px',
+//     boxShadow: 24,
+//     p: 4,
+// };
 
 // const Incomes = props => {
+
+//     const [open, setOpen] = useState(false);
+//     const handleOpen = () => setOpen(true);
+//     const handleClose = () => setOpen(false);
 
 //     return (
 //         <>
@@ -18,13 +36,25 @@
 //                         amount={income.amount}
 //                         onRemove={props.onRemove}
 //                     />
-//                 ))}        
+//                 ))}
 //             </div>
+//             <Button onClick={handleOpen}>Add income</Button>
+//             <Modal
+//                 open={open}
+//                 onClose={handleClose}
+//                 aria-labelledby="modal-modal-title"
+//                 aria-describedby="modal-modal-description"
+//             >
+//                 <Box sx={style}>
+//                     <AddEditModal callbackAddIncome = {income => props.onAdd(income)}/>
+//                 </Box>
+//             </Modal>
 //         </>
 //     );
-// }
-// export default Incomes;
-import * as React from 'react';
+
+// import * as React from 'react';
+import React, { useState } from 'react';
+
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -48,6 +78,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 
+// import React, { useState } from 'react';
+// import Income from './Income';
+import { Button, Modal } from '@mui/material';
+import './Incomes.scss';
+import AddEditModal from './AddEditModal';
+
 function createData(name, type, amount, frequency, date, owner) {
   return {
     name,
@@ -58,6 +94,18 @@ function createData(name, type, amount, frequency, date, owner) {
     owner
   };
 }
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    bgcolor: 'background.paper',
+    borderRadius: '20px',
+    boxShadow: 24,
+    p: 4,
+};
 
 const current = new Date();
 const tomorrow = new Date();
@@ -263,7 +311,7 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EnhancedTable() {
+export default function Incomes(props) {
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('date');
   const [selected, setSelected] = React.useState([]);
@@ -325,92 +373,109 @@ export default function EnhancedTable() {
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Paper sx={{ width: '100%', mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
-          >
-            <EnhancedTableHead
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
-              rowCount={rows.length}
-            />
-            <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
-                  const labelId = `enhanced-table-checkbox-${index}`;
+const [open, setOpen] = useState(false);
+const handleOpen = () => setOpen(true);
+const handleClose = () => setOpen(false);
 
-                  return (
+  return (
+    <>
+        <Box sx={{ width: '100%' }}>
+        <Paper sx={{ width: '100%', mb: 2 }}>
+            <EnhancedTableToolbar numSelected={selected.length} />
+            <TableContainer>
+            <Table
+                sx={{ minWidth: 750 }}
+                aria-labelledby="tableTitle"
+                size={dense ? 'small' : 'medium'}
+            >
+                <EnhancedTableHead
+                numSelected={selected.length}
+                order={order}
+                orderBy={orderBy}
+                onSelectAllClick={handleSelectAllClick}
+                onRequestSort={handleRequestSort}
+                rowCount={rows.length}
+                />
+                <TableBody>
+                {stableSort(rows, getComparator(order, orderBy))
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => {
+                    const isItemSelected = isSelected(row.name);
+                    const labelId = `enhanced-table-checkbox-${index}`;
+
+                    return (
+                        <TableRow
+                        hover
+                        onClick={(event) => handleClick(event, row.name)}
+                        role="checkbox"
+                        aria-checked={isItemSelected}
+                        tabIndex={-1}
+                        key={row.name}
+                        selected={isItemSelected}
+                        >
+                        <TableCell padding="checkbox">
+                            <Checkbox
+                            color="primary"
+                            checked={isItemSelected}
+                            inputProps={{
+                                'aria-labelledby': labelId,
+                            }}
+                            />
+                        </TableCell>
+                        <TableCell
+                            component="th"
+                            id={labelId}
+                            scope="row"
+                            padding="none"
+                        >
+                            {row.name}
+                        </TableCell>
+                        <TableCell align="left">{row.type}</TableCell>
+                        <TableCell align="left">{row.amount}</TableCell>
+                        <TableCell align="left">{row.frequency}</TableCell>
+                        <TableCell align="left">{row.date}</TableCell>
+                        <TableCell align="left">{row.owner}</TableCell>
+                        </TableRow>
+                    );
+                    })}
+                {emptyRows > 0 && (
                     <TableRow
-                      hover
-                      onClick={(event) => handleClick(event, row.name)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
-                      tabIndex={-1}
-                      key={row.name}
-                      selected={isItemSelected}
+                    style={{
+                        height: (dense ? 33 : 53) * emptyRows,
+                    }}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            'aria-labelledby': labelId,
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell
-                        component="th"
-                        id={labelId}
-                        scope="row"
-                        padding="none"
-                      >
-                        {row.name}
-                      </TableCell>
-                      <TableCell align="left">{row.type}</TableCell>
-                      <TableCell align="left">{row.amount}</TableCell>
-                      <TableCell align="left">{row.frequency}</TableCell>
-                      <TableCell align="left">{row.date}</TableCell>
-                      <TableCell align="left">{row.owner}</TableCell>
+                    <TableCell colSpan={6} />
                     </TableRow>
-                  );
-                })}
-              {emptyRows > 0 && (
-                <TableRow
-                  style={{
-                    height: (dense ? 33 : 53) * emptyRows,
-                  }}
-                >
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={rows.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
+                )}
+                </TableBody>
+            </Table>
+            </TableContainer>
+            <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={rows.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+        </Paper>
+        <FormControlLabel
+            control={<Switch checked={dense} onChange={handleChangeDense} />}
+            label="Dense padding"
         />
-      </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
-    </Box>
+        </Box>
+        <Button onClick={handleOpen}>Add income</Button>
+        <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+        >
+            <Box sx={style}>
+                <AddEditModal callbackAddIncome = {income => props.onAdd(income)}/>
+            </Box>
+        </Modal>
+    </>
   );
 }
