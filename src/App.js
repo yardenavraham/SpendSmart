@@ -58,7 +58,7 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Incomes items={items} onRemove={onRemove} total={total}/>
+        <Incomes items={items} onRemove={onRemove} total={total} onAdd={income => addIncomeHandler(income)}/>
         {/* <AddIncome onAddIncome={addIncomeHandler}/> */}
       </ThemeProvider>
     </div>
