@@ -51,7 +51,7 @@ const currentDateFormat = `${current.getDate()}/${current.getMonth()+1}/${curren
 const tomorrowDateFormat = `${tomorrow.getDate()}/${tomorrow.getMonth()+1}/${tomorrow.getFullYear()}`;
 
 const initialIncomes = [
-  createData('income1', 'category1', 2000, 'every month', currentDateFormat, 'Adi'),
+  createData('income1', 'category1', 2200, 'every month', currentDateFormat, 'Adi'),
   createData('income2', 'category2', 1500, 'every month', tomorrowDateFormat, 'Yarden'),
   createData('income3', 'category3', 1000, 'every month', currentDateFormat, 'Inbal'),
   createData('income4', 'category4', 3500, 'every month', tomorrowDateFormat, 'Adi'),
