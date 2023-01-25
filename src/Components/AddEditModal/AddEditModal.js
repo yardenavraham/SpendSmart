@@ -4,13 +4,20 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { MenuItem, Select, TextField, Card, Button, Box, Stack, Container, Avatar, CssBaseline, InputLabel, FormControl } from '@mui/material';
-// import dayjs from 'dayjs';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
+//import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 // import AddIcon from '@mui/icons-material/Add';
 import AddIcon from '@material-ui/icons/Add';
 import { incomeCategory } from '../../Consts';
+
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 
 export default function AddEditModal(props) {
     
@@ -18,8 +25,9 @@ export default function AddEditModal(props) {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({
+            id: Math.random().toString(),
             category: data.get('category'),
-            date: data.get('date'),
+            date: data.get('dateVal'),
             amount: data.get('amount'),
             description: data.get('description'),
             madeBy: data.get('madeBy')
@@ -46,6 +54,14 @@ export default function AddEditModal(props) {
     //     setValue(newValue);
     // };
 
+    const [dateVal, setDateValue] = React.useState(dayjs('2014-08-18T21:11:54'));
+
+  const handleChangeDate = (newValue) => {
+    setDateValue(newValue);
+    console.log('dateVal ' + dateVal);
+    setIncome({ ...income, date: dateVal });
+  };
+
 
     return (
         <ThemeProvider theme={theme}>
@@ -67,14 +83,14 @@ export default function AddEditModal(props) {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                            <Grid item xs={12} sm={12}>
+                            {/* <Grid item xs={12} sm={12}>
                                 <TextField
                                     fullWidth
                                     id="date"
                                     label="Date"
                                     name="date"
                                 />
-                            </Grid>
+                            </Grid> */}
                             <Grid item xs={12} sm={6}>
                                 <FormControl fullWidth>
                                     <InputLabel required id="categoryLable">Category</InputLabel>
@@ -129,20 +145,20 @@ export default function AddEditModal(props) {
                                     onChange={e => setIncome({ ...income, madeBy: e.target.value })} 
                                 />
                             </Grid>
-                            {/* <Grid item xs={12}>
+                            <Grid item xs={12}>
                                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                                     <Stack spacing={3}>
                                         <DesktopDatePicker
                                             label="Date desktop"
                                             inputFormat="MM/DD/YYYY"
-                                            value={value}
-                                            onChange={handleChange}
+                                            value={dateVal}
+                                            onChange={handleChangeDate}
                                             renderInput={(params) => <TextField {...params} />}
                                         />
                                     </Stack>
                                 </LocalizationProvider>
 
-                            </Grid> */}
+                            </Grid>
 
                         </Grid>
                         <Button
