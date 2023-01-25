@@ -33,8 +33,9 @@ function App() {
   //   }
   // ];
 
-  function createData(description, category, amount, frequency, date, madeBy) {
+  function createData(id, description, category, amount, frequency, date, madeBy) {
     return {
+      id, 
       description,
       category,
       amount,
@@ -51,10 +52,10 @@ const currentDateFormat = `${current.getDate()}/${current.getMonth()+1}/${curren
 const tomorrowDateFormat = `${tomorrow.getDate()}/${tomorrow.getMonth()+1}/${tomorrow.getFullYear()}`;
 
 const initialIncomes = [
-  createData('income1', 'category1', 2200, 'every month', currentDateFormat, 'Adi'),
-  createData('income2', 'category2', 1500, 'every month', tomorrowDateFormat, 'Yarden'),
-  createData('income3', 'category3', 1000, 'every month', currentDateFormat, 'Inbal'),
-  createData('income4', 'category4', 3500, 'every month', tomorrowDateFormat, 'Adi'),
+  createData(Math.random().toString(), 'income1', 'category1', 2000, 'every month', currentDateFormat, 'Adi'),
+  createData(Math.random().toString(), 'income2', 'category2', 1500, 'every month', tomorrowDateFormat, 'Yarden'),
+  createData(Math.random().toString(), 'income3', 'category3', 1000, 'every month', currentDateFormat, 'Inbal'),
+  createData(Math.random().toString(), 'income4', 'category4', 3500, 'every month', tomorrowDateFormat, 'Adi'),
 //   createData('Gingerbread', 356, 16.0, 49, 3.9),
 //   createData('Honeycomb', 408, 3.2, 87, 6.5),
 //   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),

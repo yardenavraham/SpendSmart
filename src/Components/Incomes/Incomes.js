@@ -314,7 +314,7 @@ EnhancedTableToolbar.propTypes = {
 
 export default function Incomes(props) {
     const rows = props.incomesList;
-    console.log('rows ' + JSON.stringify(rows));
+    // console.log('rows ' + JSON.stringify(rows));
 
 
   const [order, setOrder] = React.useState('asc');
