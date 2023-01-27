@@ -228,7 +228,7 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHeadn >
+    <TableHead >
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
