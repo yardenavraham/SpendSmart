@@ -68,7 +68,7 @@ const Income = props => {
                     color="a"
                     className={classes.button}
                     startIcon={<DeleteIcon />}
-                    onClick={() => { props.onRemove(props.id, props.amount)}}
+                    //onClick={() => { props.onRemove(props.id, props.amount)}}
                 >
                     Delete
                 </Button>

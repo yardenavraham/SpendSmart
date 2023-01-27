@@ -77,12 +77,30 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 
 // import React, { useState } from 'react';
 // import Income from './Income';
 import { Button, Modal } from '@mui/material';
 import './Incomes.scss';
 import AddEditModal from '../AddEditModal/AddEditModal';
+
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { Stack, TextField } from '@mui/material';
+import dayjs from "dayjs";
+import { RowingRounded } from '@material-ui/icons';
+import SearchBar from "material-ui-search-bar";
+import FilterMaterialUi, { FilterField, TYPE } from "filter-material-ui";
+
+
+
+
 
 // function createData(name, type, amount, frequency, date, madeBy) {
 //   return {
@@ -199,6 +217,7 @@ const headCells = [
     disablePadding: false,
     label: 'madeBy',
   },
+  {}
 ];
 
 function EnhancedTableHead(props) {
@@ -209,7 +228,7 @@ function EnhancedTableHead(props) {
   };
 
   return (
-    <TableHead>
+    <TableHeadn >
       <TableRow>
         <TableCell padding="checkbox">
           <Checkbox
@@ -258,53 +277,126 @@ EnhancedTableHead.propTypes = {
 };
 
 function EnhancedTableToolbar(props) {
-  const { numSelected } = props;
+  const { numSelected, selected, onDelete } = props;
+  //console.log('selected  ' + JSON.stringify(selected));
+  console.log('selected', selected[0]);
+
+  const incomesHeader = <div className="incomes-header">Incomes</div>;
+  
+  const now = new Date();
+  const firstDayCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDayCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  const [fromDate, setFromDate] = React.useState(firstDayCurrentMonth);
+  const [toDate, setToDate] = React.useState(lastDayCurrentMonth);
+
+  // const handleChangeDate = (newValue, dateType) => {
+  //   dateType === 'from' ? setFromDate(newValue) : setToDate(newValue);
+  //   console.log('newValue ' + newValue);
+  // };
+
+  const handleFromChangeDate = (newValue) => {
+    console.log('handleFromChangeDate newValue ' + newValue);
+    // console.log('check date ' + props.initialIncomesList[0].date.getTime());
+
+    setFromDate(newValue);
+
+    props.setIncomesList(props.initialIncomesList.filter(item => (item.date.getTime() >= newValue
+      && item.date.getTime() <= toDate)));
+  };
+
+  const handleToChangeDate = (newValue) => {
+    // setToDate(newValue);
+    console.log('newValue ' + newValue);
+    setToDate(newValue);
+    // console.log('check date ' + `${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`);
+
+    props.setIncomesList(props.initialIncomesList.filter(item => (item.date.getTime() >= fromDate
+      && item.date.getTime() <= newValue)));
+  };
 
   return (
-    <Toolbar
-      sx={{
-        pl: { sm: 2 },
-        pr: { xs: 1, sm: 1 },
-        ...(numSelected > 0 && {
-          bgcolor: (theme) =>
-            alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
-        }),
-      }}
-    >
-      {numSelected > 0 ? (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          color="inherit"
-          variant="subtitle1"
-          component="div"
-        >
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography
-          sx={{ flex: '1 1 100%' }}
-          variant="h6"
-          id="tableTitle"
-          component="div"
-        >
-          <div className="incomes-header">Incomes</div>
-        </Typography>
-      )}
+    <>
+      <div>{incomesHeader}</div>
+      <Toolbar
+        sx={{
+          pl: { sm: 2 },
+          pr: { xs: 1, sm: 1 },
+          ...(numSelected > 0 && {
+            bgcolor: (theme) =>
+              alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
+          }),
+        }}
+      >
+      
+        {numSelected > 0 ? (
+          <Typography
+            sx={{ flex: '1 1 100%' }}
+            color="inherit"
+            variant="subtitle1"
+            component="div"
+          >
+            {/* {incomesHeader} */}
+            {numSelected} items selected
+          </Typography>
+        ) : (
+          <Typography
+            sx={{ flex: '1 1 100%' }}
+            variant="h6"
+            id="tableTitle"
+            component="div"
+          >
+          {/* {incomesHeader} */}
+          </Typography>
+        )}
 
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon/>
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
+        <div>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Stack spacing={3}>
+                  <DesktopDatePicker
+                      label="From Date"
+                      inputFormat="MM/DD/YYYY"
+                      value={fromDate}
+                      onChange={handleFromChangeDate}
+                      renderInput={(params) => <TextField {...params} />}
+                  />
+              </Stack>
+          </LocalizationProvider>
+        </div>
+
+        <div>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <Stack spacing={3}>
+                  <DesktopDatePicker
+                      label="To Date"
+                      inputFormat="MM/DD/YYYY"
+                      value={toDate}
+                      onChange={handleToChangeDate}
+                      renderInput={(params) => <TextField {...params} />}
+                  />
+              </Stack>
+          </LocalizationProvider>
+        </div>
+
+        <div className="incomes-add_new_income" onClick={props.handleOpen} onHover>
+          <AddIcon /> Add New Income
+        </div>
+
+        {numSelected > 0 ? (
+          <Tooltip title="Delete">
+            <IconButton onClick={({selected}) => onDelete(selected)}>
+              <DeleteIcon/>
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title="Filter list">
+            <IconButton>
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip>
+        )}
+      </Toolbar>
+    </>
   );
 }
 
@@ -313,9 +405,7 @@ EnhancedTableToolbar.propTypes = {
 };
 
 export default function Incomes(props) {
-    const rows = props.incomesList;
-    // console.log('rows ' + JSON.stringify(rows));
-
+  const rows = props.incomesList;
 
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('date');
@@ -332,7 +422,7 @@ export default function Incomes(props) {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelected = rows.map((n) => n.description);
+      const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
@@ -382,11 +472,30 @@ const [open, setOpen] = useState(false);
 const handleOpen = () => setOpen(true);
 const handleClose = () => setOpen(false);
 
+const [searched, setSearched] = useState("");
+
+  const requestSearch = (searchedVal) => {
+    const filteredRows = props.initialIncomesList.filter((row) => {
+      return row.description.toLowerCase().includes(searchedVal.toLowerCase()) || row.category.toLowerCase().includes(searchedVal.toLowerCase());
+    });
+    props.setIncomesList(filteredRows);
+  };
+
+  const cancelSearch = () => {
+    setSearched("");
+    requestSearch(searched);
+  };
+
   return (
     <>
         <Box sx={{ width: '100%' }}>
-        <Paper sx={{ width: '100%', mb: 2 }}>
-            <EnhancedTableToolbar numSelected={selected.length} />
+        <Paper className="incomes" sx={{ width: '100%', mb: 2 }}>
+            <EnhancedTableToolbar numSelected={selected.length} selected={selected} onDelete={props.onDelete} open={open} handleOpen={handleOpen} handleClose={handleClose} initialIncomesList={props.initialIncomesList} setIncomesList={props.setIncomesList}/>
+            <SearchBar
+              value={searched}
+              onChange={(searchVal) => requestSearch(searchVal)}
+              onCancelSearch={() => cancelSearch()}
+            />
             <TableContainer>
             <Table
                 sx={{ minWidth: 750 }}
@@ -400,18 +509,19 @@ const handleClose = () => setOpen(false);
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
                 rowCount={rows.length}
+                className="incomes-table_header"
                 />
                 <TableBody>
                 {stableSort(rows, getComparator(order, orderBy))
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((row, index) => {
-                    const isItemSelected = isSelected(row.description);
+                    const isItemSelected = isSelected(row.id);
                     const labelId = `enhanced-table-checkbox-${index}`;
 
                     return (
                         <TableRow
                         hover
-                        onClick={(event) => handleClick(event, row.description)}
+                        onClick={(event) => handleClick(event, row.id)}
                         role="checkbox"
                         aria-checked={isItemSelected}
                         tabIndex={-1}
@@ -438,8 +548,22 @@ const handleClose = () => setOpen(false);
                         <TableCell align="left">{row.category}</TableCell>
                         <TableCell align="left">{row.amount}</TableCell>
                         <TableCell align="left">{row.frequency}</TableCell>
-                        <TableCell align="left">{row.date}</TableCell>
+                        <TableCell align="left">{`${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`}</TableCell>
                         <TableCell align="left">{row.madeBy}</TableCell>
+                        <TableCell align="left" className="incomes-edit_income">
+                          <EditIcon onClick={handleOpen}>Edit income</EditIcon>
+                          <Modal
+                              open={open}
+                              onClose={handleClose}
+                              aria-labelledby="modal-modal-title"
+                              aria-describedby="modal-modal-description"
+                          >
+                              <Box sx={style}>
+                                  <AddEditModal callbackEditIncome = {row => props.onEdit(row)}/>
+                              </Box>
+                          </Modal>
+                        </TableCell>
+
                         </TableRow>
                     );
                     })}
@@ -470,7 +594,7 @@ const handleClose = () => setOpen(false);
             label="Dense padding"
         />
         </Box>
-        <Button onClick={handleOpen}>Add income</Button>
+        {/* <Button onClick={handleOpen}>Add income</Button> */}
         <Modal
             open={open}
             onClose={handleClose}

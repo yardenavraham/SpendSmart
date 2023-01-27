@@ -51,11 +51,11 @@ tomorrow.setDate(current.getDate()+2);
 const currentDateFormat = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
 const tomorrowDateFormat = `${tomorrow.getDate()}/${tomorrow.getMonth()+1}/${tomorrow.getFullYear()}`;
 
-const initialIncomes = [
-  createData(Math.random().toString(), 'income1', 'category1', 2000, 'every month', currentDateFormat, 'Adi'),
-  createData(Math.random().toString(), 'income2', 'category2', 1500, 'every month', tomorrowDateFormat, 'Yarden'),
-  createData(Math.random().toString(), 'income3', 'category3', 1000, 'every month', currentDateFormat, 'Inbal'),
-  createData(Math.random().toString(), 'income4', 'category4', 3500, 'every month', tomorrowDateFormat, 'Adi'),
+const initialIncomesList = [
+  createData(Math.random().toString(), 'income1', 'category1', 2000, 'every month', current, 'Adi'),
+  createData(Math.random().toString(), 'income2', 'category2', 1500, 'every month', tomorrow, 'Yarden'),
+  createData(Math.random().toString(), 'income3', 'category3', 1000, 'every month', current, 'Inbal'),
+  createData(Math.random().toString(), 'income4', 'category4', 3500, 'every month', tomorrow, 'Adi'),
 //   createData('Gingerbread', 356, 16.0, 49, 3.9),
 //   createData('Honeycomb', 408, 3.2, 87, 6.5),
 //   createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
@@ -70,16 +70,19 @@ const initialIncomes = [
 
 
   // const [initialItems, setInitialItems] = useState(incomes);
-  const [incomesList, setIncomesList] = useState(initialIncomes);
+  const [incomesList, setIncomesList] = useState(initialIncomesList);
   const [total, setTotal] = useState(
     incomesList.reduce((accumulator,currentValue) =>  accumulator = accumulator + currentValue.amount, 0 )
   );
 
-  const onRemove = (id, amount) => {
-    console.log('onRemove app');
-    console.log('id app ' + id);
-    setIncomesList(incomesList.filter(item => item.id !== id)); //filter returns new array
-    setTotal(prevTotal => {return prevTotal - amount});
+  const deleteHandler = ({selected}) => {
+    console.log('deleteHandler app');
+    console.log('selected', JSON.stringify(selected));
+
+    // console.log("ids: ",  JSON.stringify(ids)); 
+
+    //setIncomesList(incomesList.filter(item => !selected.includes(item))); //filter returns new array
+    // setTotal(prevTotal => {return prevTotal - amount});
   }
 
   const addIncomeHandler = newIncome => {
@@ -94,7 +97,7 @@ const initialIncomes = [
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Incomes incomesList={incomesList} onRemove={onRemove} total={total} onAdd={income => addIncomeHandler(income)}/>
+        <Incomes initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={selected => deleteHandler(selected)} total={total} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)}/>
         {/* <AddIncome onAddIncome={addIncomeHandler}/> */}
       </ThemeProvider>
     </div>
