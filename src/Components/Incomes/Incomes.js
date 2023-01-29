@@ -93,7 +93,7 @@
 // import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 // import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
 // import { Stack, TextField } from '@mui/material';
-// import dayjs from "dayjs";
+import dayjs from "dayjs";
 // import { RowingRounded } from '@material-ui/icons';
 // import SearchBar from "material-ui-search-bar";
 // import FilterMaterialUi, { FilterField, TYPE } from "filter-material-ui";
@@ -633,6 +633,15 @@ import { Button, Modal, Box } from '@mui/material';
 import { Hidden } from "@material-ui/core";
 import { incomeCategory } from '../../Consts';
 
+import TextField from '@mui/material/TextField';
+// import { LocalizationProvider } from '@mui/x-date-pickers-pro';
+// import { AdapterDayjs } from '@mui/x-date-pickers-pro/AdapterDayjs';
+// import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
+// import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+// import { DateRangePicker, DateRange } from "mui-daterange-picker";
+
+
+
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -669,6 +678,16 @@ const style = {
     p: 4,
 };
 
+const arrayToObjectPairs = (arr) => {
+  const obj = {};
+  let keys = arr;
+  let values = arr;
+  for (let i = 0; i < keys.length; i++) {
+    obj[keys[i]] = values[i];
+  }
+  return obj;
+}
+
 const Incomes = props => {
 
     const [open, setOpen] = useState(false);
@@ -679,15 +698,34 @@ const Incomes = props => {
 
     const total = props.total;
 
+    const madeByFilter = arrayToObjectPairs(props.madeBy);
+    const incomeCategoryFilter = arrayToObjectPairs(incomeCategory);
 
-    const incomeCategories = {};
-    let keys = incomeCategory;
-    let values = incomeCategory;
-    for (let i = 0; i < keys.length; i++) {
-      incomeCategories[keys[i]] = values[i];
-    }
+    // const [value, setValue] = useState([null, null]);
 
-    console.log('incomeCategories ' + JSON.stringify(incomeCategories));
+    // const [fromDateValue, setFromDateValue] = useState(0);
+    // const [toDateValue, setToDateValue] = useState(10000000000000000000);
+
+    // const [openDatePicker, setOpenDatePicker] = useState(false);
+    // const [dateRange, setDateRange] = useState<DateRange>({});
+    // const toggle = () => setOpen(!open);
+
+
+
+
+    // const handleChangeFromDate = newValue => {
+    //   setFromDateValue(newValue);
+    //   console.log('newValue ' + newValue);
+    //   props.setIncomesList(props.initialIncomesList.filter(item => (item.date.getTime() >= newValue
+    //   && item.date.getTime() <= toDateValue)));
+    // }
+
+    // const handleChangeToDate = newValue => {
+    //   setToDateValue(newValue);
+    //   props.setIncomesList(props.initialIncomesList.filter(item => (item.date.getTime() <= newValue
+    //   && item.date.getTime() >= fromDateValue)));
+    // }
+
 
     const handleDateFilter = (term, rowData) => {
       return new Date(term).setHours(0, 0, 0, 0) <= new Date(rowData.due_date)
@@ -697,76 +735,109 @@ const Incomes = props => {
 
   return (
     <>
-    <MaterialTable
-      title="Incomes Information"
-      icons={tableIcons}
-      actions={[
-        {
-          icon: tableIcons.Add,
-          tooltip: "Add an Income",
-          isFreeAction: true, //Independent actions that will not on row' actions section
-          onClick: () => {setOpen(true)}
+      <MaterialTable
+        title="Incomes Information"
+        icons={tableIcons}
+        actions={[
+          {
+            icon: tableIcons.Add,
+            tooltip: "Add an Income",
+            isFreeAction: true, //Independent actions that will not on row' actions section
+            onClick: () => {setOpen(true)}
+          },
+          rowData => ({
+            icon: tableIcons.Edit,
+            tooltip: 'Edit an Income',
+            onClick: () => {setOpen(true)}
+          }),
+          rowData => ({
+            icon: tableIcons.Delete,
+            tooltip: 'Delete an Income',
+            onClick: (event, rowData) => {onDelete(rowData.id, rowData.amount)}
+          })
+        ]}
+        options={{
+          actionsColumnIndex: -1,
+          filtering: true
+        }}
+        columns={[
+          { title: "id", field: "id", hidden: true },
+          { title: "Description", field: "description", filtering: true },
+          { title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter,
         },
-        rowData => ({
-          icon: tableIcons.Edit,
-          tooltip: 'Edit an Income',
-          onClick: () => {setOpen(true)}
-        }),
-        rowData => ({
-          icon: tableIcons.Delete,
-          tooltip: 'Delete an Income',
-          onClick: (event, rowData) => {onDelete(rowData.id, rowData.amount)}
-        })
-      ]}
-      options={{
-        actionsColumnIndex: -1,
-        filtering: true
-      }}
-      columns={[
-        { title: "id", field: "id", hidden: true },
-        { title: "Description", field: "description", filtering: true },
-        { title: "Category", field: "category", filtering: true, lookup: incomeCategories,
-      },
-        { title: "Amount", field: "amount", filtering: true },
-        { title: "Frequency", field: "frequency", filtering: true },
-        { title: "Date", field: "date", filtering: true, customFilterAndSearch: (term, rowData) => handleDateFilter(term, rowData),
-      },
-        { title: "MadeBy", field: "madeBy", filtering: true }
-      ]}
-      data={props.incomesList.map((income) => ({
-        id: income.id,
-        description: income.description,
-        category: income.category,
-        amount: income.amount,
-        frequency: income.frequency,
-        date: income.date, //{`${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`}
-        madeBy: income.madeBy
-      }))}
-      components={{
-        Toolbar: (props) => (
-          <div style={{ backgroundColor: "#e8eaf5" }}>
-            <MTableToolbar {...props} />
-            <TableFooter className="incomes-total" >
-                <TableRow className="incomes-total" >
-                  <TableCell colSpan={2} />
-                  <TableCell colSpan={2}>Total: {total}</TableCell>
-                </TableRow>
-              </TableFooter>
-          </div>
-        )
-      }}
-      // footerData={ totalsData }
-    />
-    <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-    >
-        <Box sx={style}>
-            <AddEditModal callbackAddIncome = {income => props.onAdd(income)}/>
-        </Box>
-    </Modal>
+          { title: "Amount", field: "amount", filtering: true },
+          { title: "Frequency", field: "frequency", filtering: true },
+          { title: "Date", field: "date",  type: "date" },
+          { title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter }
+        ]}
+        data={props.incomesList.map((income) => ({
+          id: income.id,
+          description: income.description,
+          category: income.category,
+          amount: income.amount,
+          frequency: income.frequency,
+          date: income.date, //{`${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`}
+          madeBy: income.madeBy
+        }))}
+        components={{
+          Toolbar: (props) => (
+            <div style={{ backgroundColor: "#e8eaf5" }}>
+              <MTableToolbar {...props} />
+              <TableFooter className="incomes-total" >
+                  <TableRow className="incomes-total" >
+                    <TableCell colSpan={2} />
+                    <TableCell colSpan={2}>Total: {total}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                  {/* <LocalizationProvider
+                    dateAdapter={AdapterDayjs}
+                    localeText={{ start: 'From Date', end: 'To Date' }}
+                  > */}
+                    {/* <DateRangePicker
+                      value={value}
+                      onChange={(newValue) => {
+                        setValue(newValue);
+                      }}
+                      renderInput={(startProps, endProps) => (
+                        <>
+                          <TextField {...startProps} />
+                          <Box sx={{ mx: 2 }}> to </Box>
+                          <TextField {...endProps} />
+                        </>
+                      )}
+                    /> */}
+                    {/* <DesktopDatePicker
+                      label="From Date"
+                      inputFormat="MM/DD/YYYY"
+                      value={fromDateValue}
+                      onChange={handleChangeFromDate}
+                      renderInput={(params) => <TextField {...params} />}
+                    />
+                    <DesktopDatePicker
+                      label="To Date"
+                      inputFormat="MM/DD/YYYY"
+                      value={toDateValue}
+                      onChange={handleChangeToDate}
+                      renderInput={(params) => <TextField {...params} />}
+                    /> */}
+                  {/* </LocalizationProvider> */}
+                  </TableRow>
+                </TableFooter>
+            </div>
+          )
+        }}
+        // footerData={ totalsData }
+      />
+      <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+      >
+          <Box sx={style}>
+              <AddEditModal callbackAddIncome = {income => props.onAdd(income)}/>
+          </Box>
+      </Modal>
     </>
   );
 };
