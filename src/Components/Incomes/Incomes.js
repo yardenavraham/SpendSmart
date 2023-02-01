@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import MaterialTable, { MTableToolbar } from "material-table";
-import { forwardRef, useState } from "react";
+import { forwardRef, useState, useRef } from "react";
 import { TableCell, TableFooter, TableRow } from "@material-ui/core";
 
 import AddBox from "@material-ui/icons/AddBox";
@@ -29,6 +29,13 @@ import TextField from '@mui/material/TextField';
 // import { DateRangePicker } from '@mui/x-date-pickers-pro/DateRangePicker';
 // import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 // import { DateRangePicker, DateRange } from "mui-daterange-picker";
+import MUIDatePicker from './MUIDatePicker';
+import { MonthPicker } from '@mui/x-date-pickers/MonthPicker';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DatePickerComponent } from '@syncfusion/ej2-react-calendars';
 
 
 
@@ -91,27 +98,19 @@ const Incomes = props => {
     const madeByFilter = arrayToObjectPairs(props.madeBy);
     const incomeCategoryFilter = arrayToObjectPairs(incomeCategory);
 
-    // const [value, setValue] = useState([null, null]);
+    const [datePickerValue, setDatePickerValue] = useState(dayjs('2023-01-01'));
 
-    // const [fromDateValue, setFromDateValue] = useState(0);
-    // const [toDateValue, setToDateValue] = useState(10000000000000000000);
+    const handleDatePickerChanged = (newDate) => {
+      console.log('newDate ' + newDate);
+      const newDateVal = new Date(newDate);
+      const newDateValFormatted = `${newDateVal.getMonth()+1}/${newDateVal.getFullYear()}`;
 
-    // const [openDatePicker, setOpenDatePicker] = useState(false);
-    // const [dateRange, setDateRange] = useState<DateRange>({});
-    // const toggle = () => setOpen(!open);
+      setDatePickerValue(newDate);
 
-    // const handleChangeFromDate = newValue => {
-    //   setFromDateValue(newValue);
-    //   console.log('newValue ' + newValue);
-    //   props.setIncomesList(props.initialIncomesList.filter(item => (item.date.getTime() >= newValue
-    //   && item.date.getTime() <= toDateValue)));
-    // }
+      props.setIncomesList(props.initialIncomesList.filter(item => 
+        `${item.date.getMonth()+1}/${item.date.getFullYear()}` === newDateValFormatted));
+    }
 
-    // const handleChangeToDate = newValue => {
-    //   setToDateValue(newValue);
-    //   props.setIncomesList(props.initialIncomesList.filter(item => (item.date.getTime() <= newValue
-    //   && item.date.getTime() >= fromDateValue)));
-    // }
 
   return (
     <>
@@ -164,43 +163,30 @@ const Incomes = props => {
             <div style={{ backgroundColor: "#e8eaf5" }}>
               <MTableToolbar {...props} />
               <TableFooter className="incomes-total" >
-                  <TableRow className="incomes-total" >
+                  {/* <TableRow className="incomes-total" >
                     <TableCell colSpan={2} />
                     <TableCell colSpan={2}>Total: {total}</TableCell>
-                  </TableRow>
+                  </TableRow> */}
                   <TableRow>
-                  {/* <LocalizationProvider
+
+                  {/* <MUIDatePicker callbackDateChanged = {newValue => handleChangeFromDate(newValue)} fromOrTo/> */}
+                  {/* <MUIDatePicker callbackDateChanged = {newValue => handleChangeToDate(newValue)}/> */}
+
+                  <LocalizationProvider
                     dateAdapter={AdapterDayjs}
-                    localeText={{ start: 'From Date', end: 'To Date' }}
-                  > */}
-                    {/* <DateRangePicker
-                      value={value}
-                      onChange={(newValue) => {
-                        setValue(newValue);
-                      }}
-                      renderInput={(startProps, endProps) => (
-                        <>
-                          <TextField {...startProps} />
-                          <Box sx={{ mx: 2 }}> to </Box>
-                          <TextField {...endProps} />
-                        </>
-                      )}
-                    /> */}
-                    {/* <DesktopDatePicker
-                      label="From Date"
-                      inputFormat="MM/DD/YYYY"
-                      value={fromDateValue}
-                      onChange={handleChangeFromDate}
-                      renderInput={(params) => <TextField {...params} />}
-                    />
-                    <DesktopDatePicker
-                      label="To Date"
-                      inputFormat="MM/DD/YYYY"
-                      value={toDateValue}
-                      onChange={handleChangeToDate}
-                      renderInput={(params) => <TextField {...params} />}
-                    /> */}
-                  {/* </LocalizationProvider> */}
+                    // localeText={{ start: 'From Date', end: 'To Date' }}
+                  >
+                        <DatePicker
+                          views={['month', 'year']}
+                          label="Month and Year"
+                          minDate={dayjs('2000-03-01')}
+                          maxDate={dayjs(new Date())}
+                          value={datePickerValue}
+                          onChange={handleDatePickerChanged}
+                          renderInput={(params) => <TextField {...params} helperText={null} />}
+                        />
+
+                  </LocalizationProvider>
                   </TableRow>
                 </TableFooter>
             </div>

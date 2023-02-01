@@ -20,7 +20,10 @@ function App() {
 
   const current = new Date();
   const tomorrow = new Date();
+  const previousMonth = new Date();
   tomorrow.setDate(current.getDate()+2);
+  previousMonth.setDate(current.getDate()-32);
+
   const currentDateFormat = `${current.getDate()}/${current.getMonth()+1}/${current.getFullYear()}`;
   const tomorrowDateFormat = `${tomorrow.getDate()}/${tomorrow.getMonth()+1}/${tomorrow.getFullYear()}`;
 
@@ -28,7 +31,7 @@ function App() {
 
   const initialIncomesList = [
     createData(Math.random().toString(), 'income1', 'Salary', 2000, 'every month', current, 'Adi'),
-    createData(Math.random().toString(), 'income2', 'Salary', 1500, 'every month', tomorrow, 'Yarden'),
+    createData(Math.random().toString(), 'income2', 'Salary', 1500, 'every month', previousMonth, 'Yarden'),
     createData(Math.random().toString(), 'income3', 'Allowance', 1000, 'every month', current, 'Inbal'),
     createData(Math.random().toString(), 'income4', 'Allowance', 3500, 'every month', tomorrow, 'Adi'),
   ];
