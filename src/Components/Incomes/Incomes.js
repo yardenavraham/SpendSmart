@@ -133,13 +133,20 @@ const Incomes = props => {
         columns={[
           { title: "id", field: "id", hidden: true },
           { title: "Description", field: "description", filtering: true },
-          { title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter,
-        },
+          { title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter},
           { title: "Amount", field: "amount", filtering: true },
           { title: "Frequency", field: "frequency", filtering: true },
-          { title: "Date", field: "date",  type: "date" },
+          { title: "Date", field: "date",  type: "date", filtering: true },
           { title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter }
         ]}
+        renderSummaryRow={({ column, incomesList }) =>
+        column.field === "amount"
+          ? {
+              value: incomesList.reduce((agg, row) => agg + row.amount, 0),
+              style: { background: "red" },
+            }
+          : undefined
+        }
         data={props.incomesList.map((income) => ({
           id: income.id,
           description: income.description,
