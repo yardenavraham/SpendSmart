@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import MaterialTable, { MTableToolbar } from "material-table";
+import MaterialTable, { MTableToolbar, MTableBody } from "material-table";
 import { forwardRef, useState } from "react";
 import { TableCell, TableFooter, TableRow } from "@mui/material";
 
@@ -89,7 +89,9 @@ const Incomes = props => {
     const madeByFilter = arrayToObjectPairs(props.madeBy);
     const incomeCategoryFilter = arrayToObjectPairs(incomeCategory);
 
-    const [datePickerValue, setDatePickerValue] = useState(dayjs('2023-01-01'));
+    const now = new Date();
+    const firstDayOfCurrMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const [datePickerValue, setDatePickerValue] = useState(dayjs(firstDayOfCurrMonth));
 
     const handleDatePickerChanged = (newDate) => {
       console.log('newDate ' + newDate);
@@ -139,14 +141,6 @@ const Incomes = props => {
           { title: "Date", field: "date",  type: "date", filtering: true },
           { title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter }
         ]}
-        renderSummaryRow={({ column, incomesList }) =>
-        column.field === "amount"
-          ? {
-              value: incomesList.reduce((agg, row) => agg + row.amount, 0),
-              style: { background: "red" },
-            }
-          : undefined
-        }
         data={props.incomesList.map((income) => ({
           id: income.id,
           description: income.description,
@@ -157,22 +151,24 @@ const Incomes = props => {
           madeBy: income.madeBy
         }))}
         components={{
+          Body: (props) => (
+            <>
+              <MTableBody {...props} />
+              <tfoot className="incomes-material_table_total">
+                 <tr>
+                   <td>TOTAL</td>
+                   <td>{total}</td>
+                 </tr>
+              </tfoot>
+            </>
+          ),
           Toolbar: (props) => (
             <div style={{ backgroundColor: "#e8eaf5" }}>
               <MTableToolbar {...props} />
               <TableFooter className="incomes-total" >
-                  {/* <TableRow className="incomes-total" >
-                    <TableCell colSpan={2} />
-                    <TableCell colSpan={2}>Total: {total}</TableCell>
-                  </TableRow> */}
                   <TableRow>
-
-                  {/* <MUIDatePicker callbackDateChanged = {newValue => handleChangeFromDate(newValue)} fromOrTo/> */}
-                  {/* <MUIDatePicker callbackDateChanged = {newValue => handleChangeToDate(newValue)}/> */}
-
                   <LocalizationProvider
                     dateAdapter={AdapterDayjs}
-                    // localeText={{ start: 'From Date', end: 'To Date' }}
                   >
                         <DatePicker
                           views={['month', 'year']}
@@ -183,14 +179,12 @@ const Incomes = props => {
                           onChange={handleDatePickerChanged}
                           renderInput={(params) => <TextField {...params} helperText={null} />}
                         />
-
                   </LocalizationProvider>
                   </TableRow>
                 </TableFooter>
             </div>
           )
         }}
-        // footerData={ totalsData }
       />
       <Modal
           open={open}
