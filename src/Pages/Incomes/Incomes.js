@@ -77,7 +77,6 @@ const Incomes = () => {
         return [newIncome, ...prevItems]; //spread all the tems in the array
       });
   
-      // <IncomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={(id, amount) => deleteHandler(id, amount)} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)} madeBy={madeBy}/>
   
       console.log("incomesList after " + JSON.stringify(incomesList));
     };
@@ -85,7 +84,7 @@ const Incomes = () => {
     return (
       <>
         <Typography align="left" variant="h4" component="h2">
-          Incomes
+          <IncomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={(id, amount) => deleteHandler(id, amount)} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)} madeBy={madeBy}/>
         </Typography>
         
         {/* income component here*/}
