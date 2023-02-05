@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Incomes from './Components/Incomes/Incomes';
+import IncomesTable from './Components/IncomesTable/IncomesTable';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from './theme';
 
@@ -71,7 +71,7 @@ function App() {
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Incomes initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={(id, amount) => deleteHandler(id, amount)} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)} madeBy={madeBy}/>
+        <IncomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={(id, amount) => deleteHandler(id, amount)} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)} madeBy={madeBy}/>
       </ThemeProvider>
     </div>
   );
