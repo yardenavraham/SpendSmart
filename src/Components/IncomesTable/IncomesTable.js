@@ -76,7 +76,7 @@ const arrayToObjectPairs = (arr) => {
   return obj;
 }
 
-const Incomes = props => {
+const IncomesTable = props => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -199,7 +199,7 @@ const Incomes = props => {
   );
 };
 
-export default Incomes;
+export default IncomesTable;
 
 
 
