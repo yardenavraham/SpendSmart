@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Incomes from './Components/Incomes/Incomes';
 import { ThemeProvider } from '@mui/material/styles';
@@ -33,7 +33,7 @@ function App() {
   const madeBy = ['Adi', 'Yarden', 'Inbal'];
 
   const initialIncomesList = [
-    createData(Math.random().toString(), 'income1', 'Salary', 2000, 'every month', current, 'Adi'),
+    createData(Math.random().toString(), 'income1', 'Salary', 1000, 'every month', current, 'Adi'),
     createData(Math.random().toString(), 'income2', 'Salary', 1500, 'every month', previousMonth, 'Yarden'),
     createData(Math.random().toString(), 'income3', 'Allowance', 1000, 'every month', current, 'Inbal'),
     createData(Math.random().toString(), 'income4', 'Allowance', 3500, 'every month', tomorrow, 'Adi'),
@@ -42,13 +42,13 @@ function App() {
   const [incomesList, setIncomesList] = useState(initialIncomesList.filter(item => 
     `${item.date.getMonth()+1}/${item.date.getFullYear()}` === newDateValFormatted));
 
-  const [total, setTotal] = useState(
-    incomesList.reduce((accumulator,currentValue) =>  accumulator = accumulator + currentValue.amount, 0 )
-  );
+  // const [total, setTotal] = useState(
+  //   incomesList.reduce((accumulator,currentValue) =>  accumulator = accumulator + currentValue.amount, 0 )
+  // );
 
-  useMemo(() => {
-    setTotal(incomesList.reduce((accumulator,currentValue) =>  accumulator = accumulator + currentValue.amount, 0));
-  }, [incomesList]);
+  // useEffect(() => {
+  //   setTotal(incomesList.reduce((accumulator,currentValue) =>  accumulator = accumulator + currentValue.amount, 0));
+  // }, [incomesList]);
 
   const deleteHandler = (id, amount) => {
     console.log('deleteHandler app');
@@ -68,12 +68,10 @@ function App() {
     console.log('incomesList after ' + JSON.stringify(incomesList));
   }
 
-  console.log('total ' + total);
-
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-        <Incomes initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={(id, amount) => deleteHandler(id, amount)} total={total} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)} madeBy={madeBy}/>
+        <Incomes initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={(id, amount) => deleteHandler(id, amount)} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)} madeBy={madeBy}/>
       </ThemeProvider>
     </div>
   );
