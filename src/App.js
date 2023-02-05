@@ -19,7 +19,7 @@ import {
   Link,
   Router,
 } from "react-router-dom";
-import AppFooter from "./Components/AppHeader/AppFooter";
+import AppFooter from "./Components/AppFooter/AppFooter";
 
 export default function App() {
 
