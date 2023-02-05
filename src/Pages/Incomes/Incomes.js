@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import IncomesTable from './Components/IncomesTable/IncomesTable';
+import IncomesTable from '../../Components/IncomesTable/IncomesTable';
 
-export default class Incomes extends Component {
-  render() {
+const Incomes = () => {
 
     function createData(
       id,
@@ -93,4 +92,4 @@ export default class Incomes extends Component {
       </>
     );
   }
-}
+  export default Incomes;
