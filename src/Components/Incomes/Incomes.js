@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import MaterialTable, { MTableToolbar, MTableBody } from "material-table";
-import { forwardRef, useState } from "react";
+import { forwardRef, useState, useRef } from "react";
 import { TableCell, TableFooter, TableRow } from "@mui/material";
 
 import AddBox from "@mui/icons-material/AddBox";
@@ -82,9 +82,6 @@ const Incomes = props => {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const onDelete = props.onDelete;
-    console.log('props.total ' + props.total);
-
-    const total = props.total;
 
     const madeByFilter = arrayToObjectPairs(props.madeBy);
     const incomeCategoryFilter = arrayToObjectPairs(incomeCategory);
@@ -104,6 +101,7 @@ const Incomes = props => {
         `${item.date.getMonth()+1}/${item.date.getFullYear()}` === newDateValFormatted));
     }
 
+    const tableRef = useRef();
 
   return (
     <>
@@ -136,7 +134,7 @@ const Incomes = props => {
           { title: "id", field: "id", hidden: true },
           { title: "Description", field: "description", filtering: true },
           { title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter},
-          { title: "Amount", field: "amount", filtering: true },
+          { title: "Amount", field: "amount", filtering: true, },
           { title: "Frequency", field: "frequency", filtering: true },
           { title: "Date", field: "date",  type: "date", filtering: true },
           { title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter }
@@ -150,6 +148,7 @@ const Incomes = props => {
           date: income.date, //{`${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`}
           madeBy: income.madeBy
         }))}
+        tableRef={tableRef}        
         components={{
           Body: (props) => (
             <>
@@ -157,7 +156,7 @@ const Incomes = props => {
               <tfoot className="incomes-material_table_total">
                  <tr>
                    <td>TOTAL</td>
-                   <td>{total}</td>
+                   <td>{tableRef.current && tableRef.current.state.data.reduce((accumulator,currentValue) =>  accumulator = accumulator + currentValue.amount, 0 )}</td>
                  </tr>
               </tfoot>
             </>
