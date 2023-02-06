@@ -62,6 +62,10 @@ export default function AppHeader(props) {
       to: '/expenses',
       name: 'Expenses',
     },
+    {
+      to: '/dashboard',
+      name: 'Dashboard'
+    }
   ];
 
   const drawer = (

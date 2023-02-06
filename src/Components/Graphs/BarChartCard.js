@@ -1,32 +1,30 @@
 import React from 'react';
-import {Paper, Typography, Grid, Card, CardContent} from "@mui/material";
-import {BarChart, CartesianGrid, YAxis, XAxis, Tooltip, Legend, Bar} from "recharts";
-import {createTheme, responsiveFontSizes, ThemeProvider} from '@mui/material/styles';
-
-let theme = createTheme();
-theme = responsiveFontSizes(theme);
+import {Typography, Grid, Card, CardContent} from "@mui/material";
+import {BarChart, CartesianGrid, YAxis, XAxis, Tooltip, Legend, Bar, ResponsiveContainer} from "recharts";
+import {ThemeProvider} from '@mui/material/styles';
+import {useTheme} from "@mui/styles";
 
 function BarChartCard(props) {
+    const theme = useTheme();
+
     return (
         <Grid item xs={12}>
-            <Card>
+            <Card elevation="0">
                 <CardContent>
                     <ThemeProvider theme={theme}>
+
                         <Typography variant="h3">{props.header}</Typography>
                     </ThemeProvider>
-                    <Paper>
-                        <BarChart width={1700} height={600} data={props.data}>
+                    <ResponsiveContainer height={400}>
+                        <BarChart width={500} height={400} data={props.data}>
                             <CartesianGrid strokeDasharray="3 3" />
                             <XAxis dataKey="name" />
                             <YAxis dataKey="value"/>
                             <Tooltip />
-                            <Legend />
-                            <Bar dataKey="value" fill="#8884d8" />
-                            {/*<Bar dataKey="uv" fill="#82ca9d" />*/}
+                            {/*<Legend />*/}
+                            <Bar dataKey="value" fill={theme.palette.primary.main} />
                         </BarChart>
-
-                    </Paper>
-
+                    </ResponsiveContainer>
                 </CardContent>
             </Card>
         </Grid>
