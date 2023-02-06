@@ -20,6 +20,7 @@ import {
   Router,
 } from "react-router-dom";
 import AppFooter from "./Components/AppFooter/AppFooter";
+import Dashboard from "./Pages/Dashboard/Dashboard";
 
 export default function App() {
 
@@ -49,6 +50,7 @@ export default function App() {
               <Route path="/" element={<Home />} />
               <Route path="incomes" element={<Incomes />} />
               <Route path="expenses" element={<Expenses />} />
+              <Route path="dashboard" element={<Dashboard />} />
             </Routes>
              </Box>
           </BrowserRouter>

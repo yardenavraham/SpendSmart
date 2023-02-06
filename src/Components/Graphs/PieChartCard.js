@@ -1,36 +1,37 @@
 import React from 'react';
-import {Card, CardContent, Grid, Paper, Typography} from "@mui/material";
-import {PieChart, Pie, Tooltip} from "recharts"
-import {createTheme, responsiveFontSizes, ThemeProvider} from '@mui/material/styles';
-
-let theme = createTheme();
-theme = responsiveFontSizes(theme);
+import {Card, CardContent, Grid, Typography} from "@mui/material";
+import {PieChart, Pie, Tooltip, ResponsiveContainer} from "recharts"
+import {ThemeProvider} from '@mui/material/styles';
+import {useTheme} from "@mui/styles";
 
 function PieChartCard(props) {
+    const theme = useTheme();
+
     return (
         <Grid item xs={4}>
-        <Card>
-            <CardContent>
-                <ThemeProvider theme={theme}>
-                    <Typography variant="h5">{props.header}</Typography>
-                </ThemeProvider>
-                <Paper elevation="0">
-                    <PieChart width={450} height={300}>
-                        <Pie
-                            data={props.data}
-                            dataKey="value"
-                            nameKey={"name"}
-                            cx="50%"
-                            cy="50%"
-                            outerRadius={150}
-                            fill="#8884d8"
-                            legendType="diamond"
-                        />
-                        <Tooltip/>
-                    </PieChart>
-                </Paper>
-            </CardContent>
-        </Card>
+            <Card elevation="0">
+                <CardContent>
+                    <ThemeProvider theme={props.theme}>
+                        <Typography variant="h6">{props.header}</Typography>
+                    </ThemeProvider>
+                    <ResponsiveContainer height={200}>
+
+                        <PieChart width={150} height={200}>
+                            <Pie
+                                data={props.data}
+                                dataKey="value"
+                                nameKey={"name"}
+                                cx="50%"
+                                cy="50%"
+                                outerRadius="100%"
+                                fill={theme.palette.primary.main}
+                                legendType="diamond"
+                            />
+                            <Tooltip/>
+                        </PieChart>
+                    </ResponsiveContainer>
+                </CardContent>
+            </Card>
         </Grid>
     );
 }

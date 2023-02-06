@@ -1,7 +1,10 @@
 import React from 'react';
 import {Grid} from "@material-ui/core";
-import PieChartCard from "./Components/Graphs/PieChartCard";
-import BarChartCard from "./Components/Graphs/BarChartCard";
+import PieChartCard from "../../Components/Graphs/PieChartCard";
+import BarChartCard from "../../Components/Graphs/BarChartCard";
+import {createTheme, responsiveFontSizes} from "@mui/material/styles";
+import {ThemeProvider} from "@mui/styles";
+import theme from "../../theme";
 
 function Dashboard() {
 
@@ -49,15 +52,16 @@ function Dashboard() {
     }
 
     return (
-        <Grid container spacing="6">
-            <Grid container spacing="3" justifyContent="center" alignItems="center">
-                <PieChartCard header="# of transactions by category" data={numberOfExpensesByCategory()}/>
-                <PieChartCard header="Expenses vs. Incomes" data={expensesVsIncomes()}/>
-                <PieChartCard header="Expenses by user" data={expensesByUser()}/>
+        <ThemeProvider theme={responsiveFontSizes(theme)}>
+            <Grid container rowSpacing={3}>
+                <Grid container spacing="3" justifyContent="center" alignItems="center">
+                    <PieChartCard header="# of transactions by category" data={numberOfExpensesByCategory()}/>
+                    <PieChartCard header="Expenses vs. Incomes" data={expensesVsIncomes()}/>
+                    <PieChartCard header="Expenses by user" data={expensesByUser()}/>
+                </Grid>
+                <BarChartCard header="Expenses By Category" data={expensesByCategory()}/>
             </Grid>
-            <BarChartCard header="Expenses By Category" data={expensesByCategory()}/>
-        </Grid>
-
+        </ThemeProvider>
     );
 }
 
