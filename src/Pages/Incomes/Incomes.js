@@ -42,7 +42,7 @@ const Incomes = () => {
     const newDateVal = new Date(new Date());
     const newDateValFormatted = `${newDateVal.getMonth()+1}/${newDateVal.getFullYear()}`;
   
-    const madeBy = ['Adi', 'Yarden', 'Inbal'];
+    const madeBy = ['Adi', 'Yarden', 'Inbal', 'Michal'];
   
     // const initialIncomesList = [
     //   createData(Math.random().toString(), 'income1', 'Salary', 1000, 'every month', current, 'Adi'),
