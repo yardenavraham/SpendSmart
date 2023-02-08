@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { MenuItem, Select, TextField, Card, Button, Box, Stack, Container, Avatar, CssBaseline, InputLabel, FormControl } from '@mui/material';
 import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import { incomeCategory } from '../../Consts';
 
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -16,7 +17,7 @@ import { NestCamWiredStandTwoTone } from '@mui/icons-material';
 export default function AddEditModal(props) {
     
     const theme = createTheme();
-    const [income, setIncome] = useState({}); //complete!!!
+    const [income, setIncome] = useState({date: new Date()}); //complete!!!
     const [category, setCategory] = useState('');
     const [dateVal, setDateValue] = useState(new Date());
 
@@ -57,6 +58,9 @@ export default function AddEditModal(props) {
                         alignItems: 'center',
                     }}
                 >
+                     <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
+                        <CloseIcon/>
+                    </Avatar>
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <AddIcon />
                     </Avatar>
@@ -65,14 +69,6 @@ export default function AddEditModal(props) {
                     </Typography>
                     <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
-                            {/* <Grid item xs={12} sm={12}>
-                                <TextField
-                                    fullWidth
-                                    id="date"
-                                    label="Date"
-                                    name="date"
-                                />
-                            </Grid> */}
                             <Grid item xs={12} sm={6}>
                                 <FormControl fullWidth>
                                     <InputLabel required id="categoryLable">Category</InputLabel>
@@ -125,6 +121,16 @@ export default function AddEditModal(props) {
                                     label="Made by"
                                     name="madeBy"
                                     onChange={e => setIncome({ ...income, madeBy: e.target.value })} 
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <TextField
+                                    required
+                                    fullWidth
+                                    id="frequency"
+                                    label="Frequency"
+                                    name="frequency"
+                                    onChange={e => setIncome({ ...income, frequency: e.target.value })} 
                                 />
                             </Grid>
                             <Grid item xs={12}>

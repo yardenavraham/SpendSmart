@@ -129,7 +129,7 @@ const Incomes = () => {
     return (
       <>
         <Typography align="left" variant="h4" component="h2">
-          <IncomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)} madeBy={madeBy}/>
+          <IncomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)} madeBy={madeBy} getIncomes={getIncomes}/>
         </Typography>
       </>
     );

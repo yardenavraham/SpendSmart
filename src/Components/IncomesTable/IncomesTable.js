@@ -80,7 +80,10 @@ const IncomesTable = props => {
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
-    const handleClose = () => setOpen(false);
+    const handleClose = () => {
+      setOpen(false);
+      props.getIncomes();
+    }
     const onDelete = props.onDelete;
 
     const madeByFilter = arrayToObjectPairs(props.madeBy);
@@ -196,7 +199,7 @@ const IncomesTable = props => {
           aria-describedby="modal-modal-description"
       >
           <Box sx={style}>
-              <AddEditModal callbackAddIncome = {income => props.onAdd(income)}/>
+              <AddEditModal callbackAddIncome = {income => props.onAdd(income)} handleClose={handleClose}/>
           </Box>
       </Modal>
     </>
