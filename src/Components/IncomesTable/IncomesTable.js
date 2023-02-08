@@ -29,7 +29,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 
-
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -77,6 +76,7 @@ const arrayToObjectPairs = (arr) => {
 }
 
 const IncomesTable = props => {
+    console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -95,10 +95,14 @@ const IncomesTable = props => {
       const newDateVal = new Date(newDate);
       const newDateValFormatted = `${newDateVal.getMonth()+1}/${newDateVal.getFullYear()}`;
 
+      console.log('newDateValFormatted ' + newDateValFormatted);
       setDatePickerValue(newDate);
 
-      props.setIncomesList(props.initialIncomesList.filter(item => 
-        `${item.date.getMonth()+1}/${item.date.getFullYear()}` === newDateValFormatted));
+      props.setIncomesList(props.initialIncomesList.filter(item => {
+        const formattedDate = new Date(item.date);
+        console.log('item ', `${parseInt(formattedDate.getMonth())+1}/${formattedDate.getFullYear()}`);
+        return `${parseInt(formattedDate.getMonth())+1}/${formattedDate.getFullYear()}` === newDateValFormatted;
+      }));
     }
 
     const tableRef = useRef();
@@ -123,7 +127,7 @@ const IncomesTable = props => {
           rowData => ({
             icon: tableIcons.Delete,
             tooltip: 'Delete an Income',
-            onClick: (event, rowData) => {onDelete(rowData.id, rowData.amount)}
+            onClick: (event, rowData) => {console.log('rowData ' + JSON.stringify(rowData));onDelete(rowData._id)}
           })
         ]}
         options={{
@@ -131,7 +135,7 @@ const IncomesTable = props => {
           filtering: true
         }}
         columns={[
-          { title: "id", field: "id", hidden: true },
+          { title: "_id", field: "_id", hidden: true },
           { title: "Description", field: "description", filtering: true },
           { title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter},
           { title: "Amount", field: "amount", filtering: true, },
@@ -140,7 +144,7 @@ const IncomesTable = props => {
           { title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter }
         ]}
         data={props.incomesList.map((income) => ({
-          id: income.id,
+          _id: income._id,
           description: income.description,
           category: income.category,
           amount: income.amount,

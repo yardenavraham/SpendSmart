@@ -11,50 +11,39 @@ import { incomeCategory } from '../../Consts';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
+import { NestCamWiredStandTwoTone } from '@mui/icons-material';
 
 export default function AddEditModal(props) {
     
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            id: Math.random().toString(),
-            category: data.get('category'),
-            date: data.get('dateVal'),
-            amount: data.get('amount'),
-            description: data.get('description'),
-            madeBy: data.get('madeBy')
-        });
-        console.log('income ' + JSON.stringify(income));
-        props.callbackAddIncome(income);
-    };
-
     const theme = createTheme();
-    const [income, setIncome] = useState({
-        id: Math.random().toString(),
-        type: '',
-        // date: currentDateFormat,
-        amount: ''
-    });
-    // const [value, setValue] = useState(new Date());
+    const [income, setIncome] = useState({}); //complete!!!
     const [category, setCategory] = useState('');
+    const [dateVal, setDateValue] = useState(new Date());
 
     const handleChangeCategory = (event) => {
         setCategory(event.target.value);
     };
 
-    // const handleChange = (newValue) => {
-    //     setValue(newValue);
-    // };
+    const handleChangeDate = (newDate) => {
+        console.log('handleChangeDate');
+        console.log('newDate ' + JSON.stringify(newDate));
+        setDateValue(newDate);
+        setIncome({ ...income, date: newDate });
+    };
 
-    const [dateVal, setDateValue] = React.useState(dayjs('2014-08-18T21:11:54'));
-
-  const handleChangeDate = (newValue) => {
-    setDateValue(newValue);
-    console.log('dateVal ' + dateVal);
-    setIncome({ ...income, date: dateVal });
-  };
-
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        // const data = new FormData(event.currentTarget);
+        // console.log({
+        //     category: data.get('category'),
+        //     date: data.get('dateVal'),
+        //     amount: data.get('amount'),
+        //     description: data.get('description'),
+        //     madeBy: data.get('madeBy')
+        // });
+        console.log('income ' + JSON.stringify(income));
+        props.callbackAddIncome(income);
+    };
 
     return (
         <ThemeProvider theme={theme}>
@@ -145,7 +134,7 @@ export default function AddEditModal(props) {
                                             label="Date desktop"
                                             inputFormat="MM/DD/YYYY"
                                             value={dateVal}
-                                            onChange={handleChangeDate}
+                                            onChange={e => handleChangeDate(e)}
                                             renderInput={(params) => <TextField {...params} />}
                                         />
                                     </Stack>
