@@ -139,12 +139,66 @@ const IncomesTable = props => {
         }}
         columns={[
           { title: "_id", field: "_id", hidden: true },
-          { title: "Description", field: "description", filtering: true },
-          { title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter},
-          { title: "Amount", field: "amount", filtering: true, },
-          { title: "Frequency", field: "frequency", filtering: true },
-          { title: "Date", field: "date",  type: "date", filtering: true },
-          { title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter }
+          { title: "Description", field: "description", filtering: true, 
+            cellStyle: {
+              backgroundColor: '#039be5',
+              color: '#FFF',
+              fontSize: '16px'
+            }, 
+            headerStyle: {
+              backgroundColor: '#039be5',
+            }
+          },
+          { title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter,
+            cellStyle: {
+              backgroundColor: '#039be5',
+              color: '#FFF',
+              fontSize: '16px'
+            }, 
+            headerStyle: {
+              backgroundColor: '#039be5',
+            }
+          },
+          { title: "Amount", field: "amount", filtering: true,
+            cellStyle: {
+              backgroundColor: '#039be5',
+              color: '#FFF',
+              fontSize: '16px'
+            }, 
+            headerStyle: {
+              backgroundColor: '#039be5',
+            }  
+          },
+          { title: "Frequency", field: "frequency", filtering: true,
+            cellStyle: {
+              backgroundColor: '#039be5',
+              color: '#FFF',
+              fontSize: '16px'
+            }, 
+            headerStyle: {
+              backgroundColor: '#039be5',
+            } 
+          },
+          { title: "Date", field: "date",  type: "date", filtering: true,
+            cellStyle: {
+              backgroundColor: '#039be5',
+              color: '#FFF',
+              fontSize: '16px'
+            }, 
+            headerStyle: {
+              backgroundColor: '#039be5',
+            } 
+          },
+          { title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter,
+            cellStyle: {
+              backgroundColor: '#039be5',
+              color: '#FFF',
+              fontSize: '16px'
+            }, 
+            headerStyle: {
+              backgroundColor: '#039be5',
+            }
+          }
         ]}
         data={props.incomesList.map((income) => ({
           _id: income._id,
