@@ -61,7 +61,7 @@ const Incomes = () => {
      
       const getIncomes = async () => {
         console.log('getIncomes');
-        const response = await axios.get("http://localhost:4000/incomes");
+        const response = await axios.get("http://localhost:27017/incomes");
         console.log('response.data ' + JSON.stringify(response.data));
         setInitialIncomesList(response.data);
         setIncomesList(response.data.filter(item => {
@@ -84,7 +84,7 @@ const Incomes = () => {
     const deleteHandler = async (id) => {
       try {
         console.log('id to delete ' + id);
-        await axios.delete(`http://localhost:4000/incomes/${id}`);
+        await axios.delete(`http://localhost:27017/incomes/${id}`);
         getIncomes();
       } catch (error) {
         console.log(error);
@@ -105,7 +105,7 @@ const Incomes = () => {
     const addIncomeHandler = async (newIncome) => {
       try {
         console.log('newIncome ' + JSON.stringify(newIncome));
-        await axios.post("http://localhost:4000/incomes", 
+        await axios.post("http://localhost:27017/incomes", 
           newIncome
         );
         // navigate("/");
@@ -116,7 +116,7 @@ const Incomes = () => {
 
     const editIncomeHandler = async (id, income) => {
       try {
-        await axios.patch(`http://localhost:4000/incomes/${id}`,
+        await axios.patch(`http://localhost:27017/incomes/${id}`,
          income
         );
         // navigate("/");
