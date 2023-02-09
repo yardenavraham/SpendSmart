@@ -6,7 +6,6 @@ import {
     updateIncome,
     deleteIncome
 } from "../controllers/IncomeController.js";
- console.log('hereee');
 const router = express.Router();
  
 router.get('/Incomes', getIncomes);

@@ -6,7 +6,7 @@ import IncomeRoute from "./routes/IncomeRoute.js";
 const app = express();
 mongoose.set("strictQuery", false);
 
-mongoose.connect('mongodb+srv://adi5765:Qypm717407@spendsmartdb.olhtfco.mongodb.net/?retryWrites=true&w=majority',{
+mongoose.connect('mongodb+srv://adi5765:baot@spendsmartdb.olhtfco.mongodb.net/?retryWrites=true&w=majority',{
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
