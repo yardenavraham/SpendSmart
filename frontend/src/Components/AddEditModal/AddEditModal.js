@@ -15,9 +15,9 @@ import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { NestCamWiredStandTwoTone } from '@mui/icons-material';
 
 export default function AddEditModal(props) {
-    
+
     const theme = createTheme();
-    const [income, setIncome] = useState({date: new Date()}); //complete!!!
+    const [income, setIncome] = useState({ date: new Date() }); //complete!!!
     const [category, setCategory] = useState('');
     const [dateVal, setDateValue] = useState(new Date());
 
@@ -48,6 +48,9 @@ export default function AddEditModal(props) {
 
     return (
         <ThemeProvider theme={theme}>
+            <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
+                <CloseIcon />
+            </Avatar>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -58,9 +61,7 @@ export default function AddEditModal(props) {
                         alignItems: 'center',
                     }}
                 >
-                     <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
-                        <CloseIcon/>
-                    </Avatar>
+
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <AddIcon />
                     </Avatar>
@@ -81,8 +82,9 @@ export default function AddEditModal(props) {
                                         value={category}
                                         onChange={
                                             (e) => {
-                                            setIncome({ ...income, category: e.target.value });
-                                            handleChangeCategory(e)}
+                                                setIncome({ ...income, category: e.target.value });
+                                                handleChangeCategory(e)
+                                            }
                                         }
                                     >
                                         {incomeCategory.map((category) => (
@@ -100,7 +102,7 @@ export default function AddEditModal(props) {
                                     id="amount"
                                     label="Amount"
                                     name="amount"
-                                    onChange={e => setIncome({ ...income, amount: e.target.value })} 
+                                    onChange={e => setIncome({ ...income, amount: e.target.value })}
                                 />
                             </Grid>
 
@@ -120,7 +122,7 @@ export default function AddEditModal(props) {
                                     id="madeBy"
                                     label="Made by"
                                     name="madeBy"
-                                    onChange={e => setIncome({ ...income, madeBy: e.target.value })} 
+                                    onChange={e => setIncome({ ...income, madeBy: e.target.value })}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -130,7 +132,7 @@ export default function AddEditModal(props) {
                                     id="frequency"
                                     label="Frequency"
                                     name="frequency"
-                                    onChange={e => setIncome({ ...income, frequency: e.target.value })} 
+                                    onChange={e => setIncome({ ...income, frequency: e.target.value })}
                                 />
                             </Grid>
                             <Grid item xs={12}>
