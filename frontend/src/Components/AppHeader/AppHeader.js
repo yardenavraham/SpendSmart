@@ -24,7 +24,7 @@ import Link from '@mui/material/Link';
 import Container from "@mui/material/Container";
 
 const drawerWidth = 240;
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout','SignIn', 'EditInformation'];
 
 export default function AppHeader(props) {
   const { window } = props;
@@ -65,6 +65,18 @@ export default function AppHeader(props) {
     {
       to: '/dashboard',
       name: 'Dashboard'
+    },
+    {
+      to: '/signin',
+      name: 'SignIn'
+    },
+    {
+      to: '/signup',
+      name: 'SignUp'
+    },
+    {
+      to: '/editinformation',
+      name: 'EditInformation'
     }
   ];
 
