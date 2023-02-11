@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { MenuItem, Select, TextField, Card, Button, Box, Stack, Container, Avatar, CssBaseline, InputLabel, FormControl } from '@mui/material';
+import { MenuItem, Select, TextField, Card, Button, Box, Stack, Container, Avatar, CssBaseline, InputLabel, FormControl, Alert, AlertTitle } from '@mui/material';
 import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
@@ -13,18 +13,36 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import { NestCamWiredStandTwoTone } from '@mui/icons-material';
+import validator from 'validator'
 
 export default function AddEditModal(props) {
-    
+
     const theme = createTheme();
-    const [income, setIncome] = useState({date: new Date()}); //complete!!!
+    const [income, setIncome] = useState({ date: new Date() }); //complete!!!
     const [category, setCategory] = useState('');
     const [dateVal, setDateValue] = useState(new Date());
 
     //validations
     const [amountIsValid, setAmountIsValid] = useState(true);
     const [dateIsValid, setDateIsValid] = useState(true);
+    const [descriptionIsValid, setDescriptionIsValid] = useState(true);
+    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
+    useEffect(() => {
+        const timeId = setTimeout(() => {
+          // After 3 seconds set the show value to false
+          setShowSuccessAlert(false)
+        }, 3000)
+    
+        return () => {
+          clearTimeout(timeId)
+        }
+      }, [showSuccessAlert]);
+    
+      // If show is false the component will return null and stop here
+    //   if (!showSuccessAlert) {
+    //     return null;
+    //   }
 
     const handleChangeCategory = (event) => {
         setCategory(event.target.value);
@@ -35,16 +53,17 @@ export default function AddEditModal(props) {
         console.log('newDate ' + JSON.stringify(newDate));
         setDateValue(newDate);
         setIncome({ ...income, date: newDate });
-        if (newDate instanceof Date && !isNaN(newDate.getTime())) {
+        if (validator.isDate(newDate)) {
             setDateIsValid(true);
         }
         else{
-            setAmountIsValid(false);
+            setDateIsValid(false);
         }
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        setShowSuccessAlert(true);
         // const data = new FormData(event.currentTarget);
         // console.log({
         //     category: data.get('category'),
@@ -55,6 +74,7 @@ export default function AddEditModal(props) {
         // });
         console.log('income ' + JSON.stringify(income));
         props.callbackAddIncome(income);
+
     };
 
     const amountChangeHandler = (event) => {
@@ -68,8 +88,29 @@ export default function AddEditModal(props) {
         }
     }
 
+    const descriptionChangeHandler = event => {
+        setIncome({ ...income, description: event.target.value });
+        if (validator.isAlphanumeric(event.target.value)) {
+            setDescriptionIsValid(true);
+        }
+        else{
+            setDescriptionIsValid(false);
+        }
+
+    }
+
     return (
+        <>
+    {showSuccessAlert && <Stack sx={{ width: '100%' }} spacing={2}>
+      <Alert severity="success">
+        <AlertTitle>Success</AlertTitle>
+        This is a success alert — <strong>check it out!</strong>
+      </Alert>
+    </Stack>}
         <ThemeProvider theme={theme}>
+            <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
+                <CloseIcon />
+            </Avatar>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
                 <Box
@@ -80,9 +121,7 @@ export default function AddEditModal(props) {
                         alignItems: 'center',
                     }}
                 >
-                     <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
-                        <CloseIcon/>
-                    </Avatar>
+
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <AddIcon />
                     </Avatar>
@@ -103,8 +142,9 @@ export default function AddEditModal(props) {
                                         value={category}
                                         onChange={
                                             (e) => {
-                                            setIncome({ ...income, category: e.target.value });
-                                            handleChangeCategory(e)}
+                                                setIncome({ ...income, category: e.target.value });
+                                                handleChangeCategory(e)
+                                            }
                                         }
                                     >
                                         {incomeCategory.map((category) => (
@@ -133,7 +173,8 @@ export default function AddEditModal(props) {
                                     id="description"
                                     label="Description"
                                     name="description"
-                                    onChange={e => setIncome({ ...income, description: e.target.value })}
+                                    onChange={descriptionChangeHandler}
+                                    error={!descriptionIsValid}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -143,7 +184,7 @@ export default function AddEditModal(props) {
                                     id="madeBy"
                                     label="Made by"
                                     name="madeBy"
-                                    onChange={e => setIncome({ ...income, madeBy: e.target.value })} 
+                                    onChange={e => setIncome({ ...income, madeBy: e.target.value })}
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -153,7 +194,7 @@ export default function AddEditModal(props) {
                                     id="frequency"
                                     label="Frequency"
                                     name="frequency"
-                                    onChange={e => setIncome({ ...income, frequency: e.target.value })} 
+                                    onChange={e => setIncome({ ...income, frequency: e.target.value })}
                                 />
                             </Grid>
                             <Grid item xs={12}>
@@ -184,5 +225,6 @@ export default function AddEditModal(props) {
                 </Box>
             </Container>
         </ThemeProvider>
+        </>
     );
 }
