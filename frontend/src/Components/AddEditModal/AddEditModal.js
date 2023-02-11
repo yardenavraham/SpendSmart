@@ -21,6 +21,11 @@ export default function AddEditModal(props) {
     const [category, setCategory] = useState('');
     const [dateVal, setDateValue] = useState(new Date());
 
+    //validations
+    const [amountIsValid, setAmountIsValid] = useState(true);
+    const [dateIsValid, setDateIsValid] = useState(true);
+
+
     const handleChangeCategory = (event) => {
         setCategory(event.target.value);
     };
@@ -30,6 +35,12 @@ export default function AddEditModal(props) {
         console.log('newDate ' + JSON.stringify(newDate));
         setDateValue(newDate);
         setIncome({ ...income, date: newDate });
+        if (newDate instanceof Date && !isNaN(newDate.getTime())) {
+            setDateIsValid(true);
+        }
+        else{
+            setAmountIsValid(false);
+        }
     };
 
     const handleSubmit = (event) => {
@@ -45,6 +56,17 @@ export default function AddEditModal(props) {
         console.log('income ' + JSON.stringify(income));
         props.callbackAddIncome(income);
     };
+
+    const amountChangeHandler = (event) => {
+        const enteredAmount = event.target.value;
+        setIncome({ ...income, amount: enteredAmount });
+        if (!isNaN(enteredAmount) &&  enteredAmount >= 0) {
+            setAmountIsValid(true);
+        }
+        else{
+            setAmountIsValid(false);
+        }
+    }
 
     return (
         <ThemeProvider theme={theme}>
@@ -100,7 +122,8 @@ export default function AddEditModal(props) {
                                     id="amount"
                                     label="Amount"
                                     name="amount"
-                                    onChange={e => setIncome({ ...income, amount: e.target.value })} 
+                                    onChange={amountChangeHandler}
+                                    error={!amountIsValid}
                                 />
                             </Grid>
 
