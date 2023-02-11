@@ -21,6 +21,9 @@ import {
 } from "react-router-dom";
 import AppFooter from "./Components/AppFooter/AppFooter";
 import Dashboard from "./Pages/Dashboard/Dashboard";
+import SignIn from "./Pages/SignIn/SignIn";
+import SignUp from "./Pages/SignUp/SignUp";
+import EditInformation from "./Pages/EditInformation/EditInformation";
 
 export default function App() {
 
@@ -51,6 +54,9 @@ export default function App() {
               <Route path="incomes" element={<Incomes />} />
               <Route path="expenses" element={<Expenses />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="signin" element={<SignIn/>} />
+              <Route path="signup" element={<SignUp/>} />
+              <Route path="editinformation" element={<EditInformation/>} />
             </Routes>
              </Box>
           </BrowserRouter>
