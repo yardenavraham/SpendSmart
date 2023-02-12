@@ -13,6 +13,7 @@ const DatePickerField = ({ name, value, onChange }) => {
       onChange={val => {
         onChange(name, val);
       }}
+      value={value}
       renderInput={(params) => <TextField {...params} sx={{ width:"100%" }}/>}
     />
      </LocalizationProvider>

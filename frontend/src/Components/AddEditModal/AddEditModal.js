@@ -56,6 +56,7 @@ export default function AddEditModal(props) {
     console.log('props11 ' + JSON.stringify(props));
 
     const { addOrEdit, madeBy, selectedRow } = props;
+    console.log('madeBy ' + madeBy);
     const theme = createTheme();
     const action = addOrEdit === 'add' ? 'Add Income' : 'Edit Income';
     const alertMessage = addOrEdit === 'add' ? 'The income has been added successfully' : 'The income has been updated successfully';
@@ -78,7 +79,6 @@ export default function AddEditModal(props) {
         frequency: "",
         date: ""
     };
-  
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
@@ -158,7 +158,6 @@ export default function AddEditModal(props) {
                                         handleSubmit,
                                         handleReset,
                                         setFieldValue, 
-                                        madeBy
                                         } = props;
 
                                         console.log('props ' + JSON.stringify(props));
@@ -205,7 +204,7 @@ export default function AddEditModal(props) {
                                                             <MenuItem key={name} value={name}>
                                                                 {name}
                                                             </MenuItem>
-                                                        ))} */}
+                                                        ))}  */}
                                                         </Field>
                                                     </FormControl>
                                                 </Grid>
