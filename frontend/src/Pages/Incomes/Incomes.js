@@ -62,7 +62,7 @@ const Incomes = () => {
       const getIncomes = async () => {
         console.log('getIncomes');
         const response = await axios.get("http://localhost:27017/incomes");
-        console.log('response.data ' + JSON.stringify(response.data));
+        //console.log('response.data ' + JSON.stringify(response.data));
         setInitialIncomesList(response.data);
         setIncomesList(response.data.filter(item => {
           const formattedDate = new Date(item.date);
@@ -116,6 +116,8 @@ const Incomes = () => {
 
     const editIncomeHandler = async (id, income) => {
       try {
+        console.log('id ' + id);
+        console.log('income ' + JSON.stringify(income));
         await axios.patch(`http://localhost:27017/incomes/${id}`,
          income
         );
@@ -129,7 +131,7 @@ const Incomes = () => {
     return (
       <>
         <Typography align="left" variant="h4" component="h2">
-          <IncomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)} madeBy={madeBy} getIncomes={getIncomes}/>
+          <IncomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={(id, income) => editIncomeHandler(id, income)} madeBy={madeBy} getIncomes={getIncomes}/>
         </Typography>
       </>
     );

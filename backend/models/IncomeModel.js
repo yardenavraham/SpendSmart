@@ -19,7 +19,7 @@ const Income = mongoose.Schema({
     },
     date:{
         type: Date,
-        required: true
+        required: false //true
     },
     madeBy:{
         type: String,

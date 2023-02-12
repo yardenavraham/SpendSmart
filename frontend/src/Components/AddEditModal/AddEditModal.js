@@ -27,15 +27,6 @@ const descriptionRegex = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
 const amountRegex = /^[+]?([.]\d+|\d+[.]?\d*)$/;
 const frequencyRegex = /^[a-zA-Z\s]*$/;  
 
-const initialValues = {
-    category: "",
-    amount: "",
-    description: "",
-    madeBy: "",
-    frequency: "",
-    date: ""
-};
-
 const validationSchema = Yup.object().shape({
     category: Yup.string()
         .required("Required"),
@@ -61,42 +52,31 @@ const validationSchema = Yup.object().shape({
 
 export default function AddEditModal(props) {
 
-    console.log('props.madeBy ' + props.madeBy);
+    console.log('props11 ' + JSON.stringify(props));
 
-    const  madeBy  = props.madeBy;
+    const { addOrEdit, madeBy, selectedRow } = props;
     const theme = createTheme();
-    // const [income, setIncome] = useState({ date: new Date() }); //complete!!!
-    // const [category, setCategory] = useState('');
-    // const [frequency, setFrequency] = useState('');
-    // const [madeBy, setMadeBy] = useState('');
+    const action = addOrEdit === 'add' ? 'Add Income' : 'Edit Income';
+    const alertMessage = addOrEdit === 'add' ? 'The income has been added successfully' : 'The income has been updated successfully';
 
-    // const [dateVal, setDateValue] = useState(new Date());
-
-    //validations
-    // const [amountIsValid, setAmountIsValid] = useState(false);
-    // const [amountIsTouched, setAmountIsTouched] = useState(false);
-    // const amountIsInvalid = !amountIsValid && amountIsTouched;
-
-    // const [dateIsValid, setDateIsValid] = useState(true);
-    // const [dateIsTouched, setDateIsTouched] = useState(false);
-    // const dateIsInvalid = !dateIsValid || dateVal === null;
-    // console.log('dateIsValid ' + dateIsValid);
-    // console.log('dateVal ' + dateVal);
-
-    // console.log('dateIsInvalid ' + dateIsInvalid);
-
-    // const [descriptionIsValid, setDescriptionIsValid] = useState(false);
-    // const [descriptionIsTouched, setDescriptionIsTouched] = useState(false);
-    // const descriptionIsInvalid = !descriptionIsValid && descriptionIsTouched;
-
-    // const [categoryIsTouched, setCategoryIsTouched] = useState(false);
-    // const categoryIsInvalid = category === '' && categoryIsTouched;
-
-    // const [frequencyIsTouched, setFrequencyIsTouched] = useState(false);
-    // const frequencyIsInvalid = frequency === '' && frequencyIsTouched;
-
-    // const [madeByIsTouched, setMadeByIsTouched] = useState(false);
-    // const madeByIsInvalid = madeBy === '' && madeByIsTouched;
+    const initialValues = (addOrEdit === 'edit') ? {
+        category: selectedRow.category,
+        amount: selectedRow.amount,
+        description: selectedRow.description,
+        madeBy: selectedRow.madeBy,
+        frequency: selectedRow.frequency,
+        date: selectedRow.date
+    }
+    :
+    {
+        category: "",
+        amount: "",
+        description: "",
+        madeBy: "",
+        frequency: "",
+        date: ""
+    };
+  
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
@@ -115,11 +95,7 @@ export default function AddEditModal(props) {
           clearTimeout(timeId)
         }
       }, [showSuccessAlert]);
-    
-      // If show is false the component will return null and stop here
-    //   if (!showSuccessAlert) {
-    //     return null;
-    //   }
+
 
 
 
@@ -137,54 +113,14 @@ export default function AddEditModal(props) {
     //     }
     // };
 
-    // const handleSubmit = (event) => {
-    //     event.preventDefault();
-    //     setShowSuccessAlert(true);
-    //     // const data = new FormData(event.currentTarget);
-    //     // console.log({
-    //     //     category: data.get('category'),
-    //     //     date: data.get('dateVal'),
-    //     //     amount: data.get('amount'),
-    //     //     description: data.get('description'),
-    //     //     madeBy: data.get('madeBy')
-    //     // });
-    //     console.log('income ' + JSON.stringify(income));
-    //     props.callbackAddIncome(income);
 
-    // };
 
-    // const amountChangeHandler = (event) => {
-    //     const enteredAmount = event.target.value;
-    //     setIncome({ ...income, amount: enteredAmount });
-    //     if (!isNaN(enteredAmount) &&  enteredAmount >= 0) {
-    //         setAmountIsValid(true);
-    //     }
-    //     else{
-    //         setAmountIsValid(false);
-    //     }
-    // }
-
-    // const descriptionChangeHandler = event => {
-    //     setIncome({ ...income, description: event.target.value });
-    //     if (validator.isAlphanumeric(event.target.value)) {
-    //         setDescriptionIsValid(true);
-    //     }
-    //     else{
-    //         setDescriptionIsValid(false);
-    //     }
-
-    //}
-
-    // const dateBlur = () => {
-    //     setDateIsTouched(true);
-    //     console.log('hereeee');
-    //     console.log('dateIsTouched ' + dateIsTouched);
-    // }
+  
 
     return (
         <>
     {showSuccessAlert && <Stack sx={{ width: '100%' }} spacing={2}>
-        <AlertModal open={showSuccessAlert} alertType="success" message="The income has been added successfully!"/>
+        <AlertModal open={showSuccessAlert} alertType="success" message={alertMessage}/>
     </Stack>}
         <ThemeProvider theme={theme}>
             <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
@@ -205,7 +141,7 @@ export default function AddEditModal(props) {
                         <AddIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Add income
+                    {action}
                     </Typography>
 
                     <Box sx={{ mt: 3, alignItems: "center" }} justifyContent="center">
@@ -214,7 +150,9 @@ export default function AddEditModal(props) {
                                     initialValues={initialValues}
                                     validationSchema={validationSchema}
                                     onSubmit={(values) => {
-                                        props.callbackAddIncome({date: new Date(), ...values});
+                                        console.log('values ' + JSON.stringify(values));
+                                        props.addOrEdit === 'add' ? props.callbackAddIncome({date: new Date(), ...values}) :
+                                            props.callbackEditIncome(selectedRow._id, values);
                                         setShowSuccessAlert(true);
                                     }}
                                 >

@@ -84,6 +84,10 @@ const IncomesTable = props => {
       setOpen(false);
       props.getIncomes();
     }
+
+    const [addOrEdit, setAddOrEdit] = useState('add');
+    const [selectedRow, setSelectedRow] = useState(null);
+
     const onDelete = props.onDelete;
 
     const madeByFilter = arrayToObjectPairs(props.madeBy);
@@ -123,12 +127,12 @@ const IncomesTable = props => {
             icon: tableIcons.Add,
             tooltip: "Add an Income",
             isFreeAction: true, //Independent actions that will not on row' actions section
-            onClick: () => {setOpen(true)}
+            onClick: () => {setOpen(true); setAddOrEdit('add')}
           },
           rowData => ({
             icon: tableIcons.Edit,
             tooltip: 'Edit an Income',
-            onClick: () => {setOpen(true)}
+            onClick: () => {setOpen(true); setAddOrEdit('edit'); setSelectedRow(rowData)}
           }),
           rowData => ({
             icon: tableIcons.Delete,
@@ -256,7 +260,7 @@ const IncomesTable = props => {
           aria-describedby="modal-modal-description"
       >
           <Box sx={style}>
-              <AddEditModal callbackAddIncome = {income => props.onAdd(income)} handleClose={handleClose} madeBy={madeBy}/>
+              <AddEditModal callbackAddIncome = {income => props.onAdd(income)} callbackEditIncome = {(id, income) => props.onEdit(id, income)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow}/>
           </Box>
       </Modal>
     </>
