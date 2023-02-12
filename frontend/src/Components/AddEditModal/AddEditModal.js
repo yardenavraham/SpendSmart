@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { MenuItem, Card, Button, Box, Stack, Container, Avatar, CssBaseline, InputLabel, FormControl, Alert, AlertTitle } from '@mui/material';
 import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import { incomeCategory } from '../../Consts';
 
@@ -58,6 +59,7 @@ export default function AddEditModal(props) {
     const theme = createTheme();
     const action = addOrEdit === 'add' ? 'Add Income' : 'Edit Income';
     const alertMessage = addOrEdit === 'add' ? 'The income has been added successfully' : 'The income has been updated successfully';
+    const addOrEditIcon = addOrEdit === 'add' ? <AddIcon /> : <EditIcon />;
 
     const initialValues = (addOrEdit === 'edit') ? {
         category: selectedRow.category,
@@ -80,24 +82,16 @@ export default function AddEditModal(props) {
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
-    // let formIsValid = false;
-    // if (!amountIsInvalid && !dateIsInvalid && !descriptionIsInvalid && !categoryIsInvalid && !frequencyIsInvalid && !madeByIsInvalid) {
-    //     formIsValid = true;
-    // }
-
     useEffect(() => {
         const timeId = setTimeout(() => {
           // After 3 seconds set the show value to false
           setShowSuccessAlert(false)
-        }, 3000)
+        }, 2000)
     
         return () => {
           clearTimeout(timeId)
         }
       }, [showSuccessAlert]);
-
-
-
 
     // const handleChangeDate = (newDate) => {
     //     console.log('handleChangeDate');
@@ -112,10 +106,6 @@ export default function AddEditModal(props) {
     //         setDateIsValid(false);
     //     }
     // };
-
-
-
-  
 
     return (
         <>
@@ -138,7 +128,7 @@ export default function AddEditModal(props) {
                 >
 
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                        <AddIcon />
+                        {addOrEditIcon}
                     </Avatar>
                     <Typography component="h1" variant="h5">
                     {action}
@@ -249,14 +239,6 @@ export default function AddEditModal(props) {
                                         </Form>
                                     )}}
                                 </Formik>
-                            </Grid>
-
-                            <Grid container justifyContent="flex-end">
-                                <Grid item>
-                                    {/* <Link href="/signin" variant="body2">
-                                        Already have an account? Sign in
-                                    </Link> */}
-                                </Grid>
                             </Grid>
                         </Box>
 
