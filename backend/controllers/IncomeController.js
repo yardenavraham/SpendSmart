@@ -34,6 +34,8 @@ export const saveIncome = async (req, res) => {
  
 export const updateIncome = async (req, res) => {
     try {
+        console.log('here update income ' + JSON.stringify(req.body));
+
         const updatedincome = await Income.updateOne({_id:req.params.id}, {$set: req.body});
         res.status(200).json(updatedincome);
     } catch (error) {

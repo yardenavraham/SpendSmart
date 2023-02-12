@@ -55,31 +55,21 @@ const Incomes = () => {
     const [incomesList, setIncomesList] = useState([]);
 
   
-      useEffect(() => {
+    useEffect(() => {
         getIncomes();
-      }, []);
+    }, []);
      
-      const getIncomes = async () => {
+    const getIncomes = async () => {
         console.log('getIncomes');
         const response = await axios.get("http://localhost:27017/incomes");
-        console.log('response.data ' + JSON.stringify(response.data));
+        //console.log('response.data ' + JSON.stringify(response.data));
         setInitialIncomesList(response.data);
         setIncomesList(response.data.filter(item => {
           const formattedDate = new Date(item.date);
-          return `${formattedDate.getMonth()+1}/${formattedDate.getFullYear()}` === newDateValFormatted}));
+          return `${formattedDate.getMonth()+1}/${formattedDate.getFullYear()}` === newDateValFormatted})
+          .sort((a, b) => new Date(a.date) - new Date(b.date)));
 
-      };
-
-
-    //const [incomesList, setIncomesList] = useState(initialIncomesList.filter(item => 
-     // `${item.date.getMonth()+1}/${item.date.getFullYear()}` === newDateValFormatted));
-  
-    // const deleteHandler = (id, amount) => {
-    //   console.log("deleteHandler app");
-    //   console.log("id", id);
-    //   console.log("amount", amount);
-    //   setIncomesList(incomesList.filter(item => item.id !== id)); //filter returns new array
-    // }
+    };
 
     const deleteHandler = async (id) => {
       try {
@@ -90,17 +80,7 @@ const Incomes = () => {
         console.log(error);
       }
     };
-  
-    // const addIncomeHandler = (newIncome) => {
-    //   console.log("success add");
-    //   setIncomesList((prevItems) => {
-    //     //we have to update according the last snapshot
-    //     return [newIncome, ...prevItems]; //spread all the tems in the array
-    //   });
-  
-  
-    //   console.log("incomesList after " + JSON.stringify(incomesList));
-    // };
+
 
     const addIncomeHandler = async (newIncome) => {
       try {
@@ -116,6 +96,8 @@ const Incomes = () => {
 
     const editIncomeHandler = async (id, income) => {
       try {
+        console.log('id ' + id);
+        console.log('income ' + JSON.stringify(income));
         await axios.patch(`http://localhost:27017/incomes/${id}`,
          income
         );
@@ -129,7 +111,7 @@ const Incomes = () => {
     return (
       <>
         <Typography align="left" variant="h4" component="h2">
-          <IncomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={income => addIncomeHandler(income)} madeBy={madeBy} getIncomes={getIncomes}/>
+          <IncomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={(id, income) => editIncomeHandler(id, income)} madeBy={madeBy} getIncomes={getIncomes}/>
         </Typography>
       </>
     );

@@ -74,15 +74,19 @@ const arrayToObjectPairs = (arr) => {
 }
 
 const IncomesTable = props => {
-  console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
+    //console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-    props.getIncomes();
-  }
-  const onDelete = props.onDelete;
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+      setOpen(false);
+      props.getIncomes();
+    }
+
+    const [addOrEdit, setAddOrEdit] = useState('add');
+    const [selectedRow, setSelectedRow] = useState(null);
+
+    const onDelete = props.onDelete;
 
   const madeByFilter = arrayToObjectPairs(props.madeBy);
   const incomeCategoryFilter = arrayToObjectPairs(incomeCategory);
@@ -107,6 +111,9 @@ const IncomesTable = props => {
   }
 
   const tableRef = useRef();
+
+    console.log('madeBy ' + props.madeBy);
+    const { madeBy } = props;
 
   return (
     <>
@@ -136,13 +143,13 @@ const IncomesTable = props => {
             icon: tableIcons.Add,
             tooltip: "Add an Income",
             isFreeAction: true, //Independent actions that will not on row' actions section
-            onClick: () => { setOpen(true) }
+            onClick: () => {setOpen(true); setAddOrEdit('add')}
           },
 
           rowData => ({
             icon: tableIcons.Edit,
             tooltip: 'Edit an Income',
-            onClick: () => { setOpen(true) }
+            onClick: () => {setOpen(true); setAddOrEdit('edit'); setSelectedRow(rowData)}
           }),
           rowData => ({
             icon: tableIcons.Delete,
@@ -159,67 +166,67 @@ const IncomesTable = props => {
           {
             title: "Description", field: "description", filtering: true,
             cellStyle: {
-              backgroundColor: '#039be5',
-              color: '#FFF',
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
               fontSize: '16px'
             },
             headerStyle: {
-              backgroundColor: '#039be5',
+              backgroundColor: '#FFFFFF',
             }
           },
           {
             title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter,
             cellStyle: {
-              backgroundColor: '#039be5',
-              color: '#FFF',
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
               fontSize: '16px'
             },
             headerStyle: {
-              backgroundColor: '#039be5',
+              backgroundColor: '#FFFFFF',
             }
           },
           {
             title: "Amount", field: "amount", filtering: true,
             cellStyle: {
-              backgroundColor: '#039be5',
-              color: '#FFF',
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
               fontSize: '16px'
             },
             headerStyle: {
-              backgroundColor: '#039be5',
-            }
+              backgroundColor: '#FFFFFF',
+            }  
           },
           {
             title: "Frequency", field: "frequency", filtering: true,
             cellStyle: {
-              backgroundColor: '#039be5',
-              color: '#FFF',
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
               fontSize: '16px'
             },
             headerStyle: {
-              backgroundColor: '#039be5',
-            }
+              backgroundColor: '#FFFFFF',
+            } 
           },
           {
             title: "Date", field: "date", type: "date", filtering: true,
             cellStyle: {
-              backgroundColor: '#039be5',
-              color: '#FFF',
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
               fontSize: '16px'
             },
             headerStyle: {
-              backgroundColor: '#039be5',
-            }
+              backgroundColor: '#FFFFFF',
+            } 
           },
           {
             title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter,
             cellStyle: {
-              backgroundColor: '#039be5',
-              color: '#FFF',
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
               fontSize: '16px'
             },
             headerStyle: {
-              backgroundColor: '#039be5',
+              backgroundColor: '#FFFFFF',
             }
           }
         ]}
@@ -253,9 +260,9 @@ const IncomesTable = props => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
-          <AddEditModal callbackAddIncome={income => props.onAdd(income)} handleClose={handleClose} />
-        </Box>
+          <Box sx={style}>
+              <AddEditModal callbackAddIncome = {income => props.onAdd(income)} callbackEditIncome = {(id, income) => props.onEdit(id, income)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow}/>
+          </Box>
       </Modal>
     </>
   );
