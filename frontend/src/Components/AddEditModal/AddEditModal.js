@@ -3,61 +3,107 @@ import { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { MenuItem, Select, TextField, Card, Button, Box, Stack, Container, Avatar, CssBaseline, InputLabel, FormControl, Alert, AlertTitle } from '@mui/material';
+import { MenuItem, Card, Button, Box, Stack, Container, Avatar, CssBaseline, InputLabel, FormControl, Alert, AlertTitle } from '@mui/material';
 import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { incomeCategory } from '../../Consts';
 
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
-import { NestCamWiredStandTwoTone } from '@mui/icons-material';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import validator from 'validator';
 import AlertModal from '../Alerts/AlertModal';
 
+import { Form, Formik, Field, FieldArray } from "formik";
+import { TextField, Select } from "formik-mui";
+import * as Yup from "yup";
+// import { DatePicker } from '@mui/x-date-pickers';
+import AdapterDateFns from "@mui/lab/AdapterDateFns";
+
+import DatePickerField from '../DatePickerField/DatePickerField';
+
+const descriptionRegex = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
+const amountRegex = /^[+]?([.]\d+|\d+[.]?\d*)$/;
+const frequencyRegex = /^[a-zA-Z\s]*$/;  
+
+const initialValues = {
+    category: "",
+    amount: "",
+    description: "",
+    madeBy: "",
+    frequency: "",
+    date: ""
+};
+
+const validationSchema = Yup.object().shape({
+    category: Yup.string()
+        .required("Required"),
+    description: Yup.string()
+        .matches(descriptionRegex, "Only English letters and numbers")
+        .min(2, "description is too short")
+        .max(50, "description is too long")
+        .required("Required"),
+    amount: Yup.string()
+        .matches(amountRegex, "Only positive numbers")
+        .min(2, "First Name is too short")
+        .max(50, "First Name is too long")
+        .required("Required"),
+    frequency: Yup.string()
+        .matches(frequencyRegex, "Only English letters")
+        .min(2, "Last Name is too short")
+        .max(50, "Last Name is too long"),
+    madeBy: Yup.string(),
+        // .required("Required"),
+    date: Yup.date()
+        .required("Required"),
+});
+
 export default function AddEditModal(props) {
 
-    const theme = createTheme();
-    const [income, setIncome] = useState({ date: new Date() }); //complete!!!
-    const [category, setCategory] = useState('');
-    const [frequency, setFrequency] = useState('');
-    const [madeBy, setMadeBy] = useState('');
+    console.log('props.madeBy ' + props.madeBy);
 
-    const [dateVal, setDateValue] = useState(new Date());
+    const  madeBy  = props.madeBy;
+    const theme = createTheme();
+    // const [income, setIncome] = useState({ date: new Date() }); //complete!!!
+    // const [category, setCategory] = useState('');
+    // const [frequency, setFrequency] = useState('');
+    // const [madeBy, setMadeBy] = useState('');
+
+    // const [dateVal, setDateValue] = useState(new Date());
 
     //validations
-    const [amountIsValid, setAmountIsValid] = useState(false);
-    const [amountIsTouched, setAmountIsTouched] = useState(false);
-    const amountIsInvalid = !amountIsValid && amountIsTouched;
+    // const [amountIsValid, setAmountIsValid] = useState(false);
+    // const [amountIsTouched, setAmountIsTouched] = useState(false);
+    // const amountIsInvalid = !amountIsValid && amountIsTouched;
 
-    const [dateIsValid, setDateIsValid] = useState(true);
-    const [dateIsTouched, setDateIsTouched] = useState(false);
-    const dateIsInvalid = !dateIsValid || dateVal === null;
-    console.log('dateIsValid ' + dateIsValid);
-    console.log('dateVal ' + dateVal);
+    // const [dateIsValid, setDateIsValid] = useState(true);
+    // const [dateIsTouched, setDateIsTouched] = useState(false);
+    // const dateIsInvalid = !dateIsValid || dateVal === null;
+    // console.log('dateIsValid ' + dateIsValid);
+    // console.log('dateVal ' + dateVal);
 
-    console.log('dateIsInvalid ' + dateIsInvalid);
+    // console.log('dateIsInvalid ' + dateIsInvalid);
 
-    const [descriptionIsValid, setDescriptionIsValid] = useState(false);
-    const [descriptionIsTouched, setDescriptionIsTouched] = useState(false);
-    const descriptionIsInvalid = !descriptionIsValid && descriptionIsTouched;
+    // const [descriptionIsValid, setDescriptionIsValid] = useState(false);
+    // const [descriptionIsTouched, setDescriptionIsTouched] = useState(false);
+    // const descriptionIsInvalid = !descriptionIsValid && descriptionIsTouched;
 
-    const [categoryIsTouched, setCategoryIsTouched] = useState(false);
-    const categoryIsInvalid = category === '' && categoryIsTouched;
+    // const [categoryIsTouched, setCategoryIsTouched] = useState(false);
+    // const categoryIsInvalid = category === '' && categoryIsTouched;
 
-    const [frequencyIsTouched, setFrequencyIsTouched] = useState(false);
-    const frequencyIsInvalid = frequency === '' && frequencyIsTouched;
+    // const [frequencyIsTouched, setFrequencyIsTouched] = useState(false);
+    // const frequencyIsInvalid = frequency === '' && frequencyIsTouched;
 
-    const [madeByIsTouched, setMadeByIsTouched] = useState(false);
-    const madeByIsInvalid = madeBy === '' && madeByIsTouched;
+    // const [madeByIsTouched, setMadeByIsTouched] = useState(false);
+    // const madeByIsInvalid = madeBy === '' && madeByIsTouched;
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
-    let formIsValid = false;
-    if (!amountIsInvalid && !dateIsInvalid && !descriptionIsInvalid && !categoryIsInvalid && !frequencyIsInvalid && !madeByIsInvalid) {
-        formIsValid = true;
-    }
+    // let formIsValid = false;
+    // if (!amountIsInvalid && !dateIsInvalid && !descriptionIsInvalid && !categoryIsInvalid && !frequencyIsInvalid && !madeByIsInvalid) {
+    //     formIsValid = true;
+    // }
 
     useEffect(() => {
         const timeId = setTimeout(() => {
@@ -77,63 +123,63 @@ export default function AddEditModal(props) {
 
 
 
-    const handleChangeDate = (newDate) => {
-        console.log('handleChangeDate');
-        console.log('newDate ' + JSON.stringify(newDate));
-        setDateValue(newDate);
-        setIncome({ ...income, date: newDate });
-        console.log('validator ' + validator.isDate(newDate));
-        if (validator.isDate(newDate)) {
-            setDateIsValid(true);
-        }
-        else{
-            setDateIsValid(false);
-        }
-    };
+    // const handleChangeDate = (newDate) => {
+    //     console.log('handleChangeDate');
+    //     console.log('newDate ' + JSON.stringify(newDate));
+    //     setDateValue(newDate);
+    //     setIncome({ ...income, date: newDate });
+    //     console.log('validator ' + validator.isDate(newDate));
+    //     if (validator.isDate(newDate)) {
+    //         setDateIsValid(true);
+    //     }
+    //     else{
+    //         setDateIsValid(false);
+    //     }
+    // };
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        setShowSuccessAlert(true);
-        // const data = new FormData(event.currentTarget);
-        // console.log({
-        //     category: data.get('category'),
-        //     date: data.get('dateVal'),
-        //     amount: data.get('amount'),
-        //     description: data.get('description'),
-        //     madeBy: data.get('madeBy')
-        // });
-        console.log('income ' + JSON.stringify(income));
-        props.callbackAddIncome(income);
+    // const handleSubmit = (event) => {
+    //     event.preventDefault();
+    //     setShowSuccessAlert(true);
+    //     // const data = new FormData(event.currentTarget);
+    //     // console.log({
+    //     //     category: data.get('category'),
+    //     //     date: data.get('dateVal'),
+    //     //     amount: data.get('amount'),
+    //     //     description: data.get('description'),
+    //     //     madeBy: data.get('madeBy')
+    //     // });
+    //     console.log('income ' + JSON.stringify(income));
+    //     props.callbackAddIncome(income);
 
-    };
+    // };
 
-    const amountChangeHandler = (event) => {
-        const enteredAmount = event.target.value;
-        setIncome({ ...income, amount: enteredAmount });
-        if (!isNaN(enteredAmount) &&  enteredAmount >= 0) {
-            setAmountIsValid(true);
-        }
-        else{
-            setAmountIsValid(false);
-        }
-    }
+    // const amountChangeHandler = (event) => {
+    //     const enteredAmount = event.target.value;
+    //     setIncome({ ...income, amount: enteredAmount });
+    //     if (!isNaN(enteredAmount) &&  enteredAmount >= 0) {
+    //         setAmountIsValid(true);
+    //     }
+    //     else{
+    //         setAmountIsValid(false);
+    //     }
+    // }
 
-    const descriptionChangeHandler = event => {
-        setIncome({ ...income, description: event.target.value });
-        if (validator.isAlphanumeric(event.target.value)) {
-            setDescriptionIsValid(true);
-        }
-        else{
-            setDescriptionIsValid(false);
-        }
+    // const descriptionChangeHandler = event => {
+    //     setIncome({ ...income, description: event.target.value });
+    //     if (validator.isAlphanumeric(event.target.value)) {
+    //         setDescriptionIsValid(true);
+    //     }
+    //     else{
+    //         setDescriptionIsValid(false);
+    //     }
 
-    }
+    //}
 
-    const dateBlur = () => {
-        setDateIsTouched(true);
-        console.log('hereeee');
-        console.log('dateIsTouched ' + dateIsTouched);
-    }
+    // const dateBlur = () => {
+    //     setDateIsTouched(true);
+    //     console.log('hereeee');
+    //     console.log('dateIsTouched ' + dateIsTouched);
+    // }
 
     return (
         <>
@@ -161,8 +207,128 @@ export default function AddEditModal(props) {
                     <Typography component="h1" variant="h5">
                         Add income
                     </Typography>
-                    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+
+                    <Box sx={{ mt: 3, alignItems: "center" }} justifyContent="center">
+                            <Grid container sx={{ alignItems: "center" }} >
+                                <Formik
+                                    initialValues={initialValues}
+                                    validationSchema={validationSchema}
+                                    onSubmit={(values) => {
+                                        props.callbackAddIncome({date: new Date(), ...values});
+                                        setShowSuccessAlert(true);
+                                    }}
+                                >
+                                      {props => {
+                                        const {
+                                        values,
+                                        touched,
+                                        errors,
+                                        dirty,
+                                        isSubmitting,
+                                        handleChange,
+                                        handleBlur,
+                                        handleSubmit,
+                                        handleReset,
+                                        setFieldValue, 
+                                        madeBy
+                                        } = props;
+
+                                        console.log('props ' + JSON.stringify(props));
+                                        return (
+                                        <Form sx={{ alignItems: "center" }} >
+                                            <Grid container spacing={2} justifyContent="center" >
+                                                <Grid item xs={12} sm={12}>
+                                                <FormControl fullWidth>
+                                                    <Field
+                                                        component={Select}
+                                                        name="category"
+                                                        label="Category">
+                                                        {incomeCategory.map((category) => (
+                                                            <MenuItem key={category} value={category}>
+                                                                {category}
+                                                            </MenuItem>
+                                                        ))}
+                                                 </Field>
+                                                 </FormControl>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <Field
+                                                    fullWidth
+                                                        component={TextField}
+                                                        name="description"
+                                                        label="Description"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
+                                                    <Field
+                                                        component={TextField}
+                                                        name="amount"
+                                                        label="Amount"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12} sm={6}>
+                                                <FormControl fullWidth>
+                                                    <Field
+                                                        fullWidth
+                                                        component={Select}
+                                                        name="madeBy"
+                                                        label="Made By">
+                                                             {/* {madeyBy.map((name) => (
+                                                            <MenuItem key={name} value={name}>
+                                                                {name}
+                                                            </MenuItem>
+                                                        ))} */}
+                                                        </Field>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <Field
+                                                        fullWidth
+                                                        component={TextField}
+                                                        name="frequency"
+                                                        label="Frequency"
+                                                    />
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                <DatePickerField
+                                                    name="date"
+                                                    value={values.date}
+                                                    onChange={setFieldValue}
+                                                    />
+                                                </Grid>
+                                               
+                                                <Grid container item xs={12}>
+                                                    <Button
+                                                        type="submit"
+                                                        fullWidth
+                                                        variant="contained"
+                                                        sx={{ mt: 3, mb: 2 }}
+                                                    >
+                                                        Save
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                        </Form>
+                                    )}}
+                                </Formik>
+                            </Grid>
+
+                            <Grid container justifyContent="flex-end">
+                                <Grid item>
+                                    {/* <Link href="/signin" variant="body2">
+                                        Already have an account? Sign in
+                                    </Link> */}
+                                </Grid>
+                            </Grid>
+                        </Box>
+
+
+
+                    {/* <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
                         <Grid container spacing={2}>
+
+
+                            
                             <Grid item xs={12} sm={6}>
                                 <FormControl fullWidth>
                                     <InputLabel required id="categoryLable">Category</InputLabel>
@@ -176,7 +342,8 @@ export default function AddEditModal(props) {
                                         onChange={
                                             (e) => {
                                                 setIncome({ ...income, category: e.target.value });
-                                                setCategory(e.target.value);
+                                                //setCategory(e.target.value);
+                                                
                                             }
                                         }
                                         error={categoryIsInvalid}
@@ -273,6 +440,8 @@ export default function AddEditModal(props) {
                             </Grid>
 
                         </Grid>
+
+
                         <Button
                             disabled={!formIsValid}
                             type="submit"
@@ -282,7 +451,7 @@ export default function AddEditModal(props) {
                         >
                             Save
                         </Button>
-                    </Box>
+                    </Box> */}
                 </Box>
             </Container>
         </ThemeProvider>

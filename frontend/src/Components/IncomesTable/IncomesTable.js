@@ -76,7 +76,7 @@ const arrayToObjectPairs = (arr) => {
 }
 
 const IncomesTable = props => {
-    console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
+    //console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -109,6 +109,9 @@ const IncomesTable = props => {
     }
 
     const tableRef = useRef();
+
+    console.log('madeBy ' + props.madeBy);
+    const { madeBy } = props;
 
   return (
     <>
@@ -253,7 +256,7 @@ const IncomesTable = props => {
           aria-describedby="modal-modal-description"
       >
           <Box sx={style}>
-              <AddEditModal callbackAddIncome = {income => props.onAdd(income)} handleClose={handleClose}/>
+              <AddEditModal callbackAddIncome = {income => props.onAdd(income)} handleClose={handleClose} madeBy={madeBy}/>
           </Box>
       </Modal>
     </>
