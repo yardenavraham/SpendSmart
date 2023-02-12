@@ -80,6 +80,7 @@ export default function SignUp() {
         <ThemeProvider theme={theme}>
             <div className="back" style={{ height: '100%', position: 'sticky', left: '0px', width: '100%', }}>
                 <Container
+                
                     component="main"
                     maxWidth="xs"
                     alignItems="center"
@@ -90,7 +91,7 @@ export default function SignUp() {
                     <Box
                         sx={{
 
-                            paddingTop: 5,
+                            paddingTop: 2,
                             display: "flex",
                             flexDirection: "column",
                             alignItems: "center",
@@ -208,7 +209,7 @@ export default function SignUp() {
                                                                             type="email"
                                                                         />
                                                                     </Grid>
-                                                                    <Grid item xs={12} sm={3}>
+                                                                    <Grid container item xs={12} sm={3} justifyContent="flex-end" >
                                                                         <Button
                                                                             variant="outlined"
                                                                             color="error"

@@ -9,7 +9,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import { useState } from "react";
 
 
@@ -31,18 +32,10 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-
-function isValidEmail(email) {
-    return !/\S+@\S+\.\S+/.test(email);
-}
-
 function isEqualPassword(ps1, ps2) {
     return ps1 === ps2;
 }
 
-function isValidName(name) {
-    return !/^[A-Za-z]+$/.test(name);
-}
 
 const fieldNames = {
     OLDPASSWORD: 'OldPassword',
@@ -52,12 +45,6 @@ const fieldNames = {
 
 function validate(value, fieldName, formValues = {}) {
     switch (fieldName) {
-        case fieldNames.FIRST_NAME:
-            return isValidName(value);
-        case fieldNames.LAST_NAME:
-            return isValidName(value);
-        case fieldNames.EMAIL:
-            return isValidEmail(value);
         case fieldNames.PASSWORD2:
             return !isEqualPassword(value, formValues[fieldNames.PASSWORD].value)
         default:
@@ -78,14 +65,6 @@ export default function EditInformation() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
 
-        /// this need to be changed... 
-        if (!isValidName(data.get(fieldNames.FIRST_NAME))) {
-            console.log("first name contained numeric")
-        }
-
-        if (!isValidName(data.get(fieldNames.LAST_NAME))) {
-            console.log("last name contained numeric")
-        }
 
         if (!isEqualPassword(data.get(fieldNames.PASSWORD), data.get(fieldNames.PASSWORD2))) {
             console.log("password not alike")
@@ -196,6 +175,27 @@ export default function EditInformation() {
                                     sx={{ mt: 3, mb: 2, justifyContent: "center" }}>
                                     Change PASSWORD
                                 </Button>
+                            </Grid>
+                            <Typography component="h1" variant="h6" align='center' sx={{ mt: 6, justifyContent: "center" }}>
+                                Edit shared account
+                            </Typography>
+                            <Grid container >
+                                <Grid item xs={12} sm={6} >
+                                    <FormControlLabel
+                                        control={<Checkbox value="remember" color="primary" />}
+                                        label="yaararm@gmail.com" sx={{ mt: 1 }}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6} >
+                                    <Button
+                                        type="submit"
+                                        color="error"
+                                        //variant="contained" 
+                                        variant="outlined"
+                                        sx={{mt:1}}                                       >
+                                        delete
+                                    </Button>
+                                </Grid>
                             </Grid>
                         </Box>
                     </Box>
