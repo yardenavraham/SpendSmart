@@ -1,8 +1,6 @@
 import dayjs from "dayjs";
-import MaterialTable, { MTableToolbar, MTableBody } from "material-table";
+import MaterialTable, { MTableBody } from "material-table";
 import { forwardRef, useState, useRef } from "react";
-import { TableCell, TableFooter, TableRow } from "@mui/material";
-
 import AddBox from "@mui/icons-material/AddBox";
 import ArrowDownward from "@mui/icons-material/ArrowDownward";
 import Check from "@mui/icons-material/Check";
@@ -54,15 +52,15 @@ const tableIcons = {
 };
 
 const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 600,
-    bgcolor: 'background.paper',
-    borderRadius: '20px',
-    boxShadow: 24,
-    p: 4,
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 600,
+  bgcolor: 'background.paper',
+  borderRadius: '20px',
+  boxShadow: 24,
+  p: 4,
 };
 
 const arrayToObjectPairs = (arr) => {
@@ -76,39 +74,39 @@ const arrayToObjectPairs = (arr) => {
 }
 
 const IncomesTable = props => {
-    console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
+  console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
 
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => {
-      setOpen(false);
-      props.getIncomes();
-    }
-    const onDelete = props.onDelete;
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    props.getIncomes();
+  }
+  const onDelete = props.onDelete;
 
-    const madeByFilter = arrayToObjectPairs(props.madeBy);
-    const incomeCategoryFilter = arrayToObjectPairs(incomeCategory);
+  const madeByFilter = arrayToObjectPairs(props.madeBy);
+  const incomeCategoryFilter = arrayToObjectPairs(incomeCategory);
 
-    const now = new Date();
-    const firstDayOfCurrMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    const [datePickerValue, setDatePickerValue] = useState(dayjs(firstDayOfCurrMonth));
+  const now = new Date();
+  const firstDayOfCurrMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+  const [datePickerValue, setDatePickerValue] = useState(dayjs(firstDayOfCurrMonth));
 
-    const handleDatePickerChanged = (newDate) => {
-      console.log('newDate ' + newDate);
-      const newDateVal = new Date(newDate);
-      const newDateValFormatted = `${newDateVal.getMonth()+1}/${newDateVal.getFullYear()}`;
+  const handleDatePickerChanged = (newDate) => {
+    console.log('newDate ' + newDate);
+    const newDateVal = new Date(newDate);
+    const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
 
-      console.log('newDateValFormatted ' + newDateValFormatted);
-      setDatePickerValue(newDate);
+    console.log('newDateValFormatted ' + newDateValFormatted);
+    setDatePickerValue(newDate);
 
-      props.setIncomesList(props.initialIncomesList.filter(item => {
-        const formattedDate = new Date(item.date);
-        console.log('item ', `${parseInt(formattedDate.getMonth())+1}/${formattedDate.getFullYear()}`);
-        return `${parseInt(formattedDate.getMonth())+1}/${formattedDate.getFullYear()}` === newDateValFormatted;
-      }));
-    }
+    props.setIncomesList(props.initialIncomesList.filter(item => {
+      const formattedDate = new Date(item.date);
+      console.log('item ', `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}`);
+      return `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}` === newDateValFormatted;
+    }));
+  }
 
-    const tableRef = useRef();
+  const tableRef = useRef();
 
   return (
     <>
@@ -117,20 +115,39 @@ const IncomesTable = props => {
         icons={tableIcons}
         actions={[
           {
+            icon: props => (
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+              >
+                <DatePicker
+                  views={['month', 'year']}
+                  label="Month and Year"
+                  minDate={dayjs('2000-03-01')}
+                  maxDate={dayjs(new Date())}
+                  value={datePickerValue}
+                  onChange={handleDatePickerChanged}
+                  renderInput={(params) => <TextField {...params} helperText={null} />}
+                />
+              </LocalizationProvider>
+            ),
+            isFreeAction: true  //Independent actions that will not on row' actions section
+          },
+          {
             icon: tableIcons.Add,
             tooltip: "Add an Income",
             isFreeAction: true, //Independent actions that will not on row' actions section
-            onClick: () => {setOpen(true)}
+            onClick: () => { setOpen(true) }
           },
+
           rowData => ({
             icon: tableIcons.Edit,
             tooltip: 'Edit an Income',
-            onClick: () => {setOpen(true)}
+            onClick: () => { setOpen(true) }
           }),
           rowData => ({
             icon: tableIcons.Delete,
             tooltip: 'Delete an Income',
-            onClick: (event, rowData) => {console.log('rowData ' + JSON.stringify(rowData));onDelete(rowData._id)}
+            onClick: (event, rowData) => { console.log('rowData ' + JSON.stringify(rowData)); onDelete(rowData._id) }
           })
         ]}
         options={{
@@ -139,62 +156,68 @@ const IncomesTable = props => {
         }}
         columns={[
           { title: "_id", field: "_id", hidden: true },
-          { title: "Description", field: "description", filtering: true, 
+          {
+            title: "Description", field: "description", filtering: true,
             cellStyle: {
               backgroundColor: '#039be5',
               color: '#FFF',
               fontSize: '16px'
-            }, 
+            },
             headerStyle: {
               backgroundColor: '#039be5',
             }
           },
-          { title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter,
+          {
+            title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter,
             cellStyle: {
               backgroundColor: '#039be5',
               color: '#FFF',
               fontSize: '16px'
-            }, 
+            },
             headerStyle: {
               backgroundColor: '#039be5',
             }
           },
-          { title: "Amount", field: "amount", filtering: true,
+          {
+            title: "Amount", field: "amount", filtering: true,
             cellStyle: {
               backgroundColor: '#039be5',
               color: '#FFF',
               fontSize: '16px'
-            }, 
+            },
             headerStyle: {
               backgroundColor: '#039be5',
-            }  
+            }
           },
-          { title: "Frequency", field: "frequency", filtering: true,
+          {
+            title: "Frequency", field: "frequency", filtering: true,
             cellStyle: {
               backgroundColor: '#039be5',
               color: '#FFF',
               fontSize: '16px'
-            }, 
+            },
             headerStyle: {
               backgroundColor: '#039be5',
-            } 
+            }
           },
-          { title: "Date", field: "date",  type: "date", filtering: true,
+          {
+            title: "Date", field: "date", type: "date", filtering: true,
             cellStyle: {
               backgroundColor: '#039be5',
               color: '#FFF',
               fontSize: '16px'
-            }, 
+            },
             headerStyle: {
               backgroundColor: '#039be5',
-            } 
+            }
           },
-          { title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter,
+          {
+            title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter,
             cellStyle: {
               backgroundColor: '#039be5',
               color: '#FFF',
               fontSize: '16px'
-            }, 
+            },
             headerStyle: {
               backgroundColor: '#039be5',
             }
@@ -209,52 +232,30 @@ const IncomesTable = props => {
           date: income.date, //{`${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`}
           madeBy: income.madeBy
         }))}
-        tableRef={tableRef}        
+        tableRef={tableRef}
         components={{
           Body: (props) => (
             <>
               <MTableBody {...props} />
               <tfoot className="incomes-material_table_total">
-                 <tr>
-                   <td>TOTAL</td>
-                   <td>{tableRef.current && tableRef.current.state.data.reduce((accumulator,currentValue) =>  accumulator = accumulator + currentValue.amount, 0 )}</td>
-                 </tr>
+                <tr>
+                  <td>TOTAL</td>
+                  <td>{tableRef.current && tableRef.current.state.data.reduce((accumulator, currentValue) => accumulator = accumulator + currentValue.amount, 0)}</td>
+                </tr>
               </tfoot>
             </>
-          ),
-          Toolbar: (props) => (
-            <div style={{ backgroundColor: "#e8eaf5" }}>
-              <MTableToolbar {...props} />
-              <TableFooter className="incomes-total" >
-                  <TableRow>
-                  <LocalizationProvider
-                    dateAdapter={AdapterDayjs}
-                  >
-                        <DatePicker
-                          views={['month', 'year']}
-                          label="Month and Year"
-                          minDate={dayjs('2000-03-01')}
-                          maxDate={dayjs(new Date())}
-                          value={datePickerValue}
-                          onChange={handleDatePickerChanged}
-                          renderInput={(params) => <TextField {...params} helperText={null} />}
-                        />
-                  </LocalizationProvider>
-                  </TableRow>
-                </TableFooter>
-            </div>
           )
         }}
       />
       <Modal
-          open={open}
-          onClose={handleClose}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
       >
-          <Box sx={style}>
-              <AddEditModal callbackAddIncome = {income => props.onAdd(income)} handleClose={handleClose}/>
-          </Box>
+        <Box sx={style}>
+          <AddEditModal callbackAddIncome={income => props.onAdd(income)} handleClose={handleClose} />
+        </Box>
       </Modal>
     </>
   );
