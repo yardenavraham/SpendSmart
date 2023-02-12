@@ -38,23 +38,23 @@ const nameRegex = /^[A-Za-z]+$/;
 const validationSchema = Yup.object().shape({
   account: Yup.string()
     .matches(nameRegex, "Only English letters")
-    .min(2, "Account Name is too short")
-    .max(50, "Account Name is too long")
+    .min(2, "Minimum 2 characters")
+    .max(50, "Maximum 50 characters")
     .required("Required"),
   firstName: Yup.string()
     .matches(nameRegex, "Only English letters")
-    .min(2, "First Name is too short")
-    .max(50, "First Name is too long")
+    .min(2, "Minimum 2 characters")
+    .max(50, "Maximum 50 characters")
     .required("Required"),
   lastName: Yup.string()
     .matches(nameRegex, "Only English letters")
-    .min(2, "Last Name is too short")
-    .max(50, "Last Name is too long")
+    .min(2, "Minimum 2 characters")
+    .max(50, "Maximum 50 characters")
     .required("Required"),
   email: Yup.string().email("Invalid email").required("Required"),
   password: Yup.string()
-    .min(4, "Password is too short")
-    .max(50, "Password is too long")
+    .min(4, "Minimum 4 characters")
+    .max(50, "Maximum 50 characters")
     .required("Required"),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match")
@@ -63,10 +63,14 @@ const validationSchema = Yup.object().shape({
     Yup.object({
       partnerFirstName: Yup.string()
         .matches(nameRegex, "Only English letters")
-        .required("Required"),
+        .required("Required")
+        .min(2, "Minimum 2 characters")
+        .max(50, "Maximum 50 characters"),
       partnerLastName: Yup.string()
         .matches(nameRegex, "Only English letters")
-        .required("Required"),
+        .required("Required")
+        .min(2, "Minimum 2 characters")
+        .max(50, "Maximum 50 characters"),
       partnerEmail: Yup.string().email("Invalid email").required("Required"),
     })
   ),
