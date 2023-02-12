@@ -6,3 +6,17 @@ export const incomeCategory = [
     'Alimony',
     'Other'
 ];
+
+export const outcomeCategory = [
+    'Food',
+    'Clothes',
+    'Other'
+];
+
+export const myTableType = [
+    'Incomes',
+    'Outcomes'
+];
+
+
+
