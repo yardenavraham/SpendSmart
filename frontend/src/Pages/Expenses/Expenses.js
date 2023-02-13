@@ -82,7 +82,7 @@ const Expenses = () => {
   return (
     <>
       <Typography align="left" variant="h4" component="h2">
-        <IncomesOutcomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={(id, income) => editIncomeHandler(id, income)} madeBy={madeBy} getIncomes={getIncomes} category={outcomeCategory} tableType={myTableType.Incomes} />
+        <IncomesOutcomesTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={(id, income) => editIncomeHandler(id, income)} madeBy={madeBy} getIncomes={getIncomes} category={outcomeCategory} tableType={myTableType.Outcomes} />
       </Typography>
     </>
   );

@@ -18,8 +18,6 @@ import Search from "@mui/icons-material/Search";
 import ViewColumn from "@mui/icons-material/ViewColumn";
 import AddEditModal from '../AddEditModal/AddEditModal';
 import { Modal, Box } from '@mui/material';
-import { incomeCategory } from '../../Consts';
-import { outcomeCategory } from '../../Consts';
 import { myTableType } from '../../Consts';
 
 import TextField from '@mui/material/TextField';
@@ -91,7 +89,7 @@ const IncomesOutcomesTable = props => {
 
   const onDelete = props.onDelete;
 
-  const tableText = props.tableType === myTableType.Incomes ? "Incomes" : "Outcomes"
+  const tableText = props.tableType === "Incomes" ? "Incomes" : "Outcomes"
 
   const madeByFilter = arrayToObjectPairs(props.madeBy);
   const categoryFilter = arrayToObjectPairs(props.category);
@@ -124,7 +122,7 @@ const IncomesOutcomesTable = props => {
     <>
       <MaterialTable
         // title="Incomes Information"
-        title={"Information " + tableText}
+        title={tableText + " Information"}
         icons={tableIcons}
         actions={[
           {
@@ -267,7 +265,7 @@ const IncomesOutcomesTable = props => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <AddEditModal callbackAddIncome={income => props.onAdd(income)} callbackEditIncome={(id, income) => props.onEdit(id, income)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow} />
+          <AddEditModal callbackAddIncome={income => props.onAdd(income)} callbackEditIncome={(id, income) => props.onEdit(id, income)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow} tableType={props.tableType} />
         </Box>
       </Modal>
     </>

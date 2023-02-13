@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
-import { incomeCategory } from '../../Consts';
+import * as consts from '../../Consts';
 // import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -21,8 +21,8 @@ import DatePickerField from '../DatePickerField/DatePickerField';
 
 const descriptionRegex = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
 const amountRegex = /^[+]?([.]\d+|\d+[.]?\d*)$/;
-const frequencyRegex = /^[a-zA-Z\s]*$/;  
-const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/ ;
+const frequencyRegex = /^[a-zA-Z\s]*$/;
+const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/;
 
 const validationSchema = Yup.object().shape({
     category: Yup.string()
@@ -52,13 +52,16 @@ export default function AddEditModal(props) {
 
     //console.log('props11 ' + JSON.stringify(props));
 
-    const { addOrEdit, madeBy, selectedRow } = props;
+    const { addOrEdit, madeBy, selectedRow, tableType } = props;
     const [madeByOptions, setMadeByOptions] = useState(madeBy);
     console.log('madeBy ' + madeBy);
     const theme = createTheme();
-    const action = addOrEdit === 'add' ? 'Add Income' : 'Edit Income';
-    const alertMessage = addOrEdit === 'add' ? 'The income has been added successfully' : 'The income has been updated successfully';
-    const addOrEditIcon = addOrEdit === 'add' ? <AddIcon /> : <EditIcon />;
+    const dataModel = tableType === "Outcomes" ? consts.outcome : consts.income
+    const labels = addOrEdit === 'add' ? dataModel.modolLabelsAdd : dataModel.modolLabelsEdit
+    // const category = props.tableType === consts.myTableType.Incomes ? incomeCategory : outcomeCategory
+    // const action = addOrEdit === 'add' ? 'Add Income' : 'Edit Income';
+    // const alertMessage = addOrEdit === 'add' ? 'The income has been added successfully' : 'The income has been updated successfully';
+    // const addOrEditIcon = addOrEdit === 'add' ? <AddIcon /> : <EditIcon />;
 
     const initialValues = (addOrEdit === 'edit') ? {
         category: selectedRow.category,
@@ -67,7 +70,7 @@ export default function AddEditModal(props) {
         madeBy: selectedRow.madeBy,
         frequency: selectedRow.frequency,
         date: selectedRow.date
-    }:{
+    } : {
         category: "",
         amount: "",
         description: "",
@@ -80,19 +83,19 @@ export default function AddEditModal(props) {
 
     useEffect(() => {
         const timeId = setTimeout(() => {
-          // After 2 seconds set the show value to false
-          setShowSuccessAlert(false)
+            // After 2 seconds set the show value to false
+            setShowSuccessAlert(false)
         }, 2000)
-    
+
         return () => {
-          clearTimeout(timeId)
+            clearTimeout(timeId)
         }
-      }, [showSuccessAlert]);
+    }, [showSuccessAlert]);
 
     return (
         <>
             {showSuccessAlert && <Stack sx={{ width: '100%' }} spacing={2}>
-                <AlertModal open={showSuccessAlert} alertType="success" message={alertMessage}/>
+                <AlertModal open={showSuccessAlert} alertType="success" message={labels.alertMessage} />
             </Stack>}
             <ThemeProvider theme={theme}>
                 <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
@@ -109,10 +112,10 @@ export default function AddEditModal(props) {
                         }}
                     >
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            {addOrEditIcon}
+                            {labels.addOrEditIcon}
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                        {action}
+                            {labels.action}
                         </Typography>
 
                         <Box sx={{ mt: 3, alignItems: "center" }} justifyContent="center">
@@ -129,95 +132,96 @@ export default function AddEditModal(props) {
                                 >
                                     {props => {
                                         const {
-                                        values,
-                                        touched,
-                                        errors,
-                                        dirty,
-                                        isSubmitting,
-                                        handleChange,
-                                        handleBlur,
-                                        handleSubmit,
-                                        handleReset,
-                                        setFieldValue, 
+                                            values,
+                                            touched,
+                                            errors,
+                                            dirty,
+                                            isSubmitting,
+                                            handleChange,
+                                            handleBlur,
+                                            handleSubmit,
+                                            handleReset,
+                                            setFieldValue,
                                         } = props;
 
                                         console.log('props ' + JSON.stringify(props));
                                         return (
-                                        <Form sx={{ alignItems: "center" }} >
-                                            <Grid container spacing={2} justifyContent="center" >
-                                                <Grid item xs={12} sm={12}>
-                                                <FormControl fullWidth>
-                                                    <Field
-                                                        component={Select}
-                                                        name="category"
-                                                        label="Category">
-                                                        {incomeCategory.map((category) => (
-                                                            <MenuItem key={category} value={category}>
-                                                                {category}
-                                                            </MenuItem>
-                                                        ))}
-                                                </Field>
-                                                </FormControl>
+                                            <Form sx={{ alignItems: "center" }} >
+                                                <Grid container spacing={2} justifyContent="center" >
+                                                    <Grid item xs={12} sm={12}>
+                                                        <FormControl fullWidth>
+                                                            <Field
+                                                                component={Select}
+                                                                name="category"
+                                                                label="Category">
+                                                                {dataModel.category.map((category) => (
+                                                                    <MenuItem key={category} value={category}>
+                                                                        {category}
+                                                                    </MenuItem>
+                                                                ))}
+                                                            </Field>
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                        <Field
+                                                            fullWidth
+                                                            component={TextField}
+                                                            name="description"
+                                                            label="Description"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <Field
+                                                            component={TextField}
+                                                            name="amount"
+                                                            label="Amount"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={12} sm={6}>
+                                                        <FormControl fullWidth>
+                                                            <Field
+                                                                fullWidth
+                                                                component={Select}
+                                                                name="madeBy"
+                                                                label="Made By">
+                                                                {madeByOptions.map((name) => (
+                                                                    <MenuItem key={name} value={name}>
+                                                                        {name}
+                                                                    </MenuItem>
+                                                                ))}
+                                                            </Field>
+                                                        </FormControl>
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                        <Field
+                                                            fullWidth
+                                                            component={TextField}
+                                                            name="frequency"
+                                                            label="Frequency"
+                                                        />
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                        <DatePickerField
+                                                            name="date"
+                                                            value={values.date}
+                                                            onChange={setFieldValue}
+                                                        />
+                                                    </Grid>
+
+                                                    <Grid container item xs={12}>
+                                                        <Button
+                                                            type="submit"
+                                                            fullWidth
+                                                            variant="contained"
+                                                            sx={{ mt: 3, mb: 2 }}
+                                                        >
+                                                            Save
+                                                        </Button>
+                                                    </Grid>
                                                 </Grid>
-                                                <Grid item xs={12}>
-                                                    <Field
-                                                    fullWidth
-                                                        component={TextField}
-                                                        name="description"
-                                                        label="Description"
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} sm={6}>
-                                                    <Field
-                                                        component={TextField}
-                                                        name="amount"
-                                                        label="Amount"
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12} sm={6}>
-                                                <FormControl fullWidth>
-                                                    <Field
-                                                        fullWidth
-                                                        component={Select}
-                                                        name="madeBy"
-                                                        label="Made By">
-                                                            {madeByOptions.map((name) => (
-                                                            <MenuItem key={name} value={name}>
-                                                                {name}
-                                                            </MenuItem>
-                                                        ))} 
-                                                        </Field>
-                                                    </FormControl>
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    <Field
-                                                        fullWidth
-                                                        component={TextField}
-                                                        name="frequency"
-                                                        label="Frequency"
-                                                    />
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                <DatePickerField
-                                                    name="date"
-                                                    value={values.date}
-                                                    onChange={setFieldValue}
-                                                    />
-                                                </Grid>
-                                            
-                                                <Grid container item xs={12}>
-                                                    <Button
-                                                        type="submit"
-                                                        fullWidth
-                                                        variant="contained"
-                                                        sx={{ mt: 3, mb: 2 }}
-                                                    >
-                                                        Save
-                                                    </Button>
-                                                </Grid>
-                                            </Grid>
-                                        </Form>
-                                    )}}
+                                            </Form>
+                                        )
+                                    }}
                                 </Formik>
                             </Grid>
                         </Box>
