@@ -29,22 +29,21 @@ const validationSchema = Yup.object().shape({
         .required("Required"),
     description: Yup.string()
         .matches(descriptionRegex, "Only English letters and numbers")
-        .min(2, "description is too short")
-        .max(50, "description is too long")
+        .min(2, "Minimum 2 characters")
+        .max(50, "Maximum 50 characters")
         .required("Required"),
     amount: Yup.string()
         .matches(amountRegex, "Only positive numbers")
-        .min(2, "First Name is too short")
-        .max(50, "First Name is too long")
+        .min(2, "Minimum 2 characters")
+        .max(50, "Maximum 50 characters")
         .required("Required"),
     frequency: Yup.string()
         .matches(frequencyRegex, "Only English letters")
-        .min(2, "Last Name is too short")
-        .max(50, "Last Name is too long"),
+        .min(2, "Minimum 2 characters")
+        .max(50, "Maximum 50 characters"),
     madeBy: Yup.string()
         .required("Required"),
     date: Yup.date()
-        // .matches(dateRegex, "Only date values are valid")
         .required("Required"),
 });
 
