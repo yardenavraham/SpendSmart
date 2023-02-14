@@ -156,7 +156,7 @@ export default function AddEditModal(props) {
                                                                 label="Category">
                                                                 {dataModel.category.map((category) => (
                                                                     <MenuItem key={category} value={category}>
-                                                                        {category}
+                                                                        {category + ", "}
                                                                     </MenuItem>
                                                                 ))}
                                                             </Field>
