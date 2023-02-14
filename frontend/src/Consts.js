@@ -16,10 +16,10 @@ export const outcomeCategory = [
     'Other'
 ];
 
-export const myTableType = [
-    'Incomes',
-    'Outcomes'
-];
+export const myTableType = {
+    Incomes: 'Incomes',
+    Outcomes: 'Outcomes'
+};
 
 
 export const ModolLabelsIncomeAdd = {

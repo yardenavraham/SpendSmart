@@ -89,7 +89,7 @@ const IncomesOutcomesTable = props => {
 
   const onDelete = props.onDelete;
 
-  const tableText = props.tableType === "Incomes" ? "Incomes" : "Outcomes"
+  const tableText = props.myTableType === myTableType.Incomes ? "Incomes" : "Outcomes"
 
   const madeByFilter = arrayToObjectPairs(props.madeBy);
   const categoryFilter = arrayToObjectPairs(props.category);
