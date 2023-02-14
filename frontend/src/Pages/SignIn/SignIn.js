@@ -3,8 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -34,6 +33,7 @@ export default function SignIn() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         console.log({
+            acount: data.get('accountName'),
             email: data.get('email'),
             password: data.get('password'),
         });
@@ -108,7 +108,7 @@ export default function SignIn() {
                                 id="accountName"
                                 label="Account Name"
                                 name="accountName"
-                                autoComplete="accountName"
+                               
                             />
                             <TextField
                                 margin="normal"
@@ -133,10 +133,7 @@ export default function SignIn() {
                                 id="password"
                                 sx={{ mt: 1 }}
                             />
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="primary" />}
-                                label="Remember me"
-                            />
+
                             <Button
                                 type="submit"
                                 fullWidth
@@ -145,7 +142,7 @@ export default function SignIn() {
                             >
                                 Sign In
                             </Button>
-                            <Grid container justifyContent="center">
+                            <Grid container justifyContent="flex-end">
 
                                 <Grid item justifyContent="center">
                                     <Link href="/signup" variant="body2">
@@ -161,3 +158,11 @@ export default function SignIn() {
         </ThemeProvider>
     );
 }
+
+<Grid container justifyContent="flex-end">
+                                <Grid item>
+                                    <Link href="/signin" variant="body2">
+                                        Already have an account? Sign in
+                                    </Link>
+                                </Grid>
+                            </Grid>
