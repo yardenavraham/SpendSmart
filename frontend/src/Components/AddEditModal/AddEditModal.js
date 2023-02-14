@@ -51,7 +51,6 @@ const validationSchema = Yup.object().shape({
     .min(2, "Minimum 2 characters")
     .max(50, "Maximum 50 characters"),
   madeBy: Yup.string().required("Required"),
-  date: Yup.date().required("Required"),
 });
 
 export default function AddEditModal(props) {
@@ -138,6 +137,9 @@ export default function AddEditModal(props) {
                   initialValues={initialValues}
                   validationSchema={validationSchema}
                   onSubmit={(values) => {
+                    if(!values.date){
+                        alert('Please enter a valid date');
+                    }
                     //console.log('values ' + JSON.stringify(values));
                     props.addOrEdit === "add"
                       ? props.callbackAddIncome(values)
