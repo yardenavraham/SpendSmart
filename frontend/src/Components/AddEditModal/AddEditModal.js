@@ -61,7 +61,7 @@ export default function AddEditModal(props) {
   const [madeByOptions, setMadeByOptions] = useState(madeBy);
   console.log('madeBy ' + madeBy);
   const theme = createTheme();
-  const dataModel = tableType === "Outcomes" ? consts.outcome : consts.income
+  const dataModel = tableType === consts.myTableType.Outcomes ? consts.outcome : consts.income
   const labels = addOrEdit === 'add' ? dataModel.modolLabelsAdd : dataModel.modolLabelsEdit
   // const category = props.tableType === consts.myTableType.Incomes ? incomeCategory : outcomeCategory
   // const action = addOrEdit === 'add' ? 'Add Income' : 'Edit Income';
@@ -104,7 +104,7 @@ export default function AddEditModal(props) {
           <AlertModal
             open={showSuccessAlert}
             alertType="success"
-            message={alertMessage}
+            message={labels.alertMessage}
           />
         </Stack>
       )}
@@ -123,10 +123,10 @@ export default function AddEditModal(props) {
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              {addOrEditIcon}
+              {labels.addOrEditIcon}
             </Avatar>
             <Typography component="h1" variant="h5">
-              {action}
+              {labels.action}
             </Typography>
 
             <Box sx={{ mt: 3, alignItems: "center" }} justifyContent="center">
@@ -167,7 +167,7 @@ export default function AddEditModal(props) {
                                 name="category"
                                 label="Category"
                               >
-                                {incomeCategory.map((category) => (
+                                {dataModel.category.map((category) => (
                                   <MenuItem key={category} value={category}>
                                     {category}
                                   </MenuItem>
