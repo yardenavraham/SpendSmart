@@ -18,7 +18,7 @@ import dayjs from "dayjs";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
-import { incomeCategory } from "../../Consts";
+import * as consts from "../../Consts";
 // import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 // import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -56,35 +56,32 @@ const validationSchema = Yup.object().shape({
 export default function AddEditModal(props) {
   //console.log('props11 ' + JSON.stringify(props));
 
-  const { addOrEdit, madeBy, selectedRow } = props;
+  const { addOrEdit, madeBy, selectedRow, tableType } = props;
   const [madeByOptions, setMadeByOptions] = useState(madeBy);
-  console.log("madeBy " + madeBy);
+  console.log('madeBy ' + madeBy);
   const theme = createTheme();
-  const action = addOrEdit === "add" ? "Add Income" : "Edit Income";
-  const alertMessage =
-    addOrEdit === "add"
-      ? "The income has been added successfully"
-      : "The income has been updated successfully";
-  const addOrEditIcon = addOrEdit === "add" ? <AddIcon /> : <EditIcon />;
+  const dataModel = tableType === consts.myTableType.Outcomes ? consts.outcome : consts.income
+  const labels = addOrEdit === 'add' ? dataModel.modolLabelsAdd : dataModel.modolLabelsEdit
+  // const category = props.tableType === consts.myTableType.Incomes ? incomeCategory : outcomeCategory
+  // const action = addOrEdit === 'add' ? 'Add Income' : 'Edit Income';
+  // const alertMessage = addOrEdit === 'add' ? 'The income has been added successfully' : 'The income has been updated successfully';
+  // const addOrEditIcon = addOrEdit === 'add' ? <AddIcon /> : <EditIcon />;
 
-  const initialValues =
-    addOrEdit === "edit"
-      ? {
-          category: selectedRow.category,
-          amount: selectedRow.amount,
-          description: selectedRow.description,
-          madeBy: selectedRow.madeBy,
-          frequency: selectedRow.frequency,
-          date: selectedRow.date,
-        }
-      : {
-          category: "",
-          amount: "",
-          description: "",
-          madeBy: "",
-          frequency: "",
-          date: new Date(),
-        };
+  const initialValues = (addOrEdit === 'edit') ? {
+    category: selectedRow.category,
+    amount: selectedRow.amount,
+    description: selectedRow.description,
+    madeBy: selectedRow.madeBy,
+    frequency: selectedRow.frequency,
+    date: selectedRow.date
+  } : {
+    category: "",
+    amount: "",
+    description: "",
+    madeBy: "",
+    frequency: "",
+    date: new Date()
+  };
 
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
@@ -106,7 +103,7 @@ export default function AddEditModal(props) {
           <AlertModal
             open={showSuccessAlert}
             alertType="success"
-            message={alertMessage}
+            message={labels.alertMessage}
           />
         </Stack>
       )}
@@ -125,10 +122,10 @@ export default function AddEditModal(props) {
             }}
           >
             <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              {addOrEditIcon}
+              {labels.addOrEditIcon}
             </Avatar>
             <Typography component="h1" variant="h5">
-              {action}
+              {labels.action}
             </Typography>
 
             <Box sx={{ mt: 3, alignItems: "center" }} justifyContent="center">
@@ -172,7 +169,7 @@ export default function AddEditModal(props) {
                                 name="category"
                                 label="Category"
                               >
-                                {incomeCategory.map((category) => (
+                                {dataModel.category.map((category) => (
                                   <MenuItem key={category} value={category}>
                                     {category}
                                   </MenuItem>

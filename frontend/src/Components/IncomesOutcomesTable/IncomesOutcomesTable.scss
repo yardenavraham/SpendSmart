@@ -1,0 +1,72 @@
+.incomes {
+    //background-color: #d5eeff;
+}
+
+.incomes-header {
+    padding: 20px;
+    color: #005689;
+    font-size: 70px;
+    font-weight: bold;
+}
+
+.incomes-table_header {
+    color: #007cb9;
+}
+
+.incomes-total {
+    color: #007cb9;
+    font-size: 40px;
+    font-weight: bold;
+    display: inline-block;
+    background-color: #005689;
+    color: #d5eeff;
+    padding: 20px;
+    border-radius: 45px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+.incomes {
+    margin-top: 20px;
+    padding: 20px;
+}
+
+// .incomes-add_income_modal {
+//     position: 'absolute';
+//     top: 50%;
+//     left: 50%;
+//     transform: translate(-50%, -50%);
+//     width: 600;
+//     //background-color: background.paper;
+//     border-radius: 20px;
+//     box-shadow: 24;
+//     //p: 4;
+// }
+
+.incomes-add_new_income {
+    display: flex;
+    align-items: center;
+    width: 280px;
+    color: #007cb9;
+    font-size: 15px;
+    font-weight: bold;
+    background-color: #005689;
+    color: #d5eeff;
+    padding: 10px;
+    border-radius: 55px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+    &:hover {
+        cursor: pointer;
+    }
+
+    .incomes-edit_income {
+        &:hover{
+            cursor: pointer;
+        }
+    }
+    
+}
+
+.incomes-material_table_total {
+    font-weight: bold;
+}
