@@ -1,30 +1,34 @@
 import mongoose from "mongoose";
- 
-const Income = mongoose.Schema({
-    description:{
+
+const CashFlow = mongoose.Schema({
+    type: {
         type: String,
         required: true
     },
-    category:{
+    description: {
         type: String,
         required: true
     },
-    amount:{
+    category: {
+        type: String,
+        required: true
+    },
+    amount: {
         type: Number,
         required: true
     },
-    frequency:{
+    frequency: {
         type: String,
         required: false
     },
-    date:{
+    date: {
         type: Date,
         required: true
     },
-    madeBy:{
+    madeBy: {
         type: String,
         required: true
     },
 });
- 
-export default mongoose.model('Incomes', Income);
+
+export default mongoose.model('CashFlow', CashFlow);
