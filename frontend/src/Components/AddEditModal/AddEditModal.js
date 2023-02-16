@@ -35,23 +35,22 @@ const frequencyRegex = /^[a-zA-Z\s]*$/;
 const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(19|20)\d{2}$/;
 
 const validationSchema = Yup.object().shape({
-    category: Yup.string().required("Required"),
-    description: Yup.string()
-        .matches(descriptionRegex, "Only English letters and numbers")
-        .min(2, "Minimum 2 characters")
-        .max(50, "Maximum 50 characters")
-        .required("Required"),
-    amount: Yup.string()
-        .matches(amountRegex, "Only positive numbers")
-        .min(2, "Minimum 2 characters")
-        .max(50, "Maximum 50 characters")
-        .required("Required"),
-    frequency: Yup.string()
-        .matches(frequencyRegex, "Only English letters")
-        .min(2, "Minimum 2 characters")
-        .max(50, "Maximum 50 characters"),
-    madeBy: Yup.string().required("Required"),
-    date: Yup.date().required("Required"),
+  category: Yup.string().required("Required"),
+  description: Yup.string()
+    .matches(descriptionRegex, "Only English letters and numbers")
+    .min(2, "Minimum 2 characters")
+    .max(50, "Maximum 50 characters")
+    .required("Required"),
+  amount: Yup.string()
+    .matches(amountRegex, "Only positive numbers")
+    .min(2, "Minimum 2 characters")
+    .max(50, "Maximum 50 characters")
+    .required("Required"),
+  frequency: Yup.string()
+    .matches(frequencyRegex, "Only English letters")
+    .min(2, "Minimum 2 characters")
+    .max(50, "Maximum 50 characters"),
+  madeBy: Yup.string().required("Required"),
 });
 
 export default function AddEditModal(props) {
@@ -133,32 +132,35 @@ export default function AddEditModal(props) {
                             {labels.action}
                         </Typography>
 
-                        <Box sx={{ mt: 3, alignItems: "center" }} justifyContent="center">
-                            <Grid container sx={{ alignItems: "center" }}>
-                                <Formik
-                                    initialValues={initialValues}
-                                    validationSchema={validationSchema}
-                                    onSubmit={(values) => {
-                                        //console.log('values ' + JSON.stringify(values));
-                                        props.addOrEdit === "add"
-                                            ? props.callbackAddIncome(values)
-                                            : props.callbackEditIncome(selectedRow._id, values);
-                                        setShowSuccessAlert(true);
-                                    }}
-                                >
-                                    {(props) => {
-                                        const {
-                                            values,
-                                            touched,
-                                            errors,
-                                            dirty,
-                                            isSubmitting,
-                                            handleChange,
-                                            handleBlur,
-                                            handleSubmit,
-                                            handleReset,
-                                            setFieldValue,
-                                        } = props;
+            <Box sx={{ mt: 3, alignItems: "center" }} justifyContent="center">
+              <Grid container sx={{ alignItems: "center" }}>
+                <Formik
+                  initialValues={initialValues}
+                  validationSchema={validationSchema}
+                  onSubmit={(values) => {
+                    if(!values.date){
+                        alert('Please enter a valid date');
+                    }
+                    //console.log('values ' + JSON.stringify(values));
+                    props.addOrEdit === "add"
+                      ? props.callbackAddIncome(values)
+                      : props.callbackEditIncome(selectedRow._id, values);
+                    setShowSuccessAlert(true);
+                  }}
+                >
+                  {(props) => {
+                    const {
+                      values,
+                      touched,
+                      errors,
+                      dirty,
+                      isSubmitting,
+                      handleChange,
+                      handleBlur,
+                      handleSubmit,
+                      handleReset,
+                      setFieldValue,
+                    } = props;
 
                                         console.log("props " + JSON.stringify(props));
                                         return (
