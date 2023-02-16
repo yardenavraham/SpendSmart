@@ -79,7 +79,7 @@ export default function AddEditModal(props) {
         frequency: selectedRow.frequency,
         date: selectedRow.date
     } : {
-        type: "income",
+        type: tableType,
         category: "",
         amount: "",
         description: "",

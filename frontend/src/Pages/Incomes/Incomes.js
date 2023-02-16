@@ -22,12 +22,14 @@ const Incomes = () => {
 
   const getIncomes = async () => {
     console.log('getIncomes');
+    console.log(myTableType);
+
     const response = await axios.get("http://localhost:27017/CashFlow");
     //console.log('response.data ' + JSON.stringify(response.data));
     setInitialIncomesList(response.data);
     setIncomesList(response.data.filter(item => {
       const formattedDate = new Date(item.date);
-      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && (item.type === "income")
+      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && (item.type === "Incomes")
     })
       .sort((a, b) => new Date(a.date) - new Date(b.date)));
 
@@ -73,7 +75,7 @@ const Incomes = () => {
   return (
     <>
       <Typography align="left" variant="h4" component="h2">
-        <CashFlowTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={(id, income) => editIncomeHandler(id, income)} madeBy={madeBy} getIncomes={getIncomes} category={incomeCategory} myTableType={myTableType.Incomes} />
+        <CashFlowTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={(id, income) => editIncomeHandler(id, income)} madeBy={madeBy} getIncomes={getIncomes} category={incomeCategory} tableType={myTableType.Incomes} />
       </Typography>
     </>
   );

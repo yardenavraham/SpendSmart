@@ -73,7 +73,7 @@ const arrayToObjectPairs = (arr) => {
 
 const CashFlowTable = props => {
   //console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
-  console.log("my table type" + props.myTableType)
+  console.log("my table type" + props.tableType)
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
@@ -90,7 +90,7 @@ const CashFlowTable = props => {
   const tableRef = useRef();
   
   const onDelete = props.onDelete;
-  const tableText = props.myTableType //=== myTableType.Incomes ? "Incomes" : "Expenses"
+  const tableText = props.tableType //=== myTableType.Incomes ? "Incomes" : "Expenses"
   const madeByFilter = arrayToObjectPairs(props.madeBy);
   const categoryFilter = arrayToObjectPairs(props.category);
   
@@ -254,7 +254,7 @@ const CashFlowTable = props => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <AddEditModal callbackAddIncome={income => props.onAdd(income)} callbackEditIncome={(id, income) => props.onEdit(id, income)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow} tableType={props.myTableType} />
+          <AddEditModal callbackAddIncome={income => props.onAdd(income)} callbackEditIncome={(id, income) => props.onEdit(id, income)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow} tableType={props.tableType} />
         </Box>
       </Modal>
     </>
