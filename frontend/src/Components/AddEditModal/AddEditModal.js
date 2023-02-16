@@ -140,12 +140,13 @@ export default function AddEditModal(props) {
                   onSubmit={(values) => {
                     if(!values.date){
                         alert('Please enter a valid date');
+                    }else{
+                        props.addOrEdit === "add"
+                        ? props.callbackAddIncome(values)
+                        : props.callbackEditIncome(selectedRow._id, values);
+                      setShowSuccessAlert(true);
                     }
                     //console.log('values ' + JSON.stringify(values));
-                    props.addOrEdit === "add"
-                      ? props.callbackAddIncome(values)
-                      : props.callbackEditIncome(selectedRow._id, values);
-                    setShowSuccessAlert(true);
                   }}
                 >
                   {(props) => {
