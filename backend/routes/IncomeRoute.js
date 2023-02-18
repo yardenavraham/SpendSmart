@@ -8,7 +8,7 @@ import {
 } from "../controllers/CashFlowController.js";
 const router = express.Router();
  
-router.get('/CashFlow', getCashFlow);
+router.get('/CashFlow/:account', getCashFlow);
 router.get('/CashFlow/:id', getCashFlowById);
 router.post('/CashFlow/:account', saveCashFlowItem);
 router.patch('/CashFlow/:id', updateCashFlowItem);

@@ -2,7 +2,7 @@ import CashFlow from "../models/CashFlowModel.js";
  
 export const getCashFlow = async (req, res) => { //getIncomes
     try {
-        const cashFlowData = await CashFlow.find();
+        const cashFlowData = await CashFlow.find({ account: req.params.account });
         res.json(cashFlowData);
     } catch (error) {
         res.status(500).json({message: error.message});
