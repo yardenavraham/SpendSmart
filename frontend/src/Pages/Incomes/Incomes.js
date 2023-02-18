@@ -10,7 +10,8 @@ const Incomes = () => {
   const newDateVal = new Date(new Date());
   const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
 
-  const madeBy = ['Adi', 'Yarden', 'Inbal', 'Michal', 'Yulia'];
+  const madeBy = ['Adi', 'Yarden', 'Inbal', 'Michal', 'Yulia']; //TODO remove this
+  const accountName = "myAccount"; //TODO remove this
 
   const [initialIncomesList, setInitialIncomesList] = useState([]);
   const [incomesList, setIncomesList] = useState([]);
@@ -49,7 +50,7 @@ const Incomes = () => {
   const addIncomeHandler = async (newIncome) => {
     try {
       console.log('newIncome ' + JSON.stringify(newIncome));
-      await axios.post("http://localhost:27017/CashFlow",
+      await axios.post(`http://localhost:27017/CashFlow/${accountName}`,
         newIncome
       );
       // navigate("/");
