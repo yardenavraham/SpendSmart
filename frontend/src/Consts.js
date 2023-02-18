@@ -10,15 +10,15 @@ export const incomeCategory = [
     'Other'
 ];
 
-export const outcomeCategory = [
+export const expenseCategory = [
     'Food',
     'Clothes',
     'Other'
 ];
 
 export const myTableType = {
-    Incomes: 'Incomes',
-    Outcomes: 'Outcomes'
+    Incomes: "Incomes",
+    Expenses: "Expenses"
 };
 
 
@@ -46,8 +46,8 @@ export const ModolLabelsOutcomeEdit = {
     addOrEditIcon: <EditIcon />
 }
 
-export const outcome = {
-    category: outcomeCategory,
+export const expense = {
+    category: expenseCategory,
     modolLabelsAdd: ModolLabelsOutcomeAdd,
     modolLabelsEdit: ModolLabelsOutcomeEdit
 }
