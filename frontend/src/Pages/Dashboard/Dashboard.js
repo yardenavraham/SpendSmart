@@ -1,11 +1,11 @@
+import { Grid } from "@material-ui/core";
+import { responsiveFontSizes } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/styles";
 import React from 'react';
-import {Grid} from "@material-ui/core";
-import PieChartCard from "../../Components/Graphs/PieChartCard";
 import BarChartCard from "../../Components/Graphs/BarChartCard";
-import {createTheme, responsiveFontSizes} from "@mui/material/styles";
-import {ThemeProvider} from "@mui/styles";
+import SelectButton from "../../Components/Graphs/SelectButton";
+import PieChartCard from "../../Components/Graphs/PieChartCard";
 import theme from "../../theme";
-
 function Dashboard() {
 
     const data = [
@@ -21,6 +21,12 @@ function Dashboard() {
         {type: "Expense", category: "Insurance", amount: 100, user: "Y", date: new Date(2022, 11, 30)},
         {type: "Expense", category: "Insurance", amount: 100, user: "X", date: new Date(2022, 12, 30)},
     ]
+
+    const monthOptions = {
+        PREVIOUSE: 'Previous Month',
+        CURRENT: 'Current Month',
+        NEXT: 'Next Month'
+    }
 
     function numberOfExpensesByCategory() {
         const result = data
@@ -51,8 +57,25 @@ function Dashboard() {
         return Array.from( result ).map(([name, value]) => ({ name, value }));
     }
 
+    function handleSelectedValue(value) {
+        console.log(`Selected value: ${value}`);
+        
+        // here we will send query the db with the selected month to bring the data
+        switch (value) {
+            case monthOptions.CURRENT:
+                return;
+            case monthOptions.NEXT:
+                return;
+            default:
+                return false;
+        }
+      };
+
     return (
         <ThemeProvider theme={responsiveFontSizes(theme)}>
+            <Grid container >
+                <SelectButton prev="Previous Month" curr="Current Month" next="Next Month" onSelectedValue={handleSelectedValue} />
+            </Grid>
             <Grid container rowSpacing={3}>
                 <Grid container spacing="3" justifyContent="center" alignItems="center">
                     <PieChartCard header="# of transactions by category" data={numberOfExpensesByCategory()}/>
