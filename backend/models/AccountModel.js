@@ -28,9 +28,6 @@ const Account = mongoose.Schema({
     }]
 });
 
-
-
-
 Account.pre("save", function (next) {
     const account = this
 
@@ -54,5 +51,13 @@ Account.pre("save", function (next) {
     }
 })
 
-
-export default mongoose.model('Account', Account);
+Account.methods.comparePassword = function (candidatePassword, cb) {
+    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+        if (err) {
+            console.log(err);
+            return cb(err);
+        }
+        cb(null, isMatch);
+    });
+}
+    export default mongoose.model('Account', Account);

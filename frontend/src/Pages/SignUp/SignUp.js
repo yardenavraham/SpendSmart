@@ -109,8 +109,8 @@ export default function SignUp() {
   
   const saveHandler = async (account) => {
     try {
-      console.log('Saving account 222' + account.name);
-      await axios.post("http://localhost:27017/account", map(account));
+      console.log('Saving account ' + account.name);
+      await axios.post("http://localhost:27017/signup", map(account));
     } catch (error) {
       console.log(error);
     }

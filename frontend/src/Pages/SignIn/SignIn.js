@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './SignIn.css';
+import axios from "axios";
 
 function Copyright(props) {
     return (
@@ -29,14 +30,22 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
-    const handleSubmit = (event) => {
+    
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
+    
         console.log({
             acount: data.get('accountName'),
             email: data.get('email'),
             password: data.get('password'),
         });
+    
+        try {
+            await axios.post("http://localhost:27017/signin", {name: data.get('accountName'), password: data.get('password'), email: data.get('email')});
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     function isValidEmail(email) {

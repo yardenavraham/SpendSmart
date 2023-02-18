@@ -16,7 +16,7 @@ mongoose.connect('mongodb+srv://adi5765:baot@spendsmartdb.olhtfco.mongodb.net/Sp
     useUnifiedTopology: true
 });
 const db = mongoose.connection;
-db.on('error', (error) => console.log(error));
+db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Database Connected...'));
 
 app.use(cors());
