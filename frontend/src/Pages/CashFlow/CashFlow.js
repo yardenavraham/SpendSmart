@@ -5,7 +5,7 @@ import CashFlowTable from '../../Components/CashFlowTable/CashFlowTable';
 import axios from "axios";
 import { incomeCategory, myTableType } from "../../Consts";
 
-const Incomes = () => {
+const CashFlow = () => {
 
   const newDateVal = new Date(new Date());
   const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
