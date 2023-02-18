@@ -25,7 +25,7 @@ const Incomes = () => {
     console.log('getIncomes');
     console.log(myTableType);
 
-    const response = await axios.get("http://localhost:27017/CashFlow");
+    const response = await axios.get(`http://localhost:27017/CashFlow/${accountName}`);
     //console.log('response.data ' + JSON.stringify(response.data));
     setInitialIncomesList(response.data);
     setIncomesList(response.data.filter(item => {
