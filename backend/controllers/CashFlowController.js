@@ -21,6 +21,7 @@ export const getCashFlowById = async (req, res) => { //getIncomeById
 export const saveCashFlowItem = async (req, res) => { //saveIncome
     console.log('here save income');
     const cashFlowItem = new CashFlow(req.body);
+    cashFlowItem.account = req.params.account;
     console.log('income ' + cashFlowItem);
 
     try {

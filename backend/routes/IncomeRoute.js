@@ -10,7 +10,7 @@ const router = express.Router();
  
 router.get('/CashFlow', getCashFlow);
 router.get('/CashFlow/:id', getCashFlowById);
-router.post('/CashFlow', saveCashFlowItem);
+router.post('/CashFlow/:account', saveCashFlowItem);
 router.patch('/CashFlow/:id', updateCashFlowItem);
 router.delete('/CashFlow/:id', deleteCashFlowItem);
  
