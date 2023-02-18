@@ -22,6 +22,8 @@ import MenuItem from '@mui/material/MenuItem';
 import { NavLink } from "react-router-dom";
 import Link from '@mui/material/Link';
 import Container from "@mui/material/Container";
+import { useContext } from 'react';
+import AuthContext from "../../store/auth-context";
 
 const drawerWidth = 240;
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout','SignIn', 'EditInformation'];
@@ -31,6 +33,8 @@ export default function AppHeader(props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
+
+  const authCtx = useContext(AuthContext);
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -66,14 +70,18 @@ export default function AppHeader(props) {
       to: '/dashboard',
       name: 'Dashboard'
     },
-    {
-      to: '/signin',
-      name: 'SignIn'
-    },
-    {
-      to: '/signup',
-      name: 'SignUp'
-    },
+    ...(!authCtx.isLoggedIn ? [
+      { to: '/signin',
+        name: 'SignIn'}
+    ] : []),
+    ...(!authCtx.isLoggedIn ? [
+      { to: '/signup',
+        name: 'SignUp'}
+    ] : []),
+    ...(authCtx.isLoggedIn ? [
+      { to: '/logout',
+        name: 'Logout'}
+    ] : []),
     {
       to: '/editinformation',
       name: 'EditInformation'

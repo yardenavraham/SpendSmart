@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react"
+import { Navigate } from 'react-router-dom';
 import "./App.css";
 import AppHeader from "./Components/AppHeader/AppHeader";
 import Home from "./Pages/Home/Home";
@@ -24,6 +25,8 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
 import EditInformation from "./Pages/EditInformation/EditInformation";
+import AuthContext from "./store/auth-context";
+import LogOut from './Pages/Logout/Logout';
 
 export default function App() {
 
@@ -38,7 +41,10 @@ export default function App() {
         contrastText: '#ffcc00',
       },
     },
-});
+  });
+
+  const authCtx = useContext(AuthContext);
+  console.log('authCtx.isLoggedIn ' + authCtx.isLoggedIn);
 
   return (
     <div className="App">
@@ -54,8 +60,21 @@ export default function App() {
               <Route path="incomes" element={<Incomes />} />
               <Route path="expenses" element={<Expenses />} />
               <Route path="dashboard" element={<Dashboard />} />
-              <Route path="signin" element={<SignIn/>} />
-              <Route path="signup" element={<SignUp/>} />
+            <Route path="signin" element={!authCtx.isLoggedIn ? (
+                <SignIn />
+              ) : (
+                <Navigate replace to={"/"} />
+              )} />
+             <Route path="signup" element={!authCtx.isLoggedIn ? (
+                <SignUp />
+              ) : (
+                <Navigate replace to={"/"} />
+              )} />
+              <Route path='logout' element={authCtx.isLoggedIn ? (
+                <LogOut />
+              ) : (
+                <Navigate replace to={"/"} />
+              )} />
               <Route path="editinformation" element={<EditInformation/>} />
             </Routes>
              </Box>

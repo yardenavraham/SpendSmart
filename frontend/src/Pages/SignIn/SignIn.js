@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useContext } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,6 +14,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './SignIn.css';
+import  AuthContext from '../../store/auth-context';
 
 function Copyright(props) {
     return (
@@ -70,6 +72,7 @@ export default function SignIn() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormValues(previousFormValues => {
+
             const error = validate(value, name, previousFormValues);
             return {
                 ...formValues,
@@ -79,6 +82,13 @@ export default function SignIn() {
                 }
             }
         })
+    }
+
+    const authCtx = useContext(AuthContext);
+
+    const signInClicked = () => {
+        console.log('signInClicked ' + JSON.stringify(formValues));
+        authCtx.onLogin(formValues);
     }
 
     return (
@@ -142,6 +152,7 @@ export default function SignIn() {
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
+                                onClick={signInClicked}
                             >
                                 Sign In
                             </Button>
