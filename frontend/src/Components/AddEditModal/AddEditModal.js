@@ -142,8 +142,8 @@ export default function AddEditModal(props) {
                         alert('Please enter a valid date');
                     }else{
                         props.addOrEdit === "add"
-                        ? props.callbackAddIncome(values)
-                        : props.callbackEditIncome(selectedRow._id, values);
+                        ? props.callbackAddItem(values)
+                        : props.callbackEditItem(selectedRow._id, values);
                       setShowSuccessAlert(true);
                     }
                     //console.log('values ' + JSON.stringify(values));
