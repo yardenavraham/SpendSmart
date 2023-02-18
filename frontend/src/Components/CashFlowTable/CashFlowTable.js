@@ -18,11 +18,9 @@ import Search from "@mui/icons-material/Search";
 import ViewColumn from "@mui/icons-material/ViewColumn";
 import AddEditModal from '../AddEditModal/AddEditModal';
 import { Modal, Box } from '@mui/material';
-import { incomeCategory } from '../../Consts';
-
+import { myTableType } from '../../Consts';
 import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
@@ -73,36 +71,33 @@ const arrayToObjectPairs = (arr) => {
   return obj;
 }
 
-const IncomesTable = props => {
-    //console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
+const CashFlowTable = props => {
+  //console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
+  console.log("my table type" + props.tableType)
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    props.getIncomes();
+  }
 
-    const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
-    const handleClose = () => {
-      setOpen(false);
-      props.getIncomes();
-    }
-
-    const [addOrEdit, setAddOrEdit] = useState('add');
-    const [selectedRow, setSelectedRow] = useState(null);
-
-    const onDelete = props.onDelete;
-
-  const madeByFilter = arrayToObjectPairs(props.madeBy);
-  const incomeCategoryFilter = arrayToObjectPairs(incomeCategory);
-
+  const [addOrEdit, setAddOrEdit] = useState('add');
+  const [selectedRow, setSelectedRow] = useState(null);  
   const now = new Date();
   const firstDayOfCurrMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const [datePickerValue, setDatePickerValue] = useState(dayjs(firstDayOfCurrMonth));
-
+  
+  const tableRef = useRef();
+  
+  const onDelete = props.onDelete;
+  const tableText = props.tableType //=== myTableType.Incomes ? "Incomes" : "Expenses"
+  const madeByFilter = arrayToObjectPairs(props.madeBy);
+  const categoryFilter = arrayToObjectPairs(props.category);
+  
   const handleDatePickerChanged = (newDate) => {
-    console.log('newDate ' + newDate);
     const newDateVal = new Date(newDate);
     const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
-
-    console.log('newDateValFormatted ' + newDateValFormatted);
     setDatePickerValue(newDate);
-
     props.setIncomesList(props.initialIncomesList.filter(item => {
       const formattedDate = new Date(item.date);
       console.log('item ', `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}`);
@@ -110,15 +105,13 @@ const IncomesTable = props => {
     }));
   }
 
-  const tableRef = useRef();
-
-    console.log('madeBy ' + props.madeBy);
-    const { madeBy } = props;
+  console.log('madeBy ' + props.madeBy);
+  const { madeBy } = props;
 
   return (
     <>
       <MaterialTable
-        title="Incomes Information"
+        title={tableText + " Information"}
         icons={tableIcons}
         actions={[
           {
@@ -141,19 +134,19 @@ const IncomesTable = props => {
           },
           {
             icon: tableIcons.Add,
-            tooltip: "Add an Income",
+            tooltip: "Add",
             isFreeAction: true, //Independent actions that will not on row' actions section
-            onClick: () => {setOpen(true); setAddOrEdit('add')}
+            onClick: () => { setOpen(true); setAddOrEdit('add') }
           },
 
           rowData => ({
             icon: tableIcons.Edit,
-            tooltip: 'Edit an Income',
-            onClick: () => {setOpen(true); setAddOrEdit('edit'); setSelectedRow(rowData)}
+            tooltip: 'Edit',
+            onClick: () => { setOpen(true); setAddOrEdit('edit'); setSelectedRow(rowData) }
           }),
           rowData => ({
             icon: tableIcons.Delete,
-            tooltip: 'Delete an Income',
+            tooltip: 'Delete',
             onClick: (event, rowData) => { console.log('rowData ' + JSON.stringify(rowData)); onDelete(rowData._id) }
           })
         ]}
@@ -175,7 +168,7 @@ const IncomesTable = props => {
             }
           },
           {
-            title: "Category", field: "category", filtering: true, lookup: incomeCategoryFilter,
+            title: "Category", field: "category", filtering: true, lookup: categoryFilter,
             cellStyle: {
               backgroundColor: '#FFFFFF',
               color: '#00000',
@@ -194,7 +187,7 @@ const IncomesTable = props => {
             },
             headerStyle: {
               backgroundColor: '#FFFFFF',
-            }  
+            }
           },
           {
             title: "Frequency", field: "frequency", filtering: true,
@@ -205,7 +198,7 @@ const IncomesTable = props => {
             },
             headerStyle: {
               backgroundColor: '#FFFFFF',
-            } 
+            }
           },
           {
             title: "Date", field: "date", type: "date", filtering: true,
@@ -216,7 +209,7 @@ const IncomesTable = props => {
             },
             headerStyle: {
               backgroundColor: '#FFFFFF',
-            } 
+            }
           },
           {
             title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter,
@@ -260,15 +253,15 @@ const IncomesTable = props => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-          <Box sx={style}>
-              <AddEditModal callbackAddIncome = {income => props.onAdd(income)} callbackEditIncome = {(id, income) => props.onEdit(id, income)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow}/>
-          </Box>
+        <Box sx={style}>
+          <AddEditModal callbackAddIncome={income => props.onAdd(income)} callbackEditIncome={(id, income) => props.onEdit(id, income)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow} tableType={props.tableType} />
+        </Box>
       </Modal>
     </>
   );
 };
 
-export default IncomesTable;
+export default CashFlowTable;
 
 
 
