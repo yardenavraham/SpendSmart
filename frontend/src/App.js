@@ -27,8 +27,8 @@ import SignUp from "./Pages/SignUp/SignUp";
 import EditInformation from "./Pages/EditInformation/EditInformation";
 import AuthContext from "./store/auth-context";
 import LogOut from './Pages/Logout/Logout';
-import PrivateRoutes from "./Routes/PrivateRoutes";
-import PublicRoutes from "./Routes/PublicRoutes";
+// import PrivateRoutes from "./Routes/PrivateRoutes";
+// import PublicRoutes from "./Routes/PublicRoutes";
 import Logout from "./Pages/Logout/Logout";
 
 export default function App() {
