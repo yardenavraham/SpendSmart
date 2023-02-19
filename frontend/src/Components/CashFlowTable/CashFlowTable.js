@@ -254,7 +254,7 @@ const CashFlowTable = props => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <AddEditModal callbackAddIncome={income => props.onAdd(income)} callbackEditIncome={(id, income) => props.onEdit(id, income)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow} tableType={props.tableType} />
+          <AddEditModal callbackAddItem={item => props.onAdd(item)} callbackEditItem={(id, item) => props.onEdit(id, item)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow} tableType={props.tableType} />
         </Box>
       </Modal>
     </>
