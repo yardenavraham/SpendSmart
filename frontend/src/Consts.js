@@ -24,32 +24,32 @@ export const myTableType = {
 
 export const ModolLabelsIncomeAdd = {
     action: "Add Income",
-    alertMessage: "The income has been added successfully",
+    alertMessage: "Income has been added successfully",
     addOrEditIcon: <AddIcon />
 }
 
 export const ModolLabelsIncomeEdit = {
     action: "Edit Income",
-    alertMessage: "The income has been updated successfully",
+    alertMessage: "Income has been updated successfully",
     addOrEditIcon: <EditIcon />
 }
 
-export const ModolLabelsOutcomeAdd = {
-    action: "Add Outcome",
-    alertMessage: "The outcome has been added successfully",
+export const ModolLabelsExpenseAdd = {
+    action: "Add Expense",
+    alertMessage: "Expense has been added successfully",
     addOrEditIcon: <AddIcon />
 }
 
-export const ModolLabelsOutcomeEdit = {
-    action: "Edit Outcome",
-    alertMessage: "The outcome has been updated successfully",
+export const ModolLabelsExpenseEdit = {
+    action: "Edit Expense",
+    alertMessage: "Expense has been updated successfully",
     addOrEditIcon: <EditIcon />
 }
 
 export const expense = {
     category: expenseCategory,
-    modolLabelsAdd: ModolLabelsOutcomeAdd,
-    modolLabelsEdit: ModolLabelsOutcomeEdit
+    modolLabelsAdd: ModolLabelsExpenseAdd,
+    modolLabelsEdit: ModolLabelsExpenseEdit
 }
 
 export const income = {

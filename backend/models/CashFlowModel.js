@@ -29,6 +29,10 @@ const CashFlow = mongoose.Schema({
         type: String,
         required: true
     },
+    account: {
+        type: String,
+        required: false
+    },
 });
 
 export default mongoose.model('CashFlow', CashFlow);

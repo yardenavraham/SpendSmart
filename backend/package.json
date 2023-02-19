@@ -5,14 +5,25 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
     "test": "exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
     "express": "^4.17.3",
-    "mongoose": "^6.2.2"
+    "jsonwebtoken": "^9.0.0",
+    "mongoose": "^6.2.2",
+    "nodemon": "^2.0.20"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   }
 }

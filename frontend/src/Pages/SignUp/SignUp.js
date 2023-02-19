@@ -12,6 +12,7 @@ import "./SignUp.css";
 import { Form, Formik, Field, FieldArray } from "formik";
 import { TextField } from "formik-mui";
 import * as Yup from "yup";
+import axios from "axios";
 
 function Copyright(props) {
   return (
@@ -82,7 +83,40 @@ export default function SignUp() {
     partnerLastName: "",
     partnerEmail: "",
   };
-
+  
+  const mapPartner = (values) => {
+    return {
+      firstName: values.partnerFirstName,
+      lastName: values.partnerLastName,
+      email: values.partnerEmail
+    }
+  }
+  
+  const map = (values) => {
+    const partners = [{
+      email: values.email,
+      firstName: values.firstName,
+      lastName: values.lastName
+    }]
+    values.partners.map(p => mapPartner(p)).forEach(p => partners.push(p));
+    
+    return {
+      name: values.account,
+      password: values.password,
+      partners: partners
+    }
+  }
+  
+  const saveHandler = async (account) => {
+    try {
+      console.log('Saving account ' + account.name);
+      await axios.post("http://localhost:27017/signup", map(account));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  
   return (
     <ThemeProvider theme={theme}>
       <div
@@ -129,8 +163,9 @@ export default function SignUp() {
                   }}
                   validationSchema={validationSchema}
                   onSubmit={(values, { setSubmitting }) => {
-                    setTimeout(() => {
-                      alert(JSON.stringify(values, null, 2));
+                      saveHandler(values).then(r => console.log("completed save account with response: " + r));
+                      setTimeout(() => {
+                        // alert(JSON.stringify(values, null, 2));
                       setSubmitting(false);
                     }, 400);
                   }}

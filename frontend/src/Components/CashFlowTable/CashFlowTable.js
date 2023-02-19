@@ -18,7 +18,6 @@ import Search from "@mui/icons-material/Search";
 import ViewColumn from "@mui/icons-material/ViewColumn";
 import AddEditModal from '../AddEditModal/AddEditModal';
 import { Modal, Box } from '@mui/material';
-import { myTableType } from '../../Consts';
 import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -78,7 +77,7 @@ const CashFlowTable = props => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => {
     setOpen(false);
-    props.getIncomes();
+    props.getCashFlow();
   }
 
   const [addOrEdit, setAddOrEdit] = useState('add');
@@ -98,7 +97,7 @@ const CashFlowTable = props => {
     const newDateVal = new Date(newDate);
     const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
     setDatePickerValue(newDate);
-    props.setIncomesList(props.initialIncomesList.filter(item => {
+    props.setCashFlowList(props.initialCashFlowList.filter(item => {
       const formattedDate = new Date(item.date);
       console.log('item ', `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}`);
       return `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}` === newDateValFormatted;
@@ -223,14 +222,14 @@ const CashFlowTable = props => {
             }
           }
         ]}
-        data={props.incomesList.map((income) => ({
-          _id: income._id,
-          description: income.description,
-          category: income.category,
-          amount: income.amount,
-          frequency: income.frequency,
-          date: income.date, //{`${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`}
-          madeBy: income.madeBy
+        data={props.cashFlowList.map((transaction) => ({
+          _id: transaction._id,
+          description: transaction.description,
+          category: transaction.category,
+          amount: transaction.amount,
+          frequency: transaction.frequency,
+          date: transaction.date, //{`${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`}
+          madeBy: transaction.madeBy
         }))}
         tableRef={tableRef}
         components={{
@@ -254,7 +253,7 @@ const CashFlowTable = props => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <AddEditModal callbackAddIncome={income => props.onAdd(income)} callbackEditIncome={(id, income) => props.onEdit(id, income)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow} tableType={props.tableType} />
+          <AddEditModal callbackAddTransaction={transaction => props.onAdd(transaction)} callbackEditTransaction={(id, transaction) => props.onEdit(id, transaction)} handleClose={handleClose} madeBy={madeBy} addOrEdit={addOrEdit} selectedRow={selectedRow} tableType={props.tableType} />
         </Box>
       </Modal>
     </>
