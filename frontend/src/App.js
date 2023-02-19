@@ -58,7 +58,6 @@ export default function App() {
           </BrowserRouter>
         </Box>
       </Container>
-      <AppFooter />
       </ThemeProvider>
     </div>
   );
