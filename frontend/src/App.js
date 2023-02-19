@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
 import AppHeader from "./Components/AppHeader/AppHeader";
 import Home from "./Pages/Home/Home";
@@ -11,13 +11,9 @@ import { createTheme } from '@mui/material/styles';
 import { myTableType, incomeCategory, expenseCategory} from "./Consts";
 
 import {
-  createBrowserRouter,
-  RouterProvider,
   BrowserRouter,
   Route,
   Routes,
-  Link,
-  Router,
 } from "react-router-dom";
 import AppFooter from "./Components/AppFooter/AppFooter";
 import Dashboard from "./Pages/Dashboard/Dashboard";
