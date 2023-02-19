@@ -137,14 +137,15 @@ export default function AddEditModal(props) {
                 <Formik
                   initialValues={initialValues}
                   validationSchema={validationSchema}
-                  onSubmit={(values) => {
+                  onSubmit={(values, {resetForm}) => {
                     if(!values.date){
                         alert('Please enter a valid date');
                     }else{
                         props.addOrEdit === "add"
-                        ? props.callbackAddIncome(values)
-                        : props.callbackEditIncome(selectedRow._id, values);
+                        ? props.callbackAddItem(values)
+                        : props.callbackEditItem(selectedRow._id, values);
                       setShowSuccessAlert(true);
+                      resetForm({values: ''})
                     }
                     //console.log('values ' + JSON.stringify(values));
                   }}
