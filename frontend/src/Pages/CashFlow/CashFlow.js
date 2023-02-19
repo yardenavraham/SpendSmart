@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CashFlowTable from '../../Components/CashFlowTable/CashFlowTable';
 import axios from "axios";
-import { incomeCategory, myTableType } from "../../Consts";
 
-const CashFlow = () => {
+const CashFlow = (props) => {
 
   const newDateVal = new Date(new Date());
   const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
@@ -13,24 +11,24 @@ const CashFlow = () => {
   const madeBy = ['Adi', 'Yarden', 'Inbal', 'Michal', 'Yulia']; //TODO remove this
   const accountName = "myAccount"; //TODO remove this
 
-  const [initialIncomesList, setInitialIncomesList] = useState([]);
-  const [incomesList, setIncomesList] = useState([]);
+  const [initialCashFlowList, setInitialCashFlowList] = useState([]);
+  const [cashFlowList, setCashFlowList] = useState([]);
 
 
   useEffect(() => {
-    getIncomes();
+    getCashFlow();
   }, []);
 
-  const getIncomes = async () => {
-    console.log('getIncomes');
-    console.log(myTableType);
+  const getCashFlow = async () => {
+    console.log('getCashFlow');
+    console.log(props.transactionType);
 
     const response = await axios.get(`http://localhost:27017/CashFlow/${accountName}`);
-    //console.log('response.data ' + JSON.stringify(response.data));
-    setInitialIncomesList(response.data);
-    setIncomesList(response.data.filter(item => {
+    console.log('response.data ' + JSON.stringify(response.data));
+    setInitialCashFlowList(response.data);
+    setCashFlowList(response.data.filter(item => {
       const formattedDate = new Date(item.date);
-      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && (item.type === "Incomes")
+      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && (item.type === props.transactionType)
     })
       .sort((a, b) => new Date(a.date) - new Date(b.date)));
 
@@ -40,18 +38,18 @@ const CashFlow = () => {
     try {
       console.log('id to delete ' + id);
       await axios.delete(`http://localhost:27017/CashFlow/${id}`);
-      getIncomes();
+      getCashFlow();
     } catch (error) {
       console.log(error);
     }
   };
 
 
-  const addIncomeHandler = async (newIncome) => {
+  const addTransactionHandler = async (newTransaction) => {
     try {
-      console.log('newIncome ' + JSON.stringify(newIncome));
+      console.log('newTransaction ' + JSON.stringify(newTransaction));
       await axios.post(`http://localhost:27017/CashFlow/${accountName}`,
-        newIncome
+        newTransaction
       );
       // navigate("/");
     } catch (error) {
@@ -59,12 +57,12 @@ const CashFlow = () => {
     }
   };
 
-  const editIncomeHandler = async (id, income) => {
+  const editTransactionHandler = async (id, transaction) => {
     try {
       console.log('id ' + id);
-      console.log('income ' + JSON.stringify(income));
+      console.log('transaction ' + JSON.stringify(transaction));
       await axios.patch(`http://localhost:27017/CashFlow/${id}`,
-        income
+        transaction
       );
       // navigate("/");
     } catch (error) {
@@ -76,9 +74,9 @@ const CashFlow = () => {
   return (
     <>
       <Typography align="left" variant="h4" component="h2">
-        <CashFlowTable initialIncomesList={initialIncomesList} incomesList={incomesList} setIncomesList={setIncomesList} onDelete={id => deleteHandler(id)} onAdd={income => addIncomeHandler(income)} onEdit={(id, income) => editIncomeHandler(id, income)} madeBy={madeBy} getIncomes={getIncomes} category={incomeCategory} tableType={myTableType.Incomes} />
+        <CashFlowTable initialCashFlowList={initialCashFlowList} cashFlowList={cashFlowList} setCashFlowList={setCashFlowList} onDelete={id => deleteHandler(id)} onAdd={transaction => addTransactionHandler(transaction)} onEdit={(id, transaction) => editTransactionHandler(id, transaction)} madeBy={madeBy} getCashFlow={getCashFlow} category={props.categoriesList} tableType={props.transactionType} />
       </Typography>
     </>
   );
 }
-export default Incomes;
+export default CashFlow;

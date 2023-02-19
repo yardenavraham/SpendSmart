@@ -14,19 +14,12 @@ import {
     InputLabel,
     FormControl,
 } from "@mui/material";
-// import dayjs from "dayjs";
-// import AddIcon from "@mui/icons-material/Add";
-// import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import * as consts from "../../Consts";
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import AlertModal from "../Alerts/AlertModal";
 import { Form, Formik, Field } from "formik";
 import { TextField, Select } from "formik-mui";
 import * as Yup from "yup";
-// import { DatePicker } from '@mui/x-date-pickers';
 import DatePickerField from "../DatePickerField/DatePickerField";
 
 const descriptionRegex = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
@@ -63,11 +56,6 @@ export default function AddEditModal(props) {
     const dataModel = tableType === consts.myTableType.Expenses ? consts.expense : consts.income
     console.log('table type ' + tableType);
     const labels = addOrEdit === 'add' ? dataModel.modolLabelsAdd : dataModel.modolLabelsEdit
-
-    // const category = props.tableType === consts.myTableType.Incomes ? incomeCategory : outcomeCategory
-    // const action = addOrEdit === 'add' ? 'Add Income' : 'Edit Income';
-    // const alertMessage = addOrEdit === 'add' ? 'The income has been added successfully' : 'The income has been updated successfully';
-    // const addOrEditIcon = addOrEdit === 'add' ? <AddIcon /> : <EditIcon />;
 
     const initialValues = (addOrEdit === 'edit') ? {
         type: selectedRow.type,
@@ -142,8 +130,8 @@ export default function AddEditModal(props) {
                         alert('Please enter a valid date');
                     }else{
                         props.addOrEdit === "add"
-                        ? props.callbackAddIncome(values)
-                        : props.callbackEditIncome(selectedRow._id, values);
+                        ? props.callbackAddTransaction(values)
+                        : props.callbackEditTransaction(selectedRow._id, values);
                       setShowSuccessAlert(true);
                     }
                     //console.log('values ' + JSON.stringify(values));

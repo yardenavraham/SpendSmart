@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import "./App.css";
 import AppHeader from "./Components/AppHeader/AppHeader";
 import Home from "./Pages/Home/Home";
-import Incomes from "./Pages/Incomes/Incomes";
+import CashFlow from "./Pages/CashFlow/CashFlow";
 import { ThemeProvider } from "@mui/material/styles";
-import theme from "./theme";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Toolbar from "@mui/material/Toolbar";
 import { createTheme } from '@mui/material/styles';
-import Expenses from "./Pages/Expenses/Expenses";
+import { myTableType, incomeCategory, expenseCategory} from "./Consts";
+
 import {
   createBrowserRouter,
   RouterProvider,
@@ -51,8 +51,8 @@ export default function App() {
             <Box component="div" sx={{ p: 3 }}>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="incomes" element={<Incomes />} />
-              <Route path="expenses" element={<Expenses />} />
+              <Route path="incomes" element={<CashFlow transactionType={myTableType.Incomes} categoriesList={incomeCategory} />} />
+              <Route path="expenses" element={<CashFlow transactionType={myTableType.Expenses} categoriesList={expenseCategory} />} />
               <Route path="dashboard" element={<Dashboard />} />
               <Route path="signin" element={<SignIn/>} />
               <Route path="signup" element={<SignUp/>} />
