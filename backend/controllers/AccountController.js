@@ -63,31 +63,31 @@ export const signIntoAccount = async (req, res) => {
     
     try {
         const {name, email, password} = req.body;
-        const item = await Account.findOne({name: name}).then(function (err, item) {
-            console.log("item=" + item)
+        
+        const item = await Account.findOne({name: name})
+        console.log("item=" + item)
+        
+        if (!item) {
+            res.status(400).json({message: "No account exists"})
+            return;
+        }
+    
+        item.comparePassword(password, function (err, isMatch) {
             if (err) {
                 console.error(err);
-                res.status(400).json({message: err});
+                res.status(500).json({message: err});
                 return;
             }
-            
-            item.comparePassword(password, function (err, isMatch) {
-                if (err) {
-                    console.error(err);
-                    res.status(500).json({message: err});
-                    return;
-                }
-                console.log('Password for account ' + item.name + ' match=' + isMatch);
-                
-                if (!isMatch) {
-                    res.status(401).json({message: "Wrong password"});
-                }
-                
-            });
-            
+            console.log('Password for account ' + item.name + ' match=' + isMatch);
+        
+            if (!isMatch) {
+                res.status(401).json({message: "Wrong password"});
+                return;
+            }
             const token = generateToken(item);
             res.status(200).json({token: token});
         });
+        
     } catch (error) {
         console.error(error)
         res.status(404).json({message: error.message});
