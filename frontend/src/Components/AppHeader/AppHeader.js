@@ -55,36 +55,42 @@ export default function AppHeader(props) {
     setMobileOpen((prevState) => !prevState);
   };
 
-  const navList = [
-    { to: '/', name: 'Home' },
-    ...(authCtx.isLoggedIn ? [
-      { to: '/incomes',
-        name: 'Incomes'}
-    ] : []),
-    ...(authCtx.isLoggedIn ? [
-      { to: '/expenses',
-        name: 'Expenses'}
-    ] : []),
-    ...(authCtx.isLoggedIn ? [
-      { to: '/dashboard',
-        name: 'Dashboard'}
-    ] : []),
-    ...(!authCtx.isLoggedIn ? [
-      { to: '/signin',
-        name: 'SignIn'}
-    ] : []),
-    ...(!authCtx.isLoggedIn ? [
-      { to: '/signup',
-        name: 'SignUp'}
-    ] : []),
-    ...(authCtx.isLoggedIn ? [
-      { to: '/editinformation',
-        name: 'EditInformation'}
-    ] : []),
-    ...(authCtx.isLoggedIn ? [
-      { to: '/logout',
-        name: 'Logout'}
-    ] : []),
+  const navList = authCtx.isLoggedIn ?
+  [
+    { 
+      to: '/',
+      name: 'Home'
+    },
+    { 
+      to: '/incomes',
+      name: 'Incomes'
+    },
+    { 
+      to: '/expenses',
+      name: 'Expenses'
+    },
+    { 
+      to: '/dashboard',
+      name: 'Dashboard'
+    },
+    { 
+      to: '/editinformation',
+      name: 'EditInformation'
+    },
+    { 
+      to: '/logout',
+      name: 'Logout'
+    }
+  ] : 
+  [
+    { 
+      to: '/signin',
+      name: 'SignIn'
+    },
+    { 
+      to: '/signup',
+      name: 'SignUp'
+    }
   ];
 
   const drawer = (

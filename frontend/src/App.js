@@ -25,7 +25,6 @@ import AuthContext from "./store/auth-context";
 import LogOut from './Pages/Logout/Logout';
 // import PrivateRoutes from "./Routes/PrivateRoutes";
 // import PublicRoutes from "./Routes/PublicRoutes";
-import Logout from "./Pages/Logout/Logout";
 
 export default function App() {
 
