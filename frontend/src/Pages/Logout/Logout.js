@@ -7,7 +7,7 @@ const Logout = () => {
     useEffect(() => {
         console.log('logout useeffect');
         authCtx.onLogout();
-    }, []);
+    }, [authCtx]);
 
     return(
         <div>aaaa</div>

@@ -27,6 +27,9 @@ import SignUp from "./Pages/SignUp/SignUp";
 import EditInformation from "./Pages/EditInformation/EditInformation";
 import AuthContext from "./store/auth-context";
 import LogOut from './Pages/Logout/Logout';
+import PrivateRoutes from "./Routes/PrivateRoutes";
+import PublicRoutes from "./Routes/PublicRoutes";
+import Logout from "./Pages/Logout/Logout";
 
 export default function App() {
 
@@ -46,6 +49,57 @@ export default function App() {
   const authCtx = useContext(AuthContext);
   console.log('authCtx.isLoggedIn ' + authCtx.isLoggedIn);
 
+  const conditionalRouting = item => {
+    return !item.logged ? (
+      item.element
+    ) : (
+      <Navigate replace to={"/"} />
+    );
+  }
+
+  const routingList = [
+    {
+      path: "/",
+      element: <Home />,
+      logged: authCtx.isLoggedIn
+    },
+    {
+      path: "incomes",
+      element: <Incomes />,
+      logged: authCtx.isLoggedIn
+    },
+    {
+      path: "expenses",
+      element: <Expenses />,
+      logged: authCtx.isLoggedIn
+    },
+    {
+      path: "dashboard",
+      element: <Dashboard />,
+      logged: authCtx.isLoggedIn
+    },
+    {
+      path: "signin",
+      element: <SignIn />,
+      logged: !authCtx.isLoggedIn
+    },
+    {
+      path: "signup",
+      element: <SignUp />,
+      logged: !authCtx.isLoggedIn
+    },
+    {
+      path: "logout",
+      element: <LogOut />,
+      logged: authCtx.isLoggedIn
+    },
+    {
+      path: "editinformation",
+      element: <EditInformation />,
+      logged: true
+    },
+  ];
+
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -55,12 +109,16 @@ export default function App() {
           <BrowserRouter>
             <AppHeader />
             <Box component="div" sx={{ p: 3 }}>
+              {/* {authCtx.isLoggedIn ? <PrivateRoutes /> : <PublicRoutes />} */}
             <Routes>
+              {/* {routingList.map((item) => (
+                <Route key={item.path} path={item.path} element={conditionalRouting(item)} />
+              ))}; */}
               <Route path="/" element={<Home />} />
               <Route path="incomes" element={<Incomes />} />
               <Route path="expenses" element={<Expenses />} />
               <Route path="dashboard" element={<Dashboard />} />
-            <Route path="signin" element={!authCtx.isLoggedIn ? (
+            <Route path="signin" element= {!authCtx.isLoggedIn ? (
                 <SignIn />
               ) : (
                 <Navigate replace to={"/"} />

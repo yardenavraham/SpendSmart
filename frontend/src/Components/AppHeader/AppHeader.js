@@ -57,19 +57,18 @@ export default function AppHeader(props) {
 
   const navList = [
     { to: '/', name: 'Home' },
-    {
-      to: '/incomes',
-      name: 'Incomes',
-
-    },
-    {
-      to: '/expenses',
-      name: 'Expenses',
-    },
-    {
-      to: '/dashboard',
-      name: 'Dashboard'
-    },
+    ...(authCtx.isLoggedIn ? [
+      { to: '/incomes',
+        name: 'Incomes'}
+    ] : []),
+    ...(authCtx.isLoggedIn ? [
+      { to: '/expenses',
+        name: 'Expenses'}
+    ] : []),
+    ...(authCtx.isLoggedIn ? [
+      { to: '/dashboard',
+        name: 'Dashboard'}
+    ] : []),
     ...(!authCtx.isLoggedIn ? [
       { to: '/signin',
         name: 'SignIn'}
@@ -79,13 +78,13 @@ export default function AppHeader(props) {
         name: 'SignUp'}
     ] : []),
     ...(authCtx.isLoggedIn ? [
+      { to: '/editinformation',
+        name: 'EditInformation'}
+    ] : []),
+    ...(authCtx.isLoggedIn ? [
       { to: '/logout',
         name: 'Logout'}
     ] : []),
-    {
-      to: '/editinformation',
-      name: 'EditInformation'
-    }
   ];
 
   const drawer = (
