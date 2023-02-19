@@ -11,24 +11,25 @@ const CashFlow = (props) => {
   const madeBy = ['Adi', 'Yarden', 'Inbal', 'Michal', 'Yulia']; //TODO remove this
   const accountName = "myAccount"; //TODO remove this
 
+  const {transactionType} = props;
   const [initialCashFlowList, setInitialCashFlowList] = useState([]);
   const [cashFlowList, setCashFlowList] = useState([]);
 
 
   useEffect(() => {
     getCashFlow();
-  }, []);
+  }, [transactionType]);
 
   const getCashFlow = async () => {
     console.log('getCashFlow');
-    console.log(props.transactionType);
+    console.log(transactionType);
 
     const response = await axios.get(`http://localhost:27017/CashFlow/${accountName}`);
     console.log('response.data ' + JSON.stringify(response.data));
     setInitialCashFlowList(response.data);
     setCashFlowList(response.data.filter(item => {
       const formattedDate = new Date(item.date);
-      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && (item.type === props.transactionType)
+      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && (item.type === transactionType)
     })
       .sort((a, b) => new Date(a.date) - new Date(b.date)));
 
@@ -74,7 +75,7 @@ const CashFlow = (props) => {
   return (
     <>
       <Typography align="left" variant="h4" component="h2">
-        <CashFlowTable initialCashFlowList={initialCashFlowList} cashFlowList={cashFlowList} setCashFlowList={setCashFlowList} onDelete={id => deleteHandler(id)} onAdd={transaction => addTransactionHandler(transaction)} onEdit={(id, transaction) => editTransactionHandler(id, transaction)} madeBy={madeBy} getCashFlow={getCashFlow} category={props.categoriesList} tableType={props.transactionType} />
+        <CashFlowTable initialCashFlowList={initialCashFlowList} cashFlowList={cashFlowList} setCashFlowList={setCashFlowList} onDelete={id => deleteHandler(id)} onAdd={transaction => addTransactionHandler(transaction)} onEdit={(id, transaction) => editTransactionHandler(id, transaction)} madeBy={madeBy} getCashFlow={getCashFlow} category={props.categoriesList} tableType={transactionType} />
       </Typography>
     </>
   );
