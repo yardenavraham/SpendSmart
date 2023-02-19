@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import jwt from 'jwt-decode' // import dependency
+
 
 const AuthContext = React.createContext({
 	isLoggedIn: false,
     onLogout: () => {},
-    onLogin: (formValues) => {}
+    onLogin: (token) => {}
 });
 
 export const AuthContextProvider = (props) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [accountDetails, setAccountDetails] = useState({});
 
     useEffect (() => {
         const storedUserLoggedInInformation = localStorage.getItem('isLoggedIn');
-        if (storedUserLoggedInInformation === '1') {
+        if (storedUserLoggedInInformation !== null) {
             setIsLoggedIn(true);
         }
     }, []);
@@ -20,12 +23,21 @@ export const AuthContextProvider = (props) => {
         console.log('logoutHandler');
         localStorage.removeItem('isLoggedIn');
         setIsLoggedIn(false);
+        setAccountDetails({});
     };
 
-    const loginHandler = (formValues) => {
-        console.log('ctx loginHandler ' + JSON.stringify(formValues));
-        localStorage.setItem('isLoggedIn', 1);
+    const loginHandler = (token) => {
+        console.log('ctx loginHandler ' + JSON.stringify(token));
+        localStorage.setItem('isLoggedIn', token);
+        console.log('decode ' + JSON.stringify(jwt(token)));
+        const decodedToken = jwt(token);
         setIsLoggedIn(true);
+        setAccountDetails({
+            'accountName': decodedToken.accountName,
+            'firstName': decodedToken.firstName,
+            'lastName': decodedToken.lastName,
+            'email': decodedToken.email
+        })
     };
 
     return (
@@ -40,6 +52,5 @@ export const AuthContextProvider = (props) => {
         </AuthContext.Provider>
     )
 }
-
 
 export default AuthContext;

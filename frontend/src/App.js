@@ -53,48 +53,48 @@ export default function App() {
     );
   }
 
-  const routingList = [
-    {
-      path: "/",
-      element: <Home />,
-      logged: authCtx.isLoggedIn
-    },
-    {
-      path: "incomes",
-      element: <Incomes />,
-      logged: authCtx.isLoggedIn
-    },
-    {
-      path: "expenses",
-      element: <Expenses />,
-      logged: authCtx.isLoggedIn
-    },
-    {
-      path: "dashboard",
-      element: <Dashboard />,
-      logged: authCtx.isLoggedIn
-    },
-    {
-      path: "signin",
-      element: <SignIn />,
-      logged: !authCtx.isLoggedIn
-    },
-    {
-      path: "signup",
-      element: <SignUp />,
-      logged: !authCtx.isLoggedIn
-    },
-    {
-      path: "logout",
-      element: <LogOut />,
-      logged: authCtx.isLoggedIn
-    },
-    {
-      path: "editinformation",
-      element: <EditInformation />,
-      logged: true
-    },
-  ];
+  // const routingList = [
+  //   {
+  //     path: "/",
+  //     element: <Home />,
+  //     logged: authCtx.isLoggedIn
+  //   },
+  //   {
+  //     path: "incomes",
+  //     element: <Incomes />,
+  //     logged: authCtx.isLoggedIn
+  //   },
+  //   {
+  //     path: "expenses",
+  //     element: <Expenses />,
+  //     logged: authCtx.isLoggedIn
+  //   },
+  //   {
+  //     path: "dashboard",
+  //     element: <Dashboard />,
+  //     logged: authCtx.isLoggedIn
+  //   },
+  //   {
+  //     path: "signin",
+  //     element: <SignIn />,
+  //     logged: !authCtx.isLoggedIn
+  //   },
+  //   {
+  //     path: "signup",
+  //     element: <SignUp />,
+  //     logged: !authCtx.isLoggedIn
+  //   },
+  //   {
+  //     path: "logout",
+  //     element: <LogOut />,
+  //     logged: authCtx.isLoggedIn
+  //   },
+  //   {
+  //     path: "editinformation",
+  //     element: <EditInformation />,
+  //     logged: true
+  //   },
+  // ];
 
   return (
     <div className="App">

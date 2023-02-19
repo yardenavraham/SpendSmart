@@ -21,7 +21,8 @@ export const createAccount = async (req, res) => {
         const createdAccount = await new Account(account).save();
         const token = generateToken(createdAccount);
         console.log("token is " + token)
-        res.status(201).json({token: token});
+        return res.status(201).json({token: token});
+        //console.log('ret ' + JSON.stringify(ret));
     } catch (error) {
         console.log('error ' + JSON.stringify(error));
         res.status(500).json({message: error.message});
