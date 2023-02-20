@@ -70,7 +70,8 @@ export default function AppHeader(props) {
   const handleCloseUserMenu = (event) => {
     setAnchorElUser(null);
     console.log('event ' + event.target.innerText);
-    navigate(settingsToRoute.find(item => item.name === event.target.innerText).path);
+    const settingItem = settingsToRoute.find(item => item.name === event.target.innerText);
+    navigate(settingItem.path ? settingItem.path : './');
   };
 
   const handleDrawerToggle = () => {
