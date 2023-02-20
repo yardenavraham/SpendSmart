@@ -87,7 +87,7 @@ export const signIntoAccount = async (req, res) => {
                 return;
             }
             const token = generateToken(item);
-            res.status(200).json({token: token});
+            return res.status(200).json({token: token});
         });
         
     } catch (error) {

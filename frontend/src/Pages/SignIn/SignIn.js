@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './SignIn.css';
 import  AuthContext from '../../store/auth-context';
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
     return (
@@ -32,6 +33,9 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignIn() {
+
+    const authCtx = useContext(AuthContext);
+    const navigate = useNavigate();
     
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -44,7 +48,9 @@ export default function SignIn() {
         });
     
         try {
-            await axios.post("http://localhost:27017/signin", {name: data.get('accountName'), password: data.get('password'), email: data.get('email')});
+            const response = await axios.post("http://localhost:27017/signin", {name: data.get('accountName'), password: data.get('password'), email: data.get('email')});
+            authCtx.onLogin(response.data.token);
+            navigate("/");
         } catch (error) {
             console.log(error);
         }
@@ -91,13 +97,6 @@ export default function SignIn() {
                 }
             }
         })
-    }
-
-    const authCtx = useContext(AuthContext);
-
-    const signInClicked = () => {
-        console.log('signInClicked ' + JSON.stringify(formValues));
-        authCtx.onLogin(formValues);
     }
 
     return (
@@ -158,7 +157,6 @@ export default function SignIn() {
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
-                                onClick={signInClicked}
                             >
                                 Sign In
                             </Button>

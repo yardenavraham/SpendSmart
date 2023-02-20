@@ -15,6 +15,7 @@ import * as Yup from "yup";
 import axios from "axios";
 import { useContext } from 'react';
 import  AuthContext from '../../store/auth-context';
+import { useNavigate } from "react-router-dom";
 
 function Copyright(props) {
   return (
@@ -82,6 +83,7 @@ const validationSchema = Yup.object().shape({
 export default function SignUp() {
 
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const partnersGroup = {
     partnerFirstName: "",
@@ -117,8 +119,7 @@ export default function SignUp() {
       console.log('Saving account ' + account.name);
       const response = await axios.post("http://localhost:27017/signup", map(account));
       authCtx.onLogin(response.data.token);
-      //localStorage.setItem('token', response.data.token);
-      //console.log('response ' + JSON.stringify(response));
+      navigate("/");
     } catch (error) {
       console.log(error);
     }
