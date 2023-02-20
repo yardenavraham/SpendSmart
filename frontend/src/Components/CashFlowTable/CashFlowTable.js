@@ -211,7 +211,7 @@ const CashFlowTable = props => {
             }
           },
           {
-            title: "MadeBy", field: "madeBy", filtering: true, lookup: madeByFilter,
+            title: "Made By", field: "madeBy", filtering: true, lookup: madeByFilter,
             cellStyle: {
               backgroundColor: '#FFFFFF',
               color: '#00000',

@@ -12,6 +12,7 @@ import {
     Avatar,
     CssBaseline,
     FormControl,
+    InputLabel
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import * as consts from "../../Consts";
@@ -26,22 +27,18 @@ const amountRegex = /^[+]?([.]\d+|\d+[.]?\d*)$/;
 const frequencyRegex = /^[a-zA-Z\s]*$/;
 
 const validationSchema = Yup.object().shape({
-  category: Yup.string().required("Required"),
-  description: Yup.string()
-    .matches(descriptionRegex, "Only English letters and numbers")
-    .min(2, "Minimum 2 characters")
-    .max(50, "Maximum 50 characters")
-    .required("Required"),
-  amount: Yup.string()
-    .matches(amountRegex, "Only positive numbers")
-    .min(2, "Minimum 2 characters")
-    .max(50, "Maximum 50 characters")
-    .required("Required"),
-  frequency: Yup.string()
-    .matches(frequencyRegex, "Only English letters")
-    .min(2, "Minimum 2 characters")
-    .max(50, "Maximum 50 characters"),
-  madeBy: Yup.string().required("Required"),
+    category: Yup.string().required("Required"),
+    description: Yup.string()
+        .matches(descriptionRegex, "Only English letters and numbers")
+        .min(2, "Minimum 2 characters")
+        .max(50, "Maximum 50 characters")
+        .required("Required"),
+    amount: Yup.string()
+        .matches(amountRegex, "Only positive numbers")
+        .min(2, "Minimum 2 characters")
+        .max(50, "Maximum 50 characters")
+        .required("Required"),
+    madeBy: Yup.string().required("Required"),
 });
 
 export default function AddEditModal(props) {
@@ -69,11 +66,12 @@ export default function AddEditModal(props) {
         amount: "",
         description: "",
         madeBy: "",
-        frequency: "",
+        frequency: 1,
         date: new Date()
     };
 
     const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    const frequencyArr = Array(12).fill(0).map((_, i) => i + 1);
 
     useEffect(() => {
         const timeId = setTimeout(() => {
@@ -118,29 +116,29 @@ export default function AddEditModal(props) {
                             {labels.action}
                         </Typography>
 
-            <Box sx={{ mt: 3, alignItems: "center" }} justifyContent="center">
-              <Grid container sx={{ alignItems: "center" }}>
-                <Formik
-                  initialValues={initialValues}
-                  validationSchema={validationSchema}
-                  onSubmit={(values, {resetForm}) => {
-                    if(!values.date){
-                        alert('Please enter a valid date');
-                    }else{
-                        props.addOrEdit === "add"
-                        ? props.callbackAddTransaction(values)
-                        : props.callbackEditTransaction(selectedRow._id, values);
-                      setShowSuccessAlert(true);
-                      resetForm({values: ''})
-                    }
-                    //console.log('values ' + JSON.stringify(values));
-                  }}
-                >
-                  {(props) => {
-                    const {
-                      values,
-                      setFieldValue,
-                    } = props;
+                        <Box sx={{ mt: 3, alignItems: "center" }} justifyContent="center">
+                            <Grid container sx={{ alignItems: "center" }}>
+                                <Formik
+                                    initialValues={initialValues}
+                                    validationSchema={validationSchema}
+                                    onSubmit={(values, { resetForm }) => {
+                                        if (!values.date) {
+                                            alert('Please enter a valid date');
+                                        } else {
+                                            props.addOrEdit === "add"
+                                                ? props.callbackAddTransaction(values)
+                                                : props.callbackEditTransaction(selectedRow._id, values);
+                                            setShowSuccessAlert(true);
+                                            resetForm({ values: '' })
+                                        }
+                                        //console.log('values ' + JSON.stringify(values));
+                                    }}
+                                >
+                                    {(props) => {
+                                        const {
+                                            values,
+                                            setFieldValue,
+                                        } = props;
 
                                         console.log("props " + JSON.stringify(props));
                                         return (
@@ -193,12 +191,26 @@ export default function AddEditModal(props) {
                                                         </FormControl>
                                                     </Grid>
                                                     <Grid item xs={12}>
-                                                        <Field
+                                                        <FormControl fullWidth>
+                                                            <Field
+                                                                defaultValue={"1"}
+                                                                component={Select}
+                                                                name="frequency"
+                                                                label="Monthly frequency"
+                                                            >
+                                                                {frequencyArr.map((num) => (
+                                                                    <MenuItem key={num} value={num}>
+                                                                        {num}
+                                                                    </MenuItem>
+                                                                ))}
+                                                            </Field>
+                                                        </FormControl>
+                                                        {/* <Field
                                                             fullWidth
                                                             component={TextField}
                                                             name="frequency"
                                                             label="Frequency"
-                                                        />
+                                                        /> */}
                                                     </Grid>
                                                     <Grid item xs={12}>
                                                         <DatePickerField
