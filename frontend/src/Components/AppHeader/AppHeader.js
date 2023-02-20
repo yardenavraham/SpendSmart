@@ -24,9 +24,28 @@ import Link from '@mui/material/Link';
 import Container from "@mui/material/Container";
 import { useContext } from 'react';
 import AuthContext from "../../store/auth-context";
+import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout','SignIn', 'EditInformation'];
+const settingsToRoute = [
+  {
+    name: 'Profile',
+    path: './editinformation'
+  }, 
+  {
+    name: 'Logout',
+    path: './logout'
+  }, 
+  {
+    name: 'SignIn',
+    path: './signin'
+  }, 
+  {
+    name: 'SignUp',
+    path: './signup'
+  }
+];
 
 export default function AppHeader(props) {
   const { window } = props;
@@ -35,6 +54,7 @@ export default function AppHeader(props) {
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
   const authCtx = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
@@ -47,8 +67,10 @@ export default function AppHeader(props) {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (event) => {
     setAnchorElUser(null);
+    console.log('event ' + event.target.innerText);
+    navigate(settingsToRoute.find(item => item.name === event.target.innerText).path);
   };
 
   const handleDrawerToggle = () => {
@@ -73,24 +95,24 @@ export default function AppHeader(props) {
       to: '/dashboard',
       name: 'Dashboard'
     },
-    { 
-      to: '/editinformation',
-      name: 'EditInformation'
-    },
-    { 
-      to: '/logout',
-      name: 'Logout'
-    }
+    // { 
+    //   to: '/editinformation',
+    //   name: 'EditInformation'
+    // },
+    // { 
+    //   to: '/logout',
+    //   name: 'Logout'
+    // }
   ] : 
   [
-    { 
-      to: '/signin',
-      name: 'SignIn'
-    },
-    { 
-      to: '/signup',
-      name: 'SignUp'
-    }
+    // { 
+    //   to: '/signin',
+    //   name: 'SignIn'
+    // },
+    // { 
+    //   to: '/signup',
+    //   name: 'SignUp'
+    // }
   ];
 
   const drawer = (
@@ -179,7 +201,7 @@ export default function AppHeader(props) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Yulia" src="/static/images/avatar/2.jpg" />
+                <Avatar alt={authCtx.accountDetails.firstName} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
@@ -198,9 +220,9 @@ export default function AppHeader(props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
+              {settingsToRoute.map((item) => (
+                <MenuItem key={item.name} value={item.name} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{item.name}</Typography>
                 </MenuItem>
               ))}
             </Menu>
