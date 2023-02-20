@@ -23,8 +23,8 @@ import SignUp from "./Pages/SignUp/SignUp";
 import EditInformation from "./Pages/EditInformation/EditInformation";
 import AuthContext from "./store/auth-context";
 import LogOut from './Pages/Logout/Logout';
-// import PrivateRoutes from "./Routes/PrivateRoutes";
-// import PublicRoutes from "./Routes/PublicRoutes";
+import PrivateRoute from "./Routes/PrivateRoute";
+// import PublicRoute from "./Routes/PublicRoute";
 
 export default function App() {
 
@@ -51,50 +51,6 @@ export default function App() {
       <Navigate replace to={"/"} />
     );
   }
-
-  // const routingList = [
-  //   {
-  //     path: "/",
-  //     element: <Home />,
-  //     logged: authCtx.isLoggedIn
-  //   },
-  //   {
-  //     path: "incomes",
-  //     element: <Incomes />,
-  //     logged: authCtx.isLoggedIn
-  //   },
-  //   {
-  //     path: "expenses",
-  //     element: <Expenses />,
-  //     logged: authCtx.isLoggedIn
-  //   },
-  //   {
-  //     path: "dashboard",
-  //     element: <Dashboard />,
-  //     logged: authCtx.isLoggedIn
-  //   },
-  //   {
-  //     path: "signin",
-  //     element: <SignIn />,
-  //     logged: !authCtx.isLoggedIn
-  //   },
-  //   {
-  //     path: "signup",
-  //     element: <SignUp />,
-  //     logged: !authCtx.isLoggedIn
-  //   },
-  //   {
-  //     path: "logout",
-  //     element: <LogOut />,
-  //     logged: authCtx.isLoggedIn
-  //   },
-  //   {
-  //     path: "editinformation",
-  //     element: <EditInformation />,
-  //     logged: true
-  //   },
-  // ];
-
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
@@ -104,31 +60,31 @@ export default function App() {
           <BrowserRouter>
             <AppHeader />
             <Box component="div" sx={{ p: 3 }}>
-              {/* {authCtx.isLoggedIn ? <PrivateRoutes /> : <PublicRoutes />} */}
             <Routes>
-              {/* {routingList.map((item) => (
-                <Route key={item.path} path={item.path} element={conditionalRouting(item)} />
-              ))}; */}
-              <Route path="/" element={<Home />} />
-              <Route path="incomes" element={<CashFlow transactionType={myTableType.Incomes} categoriesList={incomeCategory} />} />
-              <Route path="expenses" element={<CashFlow transactionType={myTableType.Expenses} categoriesList={expenseCategory} />} />
-              <Route path="dashboard" element={<Dashboard />} />
-            <Route path="signin" element= {!authCtx.isLoggedIn ? (
-                <SignIn />
-              ) : (
-                <Navigate replace to={"/"} />
-              )} />
-             <Route path="signup" element={!authCtx.isLoggedIn ? (
-                <SignUp />
-              ) : (
-                <Navigate replace to={"/"} />
-              )} />
-              <Route path='logout' element={authCtx.isLoggedIn ? (
-                <LogOut />
-              ) : (
-                <Navigate replace to={"/"} />
-              )} />
-              <Route path="editinformation" element={<EditInformation/>} />
+              <Route exact path='/' element={<PrivateRoute/>}>
+                <Route path="/" element={<Home />} />
+              </Route>
+              <Route exact path='/' element={<PrivateRoute/>}>
+                <Route path="incomes" element={<CashFlow transactionType={myTableType.Incomes} categoriesList={incomeCategory} />} />
+              </Route>
+              <Route exact path='/' element={<PrivateRoute/>}>
+                <Route path="expenses" element={<CashFlow transactionType={myTableType.Expenses} categoriesList={expenseCategory} />} />
+              </Route>
+              <Route exact path='/' element={<PrivateRoute/>}>
+                <Route path="dashboard" element={<Dashboard />} />
+              </Route>
+              {/* <Route exact path='/' element={<PublicRoute/>}> */}
+                <Route path="signin" element={<SignIn />} />
+              {/* </Route> */}
+              {/* <Route exact path='/' element={<PrivateRoute/>}> */}
+                <Route path="signup" element={<SignUp />} />
+              {/* </Route> */}
+              <Route exact path='/' element={<PrivateRoute/>}>
+                <Route path="logout" element={<LogOut/>} />
+              </Route>
+              <Route exact path='/' element={<PrivateRoute/>}>
+                <Route path="editinformation" element={<EditInformation/>} />
+               </Route>
             </Routes>
              </Box>
           </BrowserRouter>
