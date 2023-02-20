@@ -18,8 +18,8 @@ const CashFlow = mongoose.Schema({
         required: true
     },
     frequency: {
-        type: String,
-        required: false
+        type: Number,
+        required: true
     },
     date: {
         type: Date,

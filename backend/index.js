@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
-import IncomeRoute from "./routes/IncomeRoute.js";
+import CashFlowRoute from "./routes/CashFlowRoute.js";
 import AccountRoute from "./routes/AccountRoute.js";
 
 const app = express();
@@ -21,7 +21,7 @@ db.once('open', () => console.log('Database Connected...'));
 
 app.use(cors());
 app.use(express.json());
-app.use(IncomeRoute);
+app.use(CashFlowRoute);
 app.use(AccountRoute);
 
 app.listen(27017, () => console.log('Server up and running...'));
