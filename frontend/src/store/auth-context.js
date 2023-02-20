@@ -40,7 +40,7 @@ export const AuthContextProvider = (props) => {
             'firstName': decodedToken.firstName,
             'lastName': decodedToken.lastName,
             'email': decodedToken.email,
-            'partners': decodedToken.partners
+            'partners': decodedToken.partners.map(user => user.firstName)
         });
         // console.log('accountDetails ' + JSON.stringify(accountDetails));
     };
