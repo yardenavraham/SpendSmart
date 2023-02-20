@@ -37,7 +37,8 @@ export const generateToken = (account) => {
             accountName: account.name,
             firstName: account.partners[0].firstName,
             lastName: account.partners[0].lastName,
-            email: account.partners[0].email
+            email: account.partners[0].email,
+            partners: account.partners
         };
         return jwt.sign(fieldsForToken, TOKEN_KEY, {expiresIn: "7d"});
     } catch (err) {

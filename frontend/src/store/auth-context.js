@@ -3,6 +3,7 @@ import jwt from 'jwt-decode' // import dependency
 
 
 const AuthContext = React.createContext({
+    accountDetails: {},
 	isLoggedIn: false,
     onLogout: () => {},
     onLogin: (token) => {}
@@ -31,18 +32,23 @@ export const AuthContextProvider = (props) => {
         localStorage.setItem('isLoggedIn', token);
         console.log('decode ' + JSON.stringify(jwt(token)));
         const decodedToken = jwt(token);
+        console.log('decodedToken.email ' + JSON.stringify(decodedToken.email));
+        
         setIsLoggedIn(true);
         setAccountDetails({
             'accountName': decodedToken.accountName,
             'firstName': decodedToken.firstName,
             'lastName': decodedToken.lastName,
-            'email': decodedToken.email
-        })
+            'email': decodedToken.email,
+            'partners': decodedToken.partners
+        });
+        // console.log('accountDetails ' + JSON.stringify(accountDetails));
     };
 
     return (
         <AuthContext.Provider
             value={{
+                accountDetails: accountDetails,
                 isLoggedIn: isLoggedIn,
                 onLogout: logoutHandler,
                 onLogin: loginHandler

@@ -117,9 +117,8 @@ export default function SignUp() {
       console.log('Saving account ' + account.name);
       const response = await axios.post("http://localhost:27017/signup", map(account));
       authCtx.onLogin(response.data.token);
-      //        localStorage.setItem('token', response.data.token);
-
-      console.log('response ' + JSON.stringify(response));
+      //localStorage.setItem('token', response.data.token);
+      //console.log('response ' + JSON.stringify(response));
     } catch (error) {
       console.log(error);
     }
