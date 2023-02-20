@@ -27,21 +27,25 @@ import AuthContext from "../../store/auth-context";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout','SignIn', 'EditInformation'];
+// const settings = ['Profile', 'Account', 'Dashboard', 'Logout','SignIn', 'EditInformation'];
 const settingsToRoute = [
   {
+    isLoggedIn: true,
     name: 'Profile',
     path: './editinformation'
   }, 
   {
+    isLoggedIn: true,
     name: 'Logout',
     path: './logout'
   }, 
   {
+    isLoggedIn: false,
     name: 'SignIn',
     path: './signin'
   }, 
   {
+    isLoggedIn: false,
     name: 'SignUp',
     path: './signup'
   }
@@ -71,7 +75,7 @@ export default function AppHeader(props) {
     setAnchorElUser(null);
     console.log('event ' + event.target.innerText);
     const settingItem = settingsToRoute.find(item => item.name === event.target.innerText);
-    navigate(settingItem.path ? settingItem.path : './');
+    navigate(settingItem ? settingItem.path : './');
   };
 
   const handleDrawerToggle = () => {
@@ -221,7 +225,7 @@ export default function AppHeader(props) {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settingsToRoute.map((item) => (
+              {settingsToRoute.filter(item => item.isLoggedIn === authCtx.isLoggedIn).map((item) => (
                 <MenuItem key={item.name} value={item.name} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{item.name}</Typography>
                 </MenuItem>
