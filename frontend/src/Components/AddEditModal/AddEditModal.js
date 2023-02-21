@@ -1,7 +1,5 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import Grid from "@mui/material/Grid";
-import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
     MenuItem,
@@ -12,7 +10,8 @@ import {
     Avatar,
     CssBaseline,
     FormControl,
-    InputLabel
+    Typography,
+    Grid
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import * as consts from "../../Consts";
@@ -24,7 +23,6 @@ import DatePickerField from "../DatePickerField/DatePickerField";
 
 const descriptionRegex = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
 const amountRegex = /^[+]?([.]\d+|\d+[.]?\d*)$/;
-const frequencyRegex = /^[a-zA-Z\s]*$/;
 
 const validationSchema = Yup.object().shape({
     category: Yup.string().required("Required"),
@@ -42,14 +40,11 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function AddEditModal(props) {
-    //console.log('props11 ' + JSON.stringify(props));
 
     const { addOrEdit, madeBy, selectedRow, tableType } = props;
     const [madeByOptions] = useState(madeBy);
-    console.log('madeBy ' + madeBy);
     const theme = createTheme();
     const dataModel = tableType === consts.myTableType.Expenses ? consts.expense : consts.income
-    console.log('table type ' + tableType);
     const labels = addOrEdit === 'add' ? dataModel.modolLabelsAdd : dataModel.modolLabelsEdit
 
     const initialValues = (addOrEdit === 'edit') ? {
@@ -70,30 +65,33 @@ export default function AddEditModal(props) {
         date: new Date()
     };
 
-    const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    // const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+    // const [showErrorAlert, setShowErrorAlert] = useState(false);
+
+    const [showAlert, setShowAlert] = useState(false);
+    const [message, setMessage] = useState('');
+    const [alertType, setAlertType] = useState('');
+
     const frequencyArr = Array(12).fill(0).map((_, i) => i + 1);
 
     useEffect(() => {
         const timeId = setTimeout(() => {
-            // After 2 seconds set the show value to false
-            setShowSuccessAlert(false);
-        }, 2000);
+            setShowAlert(false);
+        }, 3000);
 
         return () => {
             clearTimeout(timeId);
         };
-    }, [showSuccessAlert]);
+    }, [showAlert]);
 
     return (
         <>
-            {showSuccessAlert && (
-                <Stack sx={{ width: "100%" }} spacing={2}>
-                    <AlertModal
-                        open={showSuccessAlert}
-                        alertType="success"
-                        message={labels.alertMessage}
-                    />
-                </Stack>
+            {showAlert && (
+                <AlertModal
+                    open={showAlert}
+                    alertType={alertType}
+                    message={message}
+                />
             )}
             <ThemeProvider theme={theme}>
                 <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
@@ -123,15 +121,19 @@ export default function AddEditModal(props) {
                                     validationSchema={validationSchema}
                                     onSubmit={(values, { resetForm }) => {
                                         if (!values.date) {
-                                            alert('Please enter a valid date');
+                                            setMessage('Please enter a valid date');
+                                            setAlertType('error');
+                                            setShowAlert(true);
+                                            resetForm({ values: Object.assign({}, values, { date: new Date() }) })
                                         } else {
                                             props.addOrEdit === "add"
                                                 ? props.callbackAddTransaction(values)
                                                 : props.callbackEditTransaction(selectedRow._id, values);
-                                            setShowSuccessAlert(true);
+                                            setMessage(labels.alertMessage);
+                                            setAlertType('success');
+                                            setShowAlert(true);
                                             resetForm({ values: '' })
                                         }
-                                        //console.log('values ' + JSON.stringify(values));
                                     }}
                                 >
                                     {(props) => {

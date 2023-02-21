@@ -22,7 +22,7 @@ const AlertModal = ({open, alertType, message}) => {
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                <Alert severity="success">
+                <Alert severity={alertType}>
                     <AlertTitle>{alertType}</AlertTitle>
                     {message}
                 </Alert>
