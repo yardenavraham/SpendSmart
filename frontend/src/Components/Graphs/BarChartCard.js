@@ -17,7 +17,7 @@ import * as d3 from 'd3';
 
 function BarChartCard(props) {
   const theme = useTheme();
-  const colors = d3.schemeCategory10;
+  const colors = d3.schemeSet2;
 
   return (
     <Grid item xs={12}>
@@ -31,16 +31,19 @@ function BarChartCard(props) {
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis dataKey="value" />
+              
               <Tooltip />
-              {/*<Legend />*/}
-              <Bar dataKey="value" fill={theme.palette.primary.main}>
+              <Legend />
+              <Bar dataKey="value">
                 {props.data.map((entry, index) => (
                   <Cell
                     key={`cell-${index}`}
                     fill={colors[index % colors.length]}
                   />
                 ))}
+
               </Bar>
+              
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
