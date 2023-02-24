@@ -1,13 +1,20 @@
 import React from "react";
 import { Card, CardContent, Grid, Typography } from "@mui/material";
-import { PieChart, Pie,  Cell, Tooltip, ResponsiveContainer } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Legend,
+  Cell,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import { ThemeProvider } from "@mui/material/styles";
 import { useTheme } from "@mui/styles";
-import * as d3 from 'd3';
+import * as d3 from "d3";
 
 function PieChartCard(props) {
   const theme = useTheme();
-  const colors = d3.schemeCategory10;
+  const colors = d3.schemeSet2;
 
   return (
     <Grid item xs={4}>
@@ -26,12 +33,17 @@ function PieChartCard(props) {
                 cy="50%"
                 outerRadius="100%"
                 fill={theme.palette.primary.main}
-                legendType="diamond"
+                legendType="circle"
+                height={36}
               >
-            {props.data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-            ))}
+                {props.data.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={colors[index % colors.length]}
+                  />
+                ))}
               </Pie>
+              <Legend />
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
