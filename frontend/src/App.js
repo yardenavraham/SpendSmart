@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react"
-import { Navigate } from 'react-router-dom';
+import React from "react"
 import "./App.css";
 import AppHeader from "./Components/AppHeader/AppHeader";
 import Home from "./Pages/Home/Home";
@@ -21,7 +20,6 @@ import Dashboard from "./Pages/Dashboard/Dashboard";
 import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
 import EditInformation from "./Pages/EditInformation/EditInformation";
-import AuthContext from "./store/auth-context";
 import LogOut from './Pages/Logout/Logout';
 import PrivateRoute from "./Routes/PrivateRoute";
 // import PublicRoute from "./Routes/PublicRoute";
@@ -41,16 +39,6 @@ export default function App() {
     },
   });
 
-  const authCtx = useContext(AuthContext);
-  console.log('authCtx.isLoggedIn ' + authCtx.isLoggedIn);
-
-  const conditionalRouting = item => {
-    return !item.logged ? (
-      item.element
-    ) : (
-      <Navigate replace to={"/"} />
-    );
-  }
   return (
     <div className="App">
       <ThemeProvider theme={theme}>

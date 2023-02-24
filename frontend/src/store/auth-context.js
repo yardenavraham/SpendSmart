@@ -13,10 +13,26 @@ export const AuthContextProvider = (props) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [accountDetails, setAccountDetails] = useState({});
 
+    const setDetails = token => {
+        setIsLoggedIn(true);
+        const decodedToken = jwt(token);
+        console.log('decodedToken ' + JSON.stringify(decodedToken));
+        setAccountDetails({
+            'id': decodedToken.id,
+            'password': decodedToken.password,
+            'accountName': decodedToken.accountName,
+            // 'firstName': decodedToken.firstName,
+            // 'lastName': decodedToken.lastName,
+            // 'email': decodedToken.email,
+            'users': decodedToken.users
+            // 'partners': decodedToken.partners.map(user => user.firstName)
+        });
+    }
+
     useEffect (() => {
         const storedUserLoggedInInformation = localStorage.getItem('isLoggedIn');
         if (storedUserLoggedInInformation !== null) {
-            setIsLoggedIn(true);
+            setDetails(storedUserLoggedInInformation);
         }
     }, []);
 
@@ -28,22 +44,8 @@ export const AuthContextProvider = (props) => {
     };
 
     const loginHandler = (token) => {
-        console.log('ctx loginHandler ' + JSON.stringify(token));
         localStorage.setItem('isLoggedIn', token);
-        console.log('decode ' + JSON.stringify(jwt(token)));
-        const decodedToken = jwt(token);
-        console.log('decodedToken.partners ' + JSON.stringify(decodedToken.partners));
-        
-        setIsLoggedIn(true);
-        setAccountDetails({
-            'id': decodedToken.id,
-            'accountName': decodedToken.accountName,
-            'firstName': decodedToken.firstName,
-            'lastName': decodedToken.lastName,
-            'email': decodedToken.email,
-            // 'partners': decodedToken.partners.map(user => user.firstName)
-        });
-        // console.log('accountDetails ' + JSON.stringify(accountDetails));
+        setDetails(token);       
     };
 
     return (

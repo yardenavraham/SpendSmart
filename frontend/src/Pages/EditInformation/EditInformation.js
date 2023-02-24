@@ -69,7 +69,6 @@ export default function EditInformation() {
     const saveHandler = async () => {
         try {
             const account = authCtx.accountDetails;
-            console.log('Saving account ' + account.name);
             account.password = formValues[fieldNames.PASSWORD2].value;
             console.log('account ' + JSON.stringify(account));
             console.log('image ' + JSON.stringify(image));

@@ -64,10 +64,10 @@ export const generateToken = (account) => {
             id: account._id,
             password: account.password,
             accountName: account.name,
-            firstName: account.partners[0].firstName,
-            lastName: account.partners[0].lastName,
-            email: account.partners[0].email,
-            partners: account.partners.map(item => item.firstName)
+            // firstName: account.partners[0].firstName,
+            // lastName: account.partners[0].lastName,
+            // email: account.partners[0].email,
+            users: account.partners.map(item => item.firstName)
         };
         return jwt.sign(fieldsForToken, TOKEN_KEY, {expiresIn: "7d"});
     } catch (err) {

@@ -206,7 +206,7 @@ export default function AppHeader(props) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={authCtx.accountDetails.firstName} src="/static/images/avatar/2.jpg" />
+                <Avatar alt={authCtx.accountDetails.accountName} src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
             <Menu
