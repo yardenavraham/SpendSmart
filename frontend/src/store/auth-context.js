@@ -32,7 +32,7 @@ export const AuthContextProvider = (props) => {
         localStorage.setItem('isLoggedIn', token);
         console.log('decode ' + JSON.stringify(jwt(token)));
         const decodedToken = jwt(token);
-        console.log('decodedToken.email ' + JSON.stringify(decodedToken.email));
+        console.log('decodedToken.partners ' + JSON.stringify(decodedToken.partners));
         
         setIsLoggedIn(true);
         setAccountDetails({
@@ -41,7 +41,7 @@ export const AuthContextProvider = (props) => {
             'firstName': decodedToken.firstName,
             'lastName': decodedToken.lastName,
             'email': decodedToken.email,
-            'partners': decodedToken.partners.map(user => user.firstName)
+            // 'partners': decodedToken.partners.map(user => user.firstName)
         });
         // console.log('accountDetails ' + JSON.stringify(accountDetails));
     };

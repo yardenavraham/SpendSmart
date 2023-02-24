@@ -141,7 +141,7 @@ export const updateAccount = async (req, res) => { //updateAccount
     
     //         req.body.name = req.params.image;//url + '/uplaods/' + req.file.filename
     
-    //         console.log('req.body ' + JSON.stringify(req.body));
+    console.log('req.body ' + JSON.stringify(req.body));
     
     
     const updatedItem = await Account.findOneAndUpdate({_id:req.params.id}, {$set: req.body}, {new: true});
