@@ -63,13 +63,13 @@ export default function EditInformation() {
 
     const [image, setImage] = useState(null);
     const authCtx = useContext(AuthContext);
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
     console.log('authCtx ' + JSON.stringify(authCtx));
 
     const saveHandler = async () => {
         try {
             const account = authCtx.accountDetails;
-            account.password = formValues[fieldNames.PASSWORD2].value;
+            account.password = formValues[fieldNames.PASSWORD2].value !== '' ? formValues[fieldNames.PASSWORD2].value: account.password;
             console.log('account ' + JSON.stringify(account));
             console.log('image ' + JSON.stringify(image));
             await axios.patch(`http://localhost:27017/Account/${account.id}/${image}`,
