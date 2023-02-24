@@ -11,11 +11,11 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { useState } from "react";
-
-
-
-
+import { useState, useContext } from "react";
+import axios from "axios";
+import  AuthContext from '../../store/auth-context';
+import { useNavigate } from "react-router-dom";
+import UploadImage from '../../Components/UploadImage/UploadImage';
 
 function Copyright(props) {
     return (
@@ -61,6 +61,26 @@ function getInitialFormValues() {
 
 export default function EditInformation() {
 
+    const [image, setImage] = useState(null);
+    const authCtx = useContext(AuthContext);
+    const navigate = useNavigate();
+    console.log('authCtx ' + JSON.stringify(authCtx));
+
+    const saveHandler = async () => {
+        try {
+            const account = authCtx.accountDetails;
+            console.log('Saving account ' + account.name);
+            account.password = formValues[fieldNames.PASSWORD2].value;
+            console.log('account ' + JSON.stringify(account));
+            console.log('image ' + JSON.stringify(image));
+            await axios.patch(`http://localhost:27017/Account/${account.id}/${image}`,
+            account
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      };
+
     const onSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
@@ -76,6 +96,10 @@ export default function EditInformation() {
             password2: data.get(fieldNames.PASSWORD2),
 
         });
+
+       saveHandler();
+
+
     };
     //const [firstNameValue, setFirstName] = useState('');
     //console.log({ firstNameValue })
@@ -85,6 +109,10 @@ export default function EditInformation() {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        console.log('name ' + name);
+        console.log('value ' + value);
+        console.log('formValues ' + JSON.stringify(formValues));
+
         setFormValues(previousFormValues => {
             const error = validate(value, name, previousFormValues);
             return {
@@ -115,6 +143,9 @@ export default function EditInformation() {
                         <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 1 }}>
                             <Grid container spacing={2}>
 
+                                <Grid container sx={{ justifyContent: "center" }}>
+                                    <UploadImage selectedImage={image} setSelectedImage={setImage}/>
+                                </Grid>
                                 <Grid container sx={{ justifyContent: "center" }}>
                                     <Typography component="h1" variant="h6" align='center' sx={{ mt: 6, justifyContent: "center" }}>
                                         Change Password

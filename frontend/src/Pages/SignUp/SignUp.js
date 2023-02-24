@@ -103,10 +103,10 @@ export default function SignUp() {
     const partners = [{
       email: values.email,
       firstName: values.firstName,
-      lastName: values.lastName
+      lastName: values.lastName,
+      image: 'aaaaaa'
     }]
     values.partners.map(p => mapPartner(p)).forEach(p => partners.push(p));
-    
     return {
       name: values.account,
       password: values.password,
@@ -116,7 +116,7 @@ export default function SignUp() {
   
   const saveHandler = async (account) => {
     try {
-      console.log('Saving account ' + account.name);
+      console.log('Saving account ' + JSON.stringify(account));
       const response = await axios.post("http://localhost:27017/signup", map(account));
       authCtx.onLogin(response.data.token);
       navigate("/");

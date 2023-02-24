@@ -24,6 +24,10 @@ const Account = mongoose.Schema({
             type: String,
             required: true,
             index: true
+        },
+        image: {
+            type: String,
+            required: false
         }
     }]
 });

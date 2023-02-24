@@ -36,6 +36,7 @@ export const AuthContextProvider = (props) => {
         
         setIsLoggedIn(true);
         setAccountDetails({
+            'id': decodedToken.id,
             'accountName': decodedToken.accountName,
             'firstName': decodedToken.firstName,
             'lastName': decodedToken.lastName,

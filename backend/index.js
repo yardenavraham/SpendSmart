@@ -23,5 +23,6 @@ app.use(cors());
 app.use(express.json());
 app.use(CashFlowRoute);
 app.use(AccountRoute);
+app.use('/uploads', express.static('uploads'));
 
 app.listen(27017, () => console.log('Server up and running...'));
