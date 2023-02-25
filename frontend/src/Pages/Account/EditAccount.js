@@ -11,7 +11,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import  AuthContext from '../../store/auth-context';
 import { useNavigate } from "react-router-dom";
@@ -60,7 +60,7 @@ function getInitialFormValues() {
     }, {});
 }
 
-export default function EditInformation() {
+export default function EditAccount() {
     
     const [image, setImage] = useState(null);
     const authCtx = useContext(AuthContext);
@@ -75,16 +75,18 @@ export default function EditInformation() {
         try {
             const account = authCtx.accountDetails;
             console.log(JSON.stringify(account));
-            const updatedFields = {}
+            const data = {}
             
-            if (formValues[fieldNames.PASSWORD2].value !== '')
-                updatedFields.password = formValues[fieldNames.PASSWORD2].value;
+            if (formValues[fieldNames.PASSWORD2].value !== '') {
+                data.oldPassword = formValues[fieldNames.OLDPASSWORD].value;
+                data.password = formValues[fieldNames.PASSWORD2].value;
+            }
             
-            updatedFields.image = image;
-            console.log(JSON.stringify(updatedFields));
+            data.image = image;
+            console.log(JSON.stringify(data));
             
             await axios.patch(`http://localhost:27017/Account/${account.id}`,
-              updatedFields
+              data
             );
         } catch (error) {
             console.error(error);
@@ -97,7 +99,7 @@ export default function EditInformation() {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
         
-        
+        // Do we need this? there is other
         if (!isEqualPassword(data.get(fieldNames.PASSWORD), data.get(fieldNames.PASSWORD2))) {
             console.log("password not alike")
         }

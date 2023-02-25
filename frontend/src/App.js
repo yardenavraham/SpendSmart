@@ -19,9 +19,10 @@ import AppFooter from "./Components/AppFooter/AppFooter";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
-import EditInformation from "./Pages/EditInformation/EditInformation";
+import EditAccount from "./Pages/Account/EditAccount";
 import LogOut from './Pages/Logout/Logout';
 import PrivateRoute from "./Routes/PrivateRoute";
+import Account from "./Pages/Account/Account";
 // import PublicRoute from "./Routes/PublicRoute";
 
 export default function App() {
@@ -71,7 +72,10 @@ export default function App() {
                 <Route path="logout" element={<LogOut/>} />
               </Route>
               <Route exact path='/' element={<PrivateRoute/>}>
-                <Route path="editinformation" element={<EditInformation/>} />
+                <Route path="account" element={<Account/>} />
+               </Route>
+              <Route exact path='/' element={<PrivateRoute/>}>
+                <Route path="editaccount" element={<EditAccount/>} />
                </Route>
             </Routes>
              </Box>

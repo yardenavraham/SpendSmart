@@ -47,7 +47,7 @@ export default function SignIn() {
         const data = new FormData(event.currentTarget);
         
         console.log({
-            acount: data.get('accountName'),
+            account: data.get('accountName'),
             email: data.get('email'),
             password: data.get('password'),
         });

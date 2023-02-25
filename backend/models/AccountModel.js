@@ -52,13 +52,8 @@ Account.pre("save", function (next) {
     }
 })
 
-Account.methods.comparePassword = function (candidatePassword, cb) {
-    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
-        if (err) {
-            console.log(err);
-            return cb(err);
-        }
-        cb(null, isMatch);
-    });
+Account.methods.comparePassword = async function (candidatePassword) {
+    return await bcrypt.compare(candidatePassword, this.password);
 }
-    export default mongoose.model('Account', Account);
+
+export default mongoose.model('Account', Account);
