@@ -11,22 +11,23 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import axios from "axios";
 import  AuthContext from '../../store/auth-context';
 import { useNavigate } from "react-router-dom";
 import UploadImage from '../../Components/UploadImage/UploadImage';
+import AlertModal from "../../Components/Alerts/AlertModal";
 
 function Copyright(props) {
     return (
-        <Typography variant="body2" color="text.secondary" align="center" {...props}>
-            {'Copyright © '}
-            <Link color="inherit" href="/">
-                SpendSmart
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
+      <Typography variant="body2" color="text.secondary" align="center" {...props}>
+          {'Copyright © '}
+          <Link color="inherit" href="/">
+              SpendSmart
+          </Link>{' '}
+          {new Date().getFullYear()}
+          {'.'}
+      </Typography>
     );
 }
 
@@ -60,58 +61,70 @@ function getInitialFormValues() {
 }
 
 export default function EditInformation() {
-
+    
     const [image, setImage] = useState(null);
     const authCtx = useContext(AuthContext);
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     console.log('authCtx ' + JSON.stringify(authCtx));
-
+    
+    const [showAlert, setShowAlert] = useState(false);
+    const [message, setMessage] = useState('');
+    
+    
     const saveHandler = async () => {
         try {
             const account = authCtx.accountDetails;
-            account.password = formValues[fieldNames.PASSWORD2].value !== '' ? formValues[fieldNames.PASSWORD2].value: account.password;
-            console.log('account ' + JSON.stringify(account));
-            console.log('image ' + JSON.stringify(image));
-            await axios.patch(`http://localhost:27017/Account/${account.id}/${image}`,
-            account
-          );
+            console.log(JSON.stringify(account));
+            const updatedFields = {}
+            
+            if (formValues[fieldNames.PASSWORD2].value !== '')
+                updatedFields.password = formValues[fieldNames.PASSWORD2].value;
+            
+            updatedFields.image = image;
+            console.log(JSON.stringify(updatedFields));
+            
+            await axios.patch(`http://localhost:27017/Account/${account.id}`,
+              updatedFields
+            );
         } catch (error) {
-          console.log(error);
+            console.error(error);
+            setShowAlert(true);
+            setMessage(error.response.data.message);
         }
-      };
-
+    };
+    
     const onSubmit = (event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-
-
+        
+        
         if (!isEqualPassword(data.get(fieldNames.PASSWORD), data.get(fieldNames.PASSWORD2))) {
             console.log("password not alike")
         }
-
+        
         console.log({
             email: data.get(fieldNames.OLDPASSWORD),
             password: data.get(fieldNames.PASSWORD),
             password2: data.get(fieldNames.PASSWORD2),
-
+            
         });
-
-       saveHandler();
-
-
+        
+        saveHandler();
+        
+        
     };
     //const [firstNameValue, setFirstName] = useState('');
     //console.log({ firstNameValue })
-
-
+    
+    
     const [formValues, setFormValues] = useState(getInitialFormValues());
-
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         console.log('name ' + name);
         console.log('value ' + value);
         console.log('formValues ' + JSON.stringify(formValues));
-
+        
         setFormValues(previousFormValues => {
             const error = validate(value, name, previousFormValues);
             return {
@@ -123,37 +136,46 @@ export default function EditInformation() {
             }
         })
     }
-
+    
     return (
-        <ThemeProvider theme={theme}>
-            <div className="third-color" style={{ height: '100%', left: '0px', width: '100%' }}>
-                <Container component="main" maxWidth="sm" style={{ backgroundColor: 'white', borderRadius: 10 }}>
-                    <CssBaseline />
-
-                    <Box
+      <>
+          {showAlert && (
+            <AlertModal
+              open={showAlert}
+              alertType={'error'}
+              message={message}
+              setOpen={setShowAlert}
+            />
+          )}
+          <ThemeProvider theme={theme}>
+              <div className="third-color" style={{ height: '100%', left: '0px', width: '100%' }}>
+                  <Container component="main" maxWidth="sm" style={{ backgroundColor: 'white', borderRadius: 10 }}>
+                      <CssBaseline />
+                      
+                      <Box
                         sx={{
-
+                            
                             paddingTop: 5,
                             display: 'flex',
                             flexDirection: 'column',
                             alignItems: 'center',
                         }}
-                    >
-                        <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 1 }}>
-                            <Grid container spacing={2}>
-
-                                <Grid container sx={{ justifyContent: "center" }}>
-                                    <UploadImage selectedImage={image} setSelectedImage={setImage}/>
-                                </Grid>
-                                <Grid container sx={{ justifyContent: "center" }}>
-                                    <Typography component="h1" variant="h6" align='center' sx={{ mt: 6, justifyContent: "center" }}>
-                                        Change Password
-                                    </Typography>
-
-                                </Grid>
-                                <Grid container item xs={12} style={{ alignItems: 'left', marginLeft: 36 }}>
-                                    <TextField
-
+                      >
+                          <Box component="form" noValidate onSubmit={onSubmit} sx={{ mt: 1 }}>
+                              <Grid container spacing={2}>
+                                  
+                                  <Grid container sx={{ justifyContent: "center" }}>
+                                      <UploadImage selectedImage={image} setSelectedImage={setImage}/>
+                                  </Grid>
+                                  <Grid container sx={{ justifyContent: "center" }}>
+                                      <Typography component="h1" variant="h6" align='center' sx={{ mt: 6, justifyContent: "center" }}>
+                                          Change Password
+                                      </Typography>
+                                  
+                                  </Grid>
+                                  <Grid container item xs={12} style={{ alignItems: 'left', marginLeft: 36 }}>
+                                      <TextField
+                                        
                                         variant="standard"
                                         name={fieldNames.OLDPASSWORD}
                                         label="Old Password"
@@ -163,11 +185,11 @@ export default function EditInformation() {
                                         onChange={handleChange}
                                         error={formValues[fieldNames.OLDPASSWORD].error}
                                         helperText={formValues[fieldNames.OLDPASSWORD].error && 'Invalid password'}
-                                    //autoComplete="new-password"
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
+                                        //autoComplete="new-password"
+                                      />
+                                  </Grid>
+                                  <Grid item xs={12} sm={6}>
+                                      <TextField
                                         variant="standard"
                                         name={fieldNames.PASSWORD}
                                         label="New Password"
@@ -177,11 +199,11 @@ export default function EditInformation() {
                                         onChange={handleChange}
                                         error={formValues[fieldNames.PASSWORD].error}
                                         helperText={formValues[fieldNames.PASSWORD].error && 'Invalid password'}
-                                    //autoComplete="new-password"
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6}>
-                                    <TextField
+                                        //autoComplete="new-password"
+                                      />
+                                  </Grid>
+                                  <Grid item xs={12} sm={6}>
+                                      <TextField
                                         variant="standard"
                                         name={fieldNames.PASSWORD2}
                                         label="Confirm New Password"
@@ -191,47 +213,48 @@ export default function EditInformation() {
                                         onChange={handleChange}
                                         error={formValues[fieldNames.PASSWORD2].error}
                                         helperText={formValues[fieldNames.PASSWORD2].error && "Passwords don't match"}
-                                    //autoComplete="new-password"
-                                    />
-                                </Grid>
-
-
-                            </Grid>
-                            <Grid container sx={{ mt: 3, mb: 2, justifyContent: "center" }}>
-                                <Button
+                                        //autoComplete="new-password"
+                                      />
+                                  </Grid>
+                              
+                              
+                              </Grid>
+                              <Grid container sx={{ mt: 3, mb: 2, justifyContent: "center" }}>
+                                  <Button
                                     type="submit"
                                     color="secondary"
                                     variant="contained"
                                     sx={{ mt: 3, mb: 2, justifyContent: "center" }}>
-                                    Change PASSWORD
-                                </Button>
-                            </Grid>
-                            <Typography component="h1" variant="h6" align='center' sx={{ mt: 6, justifyContent: "center" }}>
-                                Edit shared account
-                            </Typography>
-                            <Grid container >
-                                <Grid item xs={12} sm={6} >
-                                    <FormControlLabel
+                                      Change PASSWORD
+                                  </Button>
+                              </Grid>
+                              <Typography component="h1" variant="h6" align='center' sx={{ mt: 6, justifyContent: "center" }}>
+                                  Edit shared account
+                              </Typography>
+                              <Grid container >
+                                  <Grid item xs={12} sm={6} >
+                                      <FormControlLabel
                                         control={<Checkbox value="remember" color="primary" />}
                                         label="yaararm@gmail.com" sx={{ mt: 1 }}
-                                    />
-                                </Grid>
-                                <Grid item xs={12} sm={6} >
-                                    <Button
+                                      />
+                                  </Grid>
+                                  <Grid item xs={12} sm={6} >
+                                      <Button
                                         type="submit"
                                         color="error"
                                         //variant="contained" 
                                         variant="outlined"
                                         sx={{mt:1}}                                       >
-                                        delete
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                        </Box>
-                    </Box>
-                    <Copyright sx={{ mt: 5, paddingBottom: 3 }} />
-                </Container>
-            </div>
-        </ThemeProvider>
+                                          delete
+                                      </Button>
+                                  </Grid>
+                              </Grid>
+                          </Box>
+                      </Box>
+                      <Copyright sx={{ mt: 5, paddingBottom: 3 }} />
+                  </Container>
+              </div>
+          </ThemeProvider>
+      </>
     );
 }

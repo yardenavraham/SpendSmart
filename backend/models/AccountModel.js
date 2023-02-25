@@ -32,24 +32,21 @@ const Account = mongoose.Schema({
     }]
 });
 
+export async function encryptPassword(password) {
+    const salt = await bcrypt.genSalt(12);
+    return await bcrypt.hash(password, salt)
+}
+
 Account.pre("save", function (next) {
     const account = this
 
     if (this.isModified("password") || this.isNew) {
-        bcrypt.genSalt(12, function (saltError, salt) {
-            if (saltError) {
-                return next(saltError)
-            } else {
-                bcrypt.hash(account.password, salt, function(hashError, hash) {
-                    if (hashError) {
-                        return next(hashError)
-                    }
-
-                    account.password = hash
-                    next()
-                })
-            }
-        })
+        try {
+            account.password = encryptPassword(account.password);
+            return next()
+        } catch (err) {
+            return next(err)
+        }
     } else {
         return next()
     }

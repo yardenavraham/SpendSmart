@@ -129,7 +129,6 @@ export default function SignUp() {
       console.error(error);
       setShowAlert(true);
       setMessage(error.response.data.message);
-  
     }
   };
   

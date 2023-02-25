@@ -1,5 +1,5 @@
 import CashFlow from "../models/CashFlowModel.js";
-import Account from "../models/AccountModel.js";
+import Account, {encryptPassword} from "../models/AccountModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 // import multer from 'multer';
@@ -102,7 +102,7 @@ export const signIntoAccount = async (req, res) => {
             res.status(400).json({message: "No account exists"})
             return;
         }
-    
+        
         item.comparePassword(password, function (err, isMatch) {
             if (err) {
                 console.error(err);
@@ -110,7 +110,7 @@ export const signIntoAccount = async (req, res) => {
                 return;
             }
             console.log('Password for account ' + item.name + ' match=' + isMatch);
-        
+            
             if (!isMatch) {
                 res.status(401).json({message: "Wrong password"});
                 return;
@@ -125,32 +125,30 @@ export const signIntoAccount = async (req, res) => {
     }
 }
 
-//TODO: update password?
-
-export const updateAccount = async (req, res) => { //updateAccount
+export const updateAccount = async (req, res) => {
     try{
-       
-    //     upload.single(req.params.image)
-    //         // console.log('req.params.image ' + JSON.stringify(req.params.image));
-
-    //         // const url = req.protocol + '://' + req.get('host');
-    //         // const updatedAccount = JSON.stringify(req.body);
-    //         console.log('req.file ' + JSON.stringify(req.file));
-    
-    //         console.log('req.body before ' + JSON.stringify(req.body));
-    
-    //         req.body.name = req.params.image;//url + '/uplaods/' + req.file.filename
-    
-    console.log('req.body ' + JSON.stringify(req.body));
-    
-    
-    const updatedItem = await Account.findOneAndUpdate({_id:req.params.id}, {$set: req.body}, {new: true});
-    console.log('here after update ');
-    res.status(200).json(updatedItem);
-
-  
+        
+        const updatedFields = req.body;
+        console.log('req.body ' + JSON.stringify(updatedFields));
+        
+        if (updatedFields.password != null) {
+            try {
+                updatedFields.password = await encryptPassword(updatedFields.password);
+                console.log("Encrypted password " + updatedFields.password)
+            } catch (error) {
+                console.error(error)
+                res.status(501).json({message: error.message});
+                return
+            }
+        }
+        
+        const updatedItem = await Account.findOneAndUpdate({_id:req.params.id}, {$set: updatedFields}, {new: true});
+        console.log('here after update ' + JSON.stringify(updatedItem));
+        res.status(200).json(updatedItem);
+        
+        
     } catch (error) {
-        console.log('error ' + JSON.stringify(error));
+        console.error('error ' + JSON.stringify(error));
         res.status(400).json({message: error.message});
     }
     
@@ -180,7 +178,7 @@ export const getCashFlow = async (req, res) => { //getIncomes
         res.status(500).json({message: error.message});
     }
 }
- 
+
 export const getCashFlowById = async (req, res) => { //getIncomeById
     try {
         const item = await CashFlow.findById(req.params.id);
@@ -189,12 +187,12 @@ export const getCashFlowById = async (req, res) => { //getIncomeById
         res.status(404).json({message: error.message});
     }
 }
- 
+
 export const saveCashFlowItem = async (req, res) => { //saveIncome
     console.log('here save income');
     const cashFlowItem = new CashFlow(req.body);
     console.log('income ' + cashFlowItem);
-
+    
     try {
         const insertedItem = await cashFlowItem.save();
         res.status(201).json(insertedItem);
@@ -203,18 +201,18 @@ export const saveCashFlowItem = async (req, res) => { //saveIncome
         res.status(400).json({message: error.message});
     }
 }
- 
+
 export const updateCashFlowItem = async (req, res) => { //updateIncome
     try {
         console.log('here update income ' + JSON.stringify(req.body));
-
+        
         const updatedItem = await CashFlow.updateOne({_id:req.params.id}, {$set: req.body});
         res.status(200).json(updatedItem);
     } catch (error) {
         res.status(400).json({message: error.message});
     }
 }
- 
+
 export const deleteCashFlowItem = async (req, res) => { //deleteIncome
     try {
         console.log('here delete income');

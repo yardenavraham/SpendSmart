@@ -5,7 +5,7 @@ const router = express.Router();
 router.post('/signup', createAccount);
 router.post('/signin', signIntoAccount);
 router.get('/account/:name', getAccountByName);
-router.patch('/account/:id/:image', updateAccount);
+router.patch('/account/:id', updateAccount);
 
 // router.get('/CashFlow/:id', getCashFlowById);
 // router.patch('/CashFlow/:id', updateCashFlowItem);
