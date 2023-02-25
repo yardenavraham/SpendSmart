@@ -27,12 +27,11 @@ import AuthContext from "../../store/auth-context";
 import { useNavigate } from "react-router-dom";
 
 const drawerWidth = 240;
-// const settings = ['Profile', 'Account', 'Dashboard', 'Logout','SignIn', 'EditInformation'];
 const settingsToRoute = [
   {
     isLoggedIn: true,
     name: 'Profile',
-    path: './editinformation'
+    path: './account'
   }, 
   {
     isLoggedIn: true,

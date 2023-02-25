@@ -60,7 +60,7 @@ function getInitialFormValues() {
     }, {});
 }
 
-export default function EditInformation() {
+export default function EditAccount() {
     
     const [image, setImage] = useState(null);
     const authCtx = useContext(AuthContext);
