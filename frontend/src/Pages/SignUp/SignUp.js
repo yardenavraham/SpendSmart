@@ -13,9 +13,10 @@ import { Form, Formik, Field, FieldArray } from "formik";
 import { TextField } from "formik-mui";
 import * as Yup from "yup";
 import axios from "axios";
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import  AuthContext from '../../store/auth-context';
 import { useNavigate } from "react-router-dom";
+import AlertModal from "../../Components/Alerts/AlertModal";
 
 function Copyright(props) {
   return (
@@ -83,7 +84,7 @@ const validationSchema = Yup.object().shape({
 export default function SignUp() {
 
   const authCtx = useContext(AuthContext);
-  const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const partnersGroup = {
     partnerFirstName: "",
@@ -114,6 +115,10 @@ export default function SignUp() {
     }
   }
   
+  const [showAlert, setShowAlert] = useState(false);
+  const [message, setMessage] = useState('');
+  
+  
   const saveHandler = async (account) => {
     try {
       console.log('Saving account ' + JSON.stringify(account));
@@ -121,12 +126,25 @@ export default function SignUp() {
       authCtx.onLogin(response.data.token);
       navigate("/");
     } catch (error) {
-      console.log(error);
+      console.error(error);
+      setShowAlert(true);
+      setMessage(error.response.data.message);
+  
     }
   };
   
   
   return (
+    <>
+      {showAlert && (
+        <AlertModal
+          open={showAlert}
+          alertType={'error'}
+          message={message}
+          setOpen={setShowAlert}
+        />
+      )}
+      
     <ThemeProvider theme={theme}>
       <div
         className="back"
@@ -329,5 +347,6 @@ export default function SignUp() {
         </Container>
       </div>
     </ThemeProvider>
+    </>
   );
 }

@@ -91,6 +91,7 @@ export default function AddEditModal(props) {
                     open={showAlert}
                     alertType={alertType}
                     message={message}
+                    setOpen={setShowAlert}
                 />
             )}
             <ThemeProvider theme={theme}>

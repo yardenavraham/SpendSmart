@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert, AlertTitle, Modal, Box } from '@mui/material';
 
-const AlertModal = ({open, alertType, message}) => {
+const AlertModal = ({open, alertType, message, setOpen}) => {
 
     const style = {
         position: 'absolute',
@@ -20,10 +20,11 @@ const AlertModal = ({open, alertType, message}) => {
             open={open}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
+            onClose={() => {setOpen(false)}}
         >
             <Box sx={style}>
                 <Alert severity={alertType}>
-                    <AlertTitle>{alertType}</AlertTitle>
+                    <AlertTitle>{alertType.charAt(0).toUpperCase() + alertType.slice(1)}</AlertTitle>
                     {message}
                 </Alert>
             </Box>
