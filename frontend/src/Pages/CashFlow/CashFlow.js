@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Typography from "@mui/material/Typography";
 import CashFlowTable from '../../Components/CashFlowTable/CashFlowTable';
 import axios from "axios";
+import AuthContext from '../../store/auth-context';
+
 
 const CashFlow = (props) => {
+  const authCtx = useContext(AuthContext);
 
   const newDateVal = new Date(new Date());
   const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
 
-  const madeBy = ['Adi', 'Yarden', 'Inbal', 'Michal', 'Yulia']; //TODO remove this
-  const accountName = "myAccount"; //TODO remove this
+  const accountName = authCtx.accountDetails.accountName
+  const madeBy = authCtx.accountDetails.users
 
-  const {transactionType} = props;
+  const { transactionType } = props;
   const [initialCashFlowList, setInitialCashFlowList] = useState([]);
   const [cashFlowList, setCashFlowList] = useState([]);
 
