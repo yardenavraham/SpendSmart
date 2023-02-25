@@ -99,25 +99,24 @@ export const signIntoAccount = async (req, res) => {
         console.log("item=" + item)
         
         if (!item) {
-            res.status(400).json({message: "No account exists"})
+            res.status(400).json({message: `Account ${name} does not exist`})
+            return;
+        }
+    
+        try {
+            const isMatch = await item.comparePassword(password);
+            console.log("password match = " + isMatch)
+            if (!isMatch) {
+                res.status(401).json({message: "Password does not match"});
+                return;
+            }
+        } catch (err) {
+            res.status(501).json({message: err});
             return;
         }
         
-        item.comparePassword(password, function (err, isMatch) {
-            if (err) {
-                console.error(err);
-                res.status(500).json({message: err});
-                return;
-            }
-            console.log('Password for account ' + item.name + ' match=' + isMatch);
-            
-            if (!isMatch) {
-                res.status(401).json({message: "Wrong password"});
-                return;
-            }
-            const token = generateToken(item);
-            return res.status(200).json({token: token});
-        });
+        const token = generateToken(item);
+        return res.status(200).json({token: token});
         
     } catch (error) {
         console.error(error)
@@ -127,11 +126,24 @@ export const signIntoAccount = async (req, res) => {
 
 export const updateAccount = async (req, res) => {
     try{
-        
         const updatedFields = req.body;
-        console.log('req.body ' + JSON.stringify(updatedFields));
+        // console.log('req.body ' + JSON.stringify(updatedFields));
         
         if (updatedFields.password != null) {
+            if (updatedFields.oldPassword == null) {
+                res.status(400).json({message: "Old password was not provided"});
+                return;
+            }
+            
+            const account = await Account.findOne({_id:req.params.id});
+            // console.log("found " + JSON.stringify(account))
+            const isMatch = await account.comparePassword(updatedFields.oldPassword);
+            // console.log("password match = " + isMatch)
+            if (!isMatch) {
+                res.status(400).json({message: "Old password does not match"});
+                return;
+            }
+            
             try {
                 updatedFields.password = await encryptPassword(updatedFields.password);
                 console.log("Encrypted password " + updatedFields.password)
