@@ -26,8 +26,6 @@ const CashFlow = (props) => {
 
   const getCashFlow = async () => {
     console.log('getCashFlow', account);
-    console.log(transactionType);
-
     const response = await axios.get(`http://localhost:27017/CashFlow/${account}`);
     setInitialCashFlowList(response.data);
     setCashFlowList(response.data.filter(item => {
