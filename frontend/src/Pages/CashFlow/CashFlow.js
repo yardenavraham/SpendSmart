@@ -22,7 +22,7 @@ const CashFlow = (props) => {
 
   useEffect(() => {
     getCashFlow();
-  }, [transactionType]);
+  }, [transactionType, account]);
 
   const getCashFlow = async () => {
     console.log('getCashFlow', account);
