@@ -11,7 +11,8 @@ const CashFlow = (props) => {
   const newDateVal = new Date(new Date());
   const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
 
-  const accountName = authCtx.accountDetails.accountName
+  const account = authCtx.accountDetails.accountName
+  console.log('account', account);
   const madeBy = authCtx.accountDetails.users
 
   const { transactionType } = props;
@@ -24,11 +25,10 @@ const CashFlow = (props) => {
   }, [transactionType]);
 
   const getCashFlow = async () => {
-    console.log('getCashFlow');
+    console.log('getCashFlow', account);
     console.log(transactionType);
 
-    const response = await axios.get(`http://localhost:27017/CashFlow/${accountName}`);
-    console.log('response.data ' + JSON.stringify(response.data));
+    const response = await axios.get(`http://localhost:27017/CashFlow/${account}`);
     setInitialCashFlowList(response.data);
     setCashFlowList(response.data.filter(item => {
       const formattedDate = new Date(item.date);
@@ -52,7 +52,7 @@ const CashFlow = (props) => {
   const addTransactionHandler = async (newTransaction) => {
     try {
       console.log('newTransaction ' + JSON.stringify(newTransaction));
-      await axios.post(`http://localhost:27017/CashFlow/${accountName}`,
+      await axios.post(`http://localhost:27017/CashFlow/${account}`,
         newTransaction
       );
       // navigate("/");
