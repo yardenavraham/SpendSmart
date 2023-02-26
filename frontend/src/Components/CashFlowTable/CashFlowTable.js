@@ -90,7 +90,8 @@ const CashFlowTable = props => {
   
   const onDelete = props.onDelete;
   const tableText = props.tableType //=== myTableType.Incomes ? "Incomes" : "Expenses"
-  const madeByFilter = arrayToObjectPairs(props.madeBy);
+  console.log('props.madeBy', JSON.stringify(props.madeBy));
+  const madeByFilter = props.madeBy !== undefined ? arrayToObjectPairs(props.madeBy): [];
   const categoryFilter = arrayToObjectPairs(props.category);
   
   const handleDatePickerChanged = (newDate) => {
