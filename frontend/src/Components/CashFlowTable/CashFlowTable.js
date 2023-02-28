@@ -123,7 +123,7 @@ const CashFlowTable = props => {
                   views={['month', 'year']}
                   label="Month and Year"
                   minDate={dayjs('2000-03-01')}
-                  maxDate={dayjs(new Date())}
+                  maxDate={dayjs(now.setFullYear(now.getFullYear() + 200))}
                   value={datePickerValue}
                   onChange={handleDatePickerChanged}
                   renderInput={(params) => <TextField {...params} helperText={null} />}
