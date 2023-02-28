@@ -19,19 +19,37 @@ export const getCashFlowById = async (req, res) => { //getIncomeById
         res.status(404).json({message: error.message});
     }
 }
+
+const addMonths = (date, months) => {
+    date.setMonth(date.getMonth() + months);
+    return date;
+  }
  
 export const saveCashFlowItem = async (req, res) => { //saveIncome
-    console.log('here save income');
-    const cashFlowItem = new CashFlow(req.body);
-    cashFlowItem.account = req.params.account;
-    console.log('income ' + cashFlowItem);
+    console.log('saveCashFlowItem');
+    console.log('req.body', JSON.stringify(req.body));
 
     try {
-        const insertedItem = await cashFlowItem.save();
-        res.status(201).json(insertedItem);
+        const cashFlowItem = req.body;
+        cashFlowItem.account = req.params.account;
+        console.log('cashFlowItem', JSON.stringify(cashFlowItem));   
+        let transactions = [];
+        const frequency = cashFlowItem.frequency;
+        const dateOfItem = cashFlowItem.date;
+
+        for (let i = 0; i < frequency; i++) {
+            let transaction = {...cashFlowItem};        
+            transaction.date = addMonths(new Date(cashFlowItem.date), i);
+            console.log("transaction " + JSON.stringify(transaction));
+            transactions.push(transaction);
+        }
+
+        console.log('transactions', transactions);
+        const insertedArr = await CashFlow.insertMany(transactions).catch(err => console.log(JSON.stringify(err)));
+        res.status(201).json(insertedArr);
     } catch (error) {
-        console.log('error ' + JSON.stringify(error));
-        res.status(400).json({message: error.message});
+        console.log('error ' + error);
+        res.status(400).json({ message: error.message });
     }
 }
  

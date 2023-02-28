@@ -48,12 +48,11 @@ const CashFlow = (props) => {
 
 
   const addTransactionHandler = async (newTransaction) => {
-    try {
+    try{
       console.log('newTransaction ' + JSON.stringify(newTransaction));
       await axios.post(`http://localhost:27017/CashFlow/${account}`,
         newTransaction
       );
-      // navigate("/");
     } catch (error) {
       console.log(error);
     }

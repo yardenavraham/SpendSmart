@@ -110,7 +110,7 @@ const CashFlowTable = props => {
 
   return (
     <>
-      <MaterialTable
+    <MaterialTable
         title={tableText + " Information"}
         icons={tableIcons}
         actions={[
