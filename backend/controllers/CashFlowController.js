@@ -33,15 +33,13 @@ export const saveCashFlowItem = async (req, res) => { //saveIncome
         const cashFlowItem = req.body;
         cashFlowItem.account = req.params.account;
         console.log('cashFlowItem', JSON.stringify(cashFlowItem));   
-        let transactions = [];
+        const transactions = [];
         const frequency = cashFlowItem.frequency;
-        const dateOfItem = cashFlowItem.date;
 
         for (let i = 0; i < frequency; i++) {
-            let transaction = {...cashFlowItem};        
-            transaction.date = addMonths(new Date(cashFlowItem.date), i);
-            console.log("transaction " + JSON.stringify(transaction));
-            transactions.push(transaction);
+            transactions[i] = {...cashFlowItem};        
+            transactions[i].date = addMonths(new Date(cashFlowItem.date), i);
+            console.log("transactions[i] " + JSON.stringify(transactions[i]));
         }
 
         console.log('transactions', transactions);
