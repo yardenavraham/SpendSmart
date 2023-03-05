@@ -63,35 +63,53 @@ function getInitialFormValues() {
 export default function EditAccount() {
     
     const [image, setImage] = useState(null);
+    const [imageName, setImageName] = useState('');
+
     const authCtx = useContext(AuthContext);
     const navigate = useNavigate();
     console.log('authCtx ' + JSON.stringify(authCtx));
     
     const [showAlert, setShowAlert] = useState(false);
     const [message, setMessage] = useState('');
-    
+
     
     const saveHandler = async () => {
         try {
             const account = authCtx.accountDetails;
-            console.log(JSON.stringify(account));
-            const data = {}
-            
+            console.log('account', JSON.stringify(account));
+            console.log('account.id', JSON.stringify(account.id));
+
+            const data = {};
+            const fd = new FormData()
+
+            fd.append('file', image, image.name)
+
+        
             if (formValues[fieldNames.PASSWORD2].value !== '') {
                 data.oldPassword = formValues[fieldNames.OLDPASSWORD].value;
                 data.password = formValues[fieldNames.PASSWORD2].value;
             }
             
+            console.log('image', image);
             data.image = image;
-            console.log(JSON.stringify(data));
+            console.log(JSON.stringify('data', JSON.stringify(data)));
+
+            const form = new FormData();
+            form.append('image', image);
+            for (const value of form.values()) {
+                console.log('fd val', value);
+              }
+            const config = {     
+                headers: { 'content-type': 'multipart/form-data' }
+            }
             
             await axios.patch(`http://localhost:27017/Account/${account.id}`,
-              data
+                form, config
             );
         } catch (error) {
             console.error(error);
             setShowAlert(true);
-            setMessage(error.response.data.message);
+            // setMessage(error.response.data.message);
         }
     };
     
@@ -167,7 +185,7 @@ export default function EditAccount() {
                               <Grid container spacing={2}>
                                   
                                   <Grid container sx={{ justifyContent: "center" }}>
-                                      <UploadImage selectedImage={image} setSelectedImage={setImage}/>
+                                      <UploadImage selectedImage={image} setSelectedImage={setImage} name={imageName} setName={setImageName}/>
                                   </Grid>
                                   <Grid container sx={{ justifyContent: "center" }}>
                                       <Typography component="h1" variant="h6" align='center' sx={{ mt: 6, justifyContent: "center" }}>

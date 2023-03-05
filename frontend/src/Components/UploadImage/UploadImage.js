@@ -1,12 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
+import './UploadImage.scss';
 // import UploadService from "./FileUploadService";
+import axios from "axios";
 
 const UploadImage = (props) => {
 
-  const {selectedImage, setSelectedImage} = props;
+  const {selectedImage, setSelectedImage, name, setName} = props;
+
+  const fileUploadHandler = (event) => {
+
+    event.preventDefault();
+
+    let formData = new FormData();
+    formData.append('file', selectedImage);
+
+    const config = {     
+        headers: { 'content-type': 'multipart/form-data' }
+    }
+    console.log(formData);
+
+    axios.post("http://localhost:27017/uploadimage", formData, config)
+    .then (res => {
+        console.log(res.data);
+        //console.log(this.state.filename);
+    })
+}
 
   return (
     <div>
+      <form encType="multipart/form">
+
       {selectedImage && (
         <div>
           <img
@@ -24,13 +47,17 @@ const UploadImage = (props) => {
       <br />
       
       <input
-        type="file"
-        name="myImage"
+       type="file" 
+       name="file" 
+       id="file" 
         onChange={(event) => {
-          console.log('img', event.target.files[0]);
+          console.log('file', event.target.files[0].name);
           setSelectedImage(event.target.files[0]);
+          setName(document.getElementById('file').value);
         }}
       />
+      <br /><button className="submitBtn" type="submit" onClick={fileUploadHandler}>Add File</button>
+      </form>
     </div>
   );
 };

@@ -26,7 +26,7 @@ const Account = mongoose.Schema({
             index: true
         },
         image: {
-            type: String,
+            type: Buffer, // casted to MongoDB's BSON type: binData
             required: false
         }
     }]

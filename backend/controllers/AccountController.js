@@ -2,33 +2,67 @@ import CashFlow from "../models/CashFlowModel.js";
 import Account, {encryptPassword} from "../models/AccountModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-// import multer from 'multer';
-// const DIR = '../../backend/uploads/';
+import multer from 'multer';
 
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, DIR);
-//     },
-//     filename: (req, file, cb) => {
-//         const fileName = file.originalname.toLowerCase().split(' ').join('-');
-//         cb(null, uuidv4() + '-' + fileName)
+const DIR = './uploads';//'../uploads/';//'/Users/adi.mansbach/Documents/SpendSmartNew/SpendSmart/backend/uploads';
+let image1;
+
+const storage = 
+console.log('in multer');    
+multer.diskStorage({
+    destination: (req, file, cb) => {
+        console.log('destination');
+        if (!fs.existsSync(DIR)) {
+            console.log('nottt');
+            fs.mkdirSync(DIR);
+        }
+        console.log('storage');
+        cb(null, DIR);
+    },
+    filename: (req, file, cb) => {
+        console.log('file.originalname', file.originalname);
+        // const fileName = file.originalname.toLowerCase().split(' ').join('-');
+        // cb(null, uuidv4() + '-' + fileName)
+        cb(null, file.originalname + '-' + Date.now())
+
+    }
+});
+
+// Multer Filter
+// const multerFilter = (req, file, cb) => {
+//     console.log('file.mimetype ', file.mimetype);
+//     if (file.mimetype.split("/")[1] === "pdf") {
+//       cb(null, true);
+//     } else {
+//       cb(new Error("Not a PDF File!!"), false);
 //     }
-// });
+//   };
 
-// const upload = multer({
-//     storage: storage,
-//     fileFilter: (req, file, cb) => {
-//         if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-//             cb(null, true);
-//             console.log('storage ' + JSON.stringify(storage));
-//         } else {
-//             cb(null, false);
-//             console.log('storage else ' + JSON.stringify(storage));
+const upload = multer({
+    storage
+    // limits: { fileSize: 1000000 * 5 },
+    // fileFilter: multerFilter
+  });//.single(image1);
 
-//             return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
-//         }
-//     }
-// });
+export const uploadImage = async (req, res) => {
+    upload.single('file')(req, res, (err) => {
+        if(err) {
+            res.status(400).send("Something went wrong!");
+        }
+        res.send(req.file);
+        console.log('req.file', req.file);
+
+        // console.log(req.file.mimetype);
+        // console.log(req.file.path);
+        console.log('req.body', req.body);
+
+                   
+
+        // console.log('res', res);
+    })
+    
+}
+
 
 export const createAccount = async (req, res) => {
     // console.log('Saving account ' + JSON.stringify(req.body));
@@ -124,47 +158,170 @@ export const signIntoAccount = async (req, res) => {
     }
 }
 
-export const updateAccount = async (req, res) => {
-    try{
-        const updatedFields = req.body;
-        // console.log('req.body ' + JSON.stringify(updatedFields));
-        
-        if (updatedFields.password != null) {
-            if (updatedFields.oldPassword == null) {
-                res.status(400).json({message: "Old password was not provided"});
-                return;
-            }
-            
-            const account = await Account.findOne({_id:req.params.id});
-            // console.log("found " + JSON.stringify(account))
-            const isMatch = await account.comparePassword(updatedFields.oldPassword);
-            // console.log("password match = " + isMatch)
-            if (!isMatch) {
-                res.status(400).json({message: "Old password does not match"});
-                return;
-            }
-            
-            try {
-                updatedFields.password = await encryptPassword(updatedFields.password);
-                console.log("Encrypted password " + updatedFields.password)
-            } catch (error) {
-                console.error(error)
-                res.status(501).json({message: error.message});
-                return
-            }
-        }
-        
-        const updatedItem = await Account.findOneAndUpdate({_id:req.params.id}, {$set: updatedFields}, {new: true});
-        console.log('here after update ' + JSON.stringify(updatedItem));
-        res.status(200).json(updatedItem);
-        
-        
-    } catch (error) {
-        console.error('error ' + JSON.stringify(error));
-        res.status(400).json({message: error.message});
-    }
-    
+const uu = async(image) => {
+    console.log('uu');
+    return image.name;
 }
+
+
+
+
+export const updateAccount = async (req, res) => {
+    console.log('before');
+    console.log('res.data ', res.data);
+    //const {image} = req.body;
+
+    image1 = req.image;
+    console.log('image1', image1);
+//     handleMultipartData(req, res, (err) => {
+//         console.log('after');
+//         if(err) {
+//        res.status(400).send("Something went wrong!");
+//      }
+//     //  console.log('res', res);
+//      res.send(req.file);
+//    });
+
+    upload.single(req.image)(req, res, function (err) {
+        console.log('after');
+        if (err instanceof multer.MulterError) {
+            console.log('err1', err);
+            // A Multer error occurred when uploading.
+        } else if (err) {
+            console.log('err2');
+
+            res.send(err)
+
+            // An unknown error occurred when uploading.
+        }
+        else{
+            //res.send("Success, Image uploaded!")
+
+            console.log('req', req.body);
+
+            // const imagePath = '/uploads/' + req.file.filename;
+
+            // console.log('imagePath ', imagePath);
+        }
+        // Everything went fine. 
+        // next()
+    })
+
+ };
+
+// export const updateAccount = async (req, res) => {
+    // try{
+    //     console.log('req.body ' + JSON.stringify(req.body));
+
+
+    //     const updatedFields = req.body;
+                
+        // if (updatedFields.password != null) {
+        //     if (updatedFields.oldPassword == null) {
+        //         res.status(400).json({message: "Old password was not provided"});
+        //         return;
+        //     }
+            
+        //     const account = await Account.findOne({_id:req.params.id});
+        //     // console.log("found " + JSON.stringify(account))
+        //     const isMatch = await account.comparePassword(updatedFields.oldPassword);
+        //     // console.log("password match = " + isMatch)
+        //     if (!isMatch) {
+        //         res.status(400).json({message: "Old password does not match"});
+        //         return;
+        //     }
+            
+        //     try {
+        //         updatedFields.password = await encryptPassword(updatedFields.password);
+        //         console.log("Encrypted password " + updatedFields.password)
+        //     } catch (error) {
+        //         console.error(error)
+        //         res.status(501).json({message: error.message});
+        //         return
+        //     }
+        // }
+
+        // console.log('before');
+        // const res = await upload.single(req.body.image);
+        // console.log('req.file', JSON.stringify(req.file));
+        //upload.single(req.body.image), function (req, res, error){//(req, res, async (error) => {
+    //         uu (req, res, async (error) => {//(req, res, async (error) => {
+    //         console.log('after');
+    //     //handleMultipartData(req, res, async (err) => {
+    //         if (error) {
+    //           res.json({ msgs: error.message });
+    //         }
+        
+    //         res.json({
+    //           body: req.body,
+    //           file: req.file,
+    //         });
+    //         console.log('res ' + res.file);
+
+
+    //         updatedFields.image = res.file;
+    //         console.log('updatedFields1 ' + JSON.stringify(updatedFields));
+
+
+
+    //         //const updatedItem = await Account.findOneAndUpdate({_id:req.params.id}, {$set: updatedFields}, {new: true});
+    //         // console.log('here after update ' + JSON.stringify(updatedItem));
+    //         // res.status(200).json(updatedItem);
+
+
+    //    });
+    
+        
+        
+//     } catch (error) {
+//         console.error('error ' + JSON.stringify(error));
+//         res.status(400).json({message: error.message});
+//     }
+    
+// }
+
+
+// export const updateAccount = async (req, res) => {
+//     try{
+//         const updatedFields = req.body;
+//         // console.log('req.body ' + JSON.stringify(updatedFields));
+        
+//         if (updatedFields.password != null) {
+//             if (updatedFields.oldPassword == null) {
+//                 res.status(400).json({message: "Old password was not provided"});
+//                 return;
+//             }
+            
+//             const account = await Account.findOne({_id:req.params.id});
+//             // console.log("found " + JSON.stringify(account))
+//             const isMatch = await account.comparePassword(updatedFields.oldPassword);
+//             // console.log("password match = " + isMatch)
+//             if (!isMatch) {
+//                 res.status(400).json({message: "Old password does not match"});
+//                 return;
+//             }
+            
+//             try {
+//                 updatedFields.password = await encryptPassword(updatedFields.password);
+//                 console.log("Encrypted password " + updatedFields.password)
+//             } catch (error) {
+//                 console.error(error)
+//                 res.status(501).json({message: error.message});
+//                 return
+//             }
+//         }
+        
+//         const updatedItem = await Account.findOneAndUpdate({_id:req.params.id}, {$set: updatedFields}, {new: true});
+//         console.log('here after update ' + JSON.stringify(updatedItem));
+//         res.status(200).json(updatedItem);
+        
+        
+//     } catch (error) {
+//         console.error('error ' + JSON.stringify(error));
+//         res.status(400).json({message: error.message});
+//     }
+    
+// }
 
 export const saveUser = async (req, res) => {
 
