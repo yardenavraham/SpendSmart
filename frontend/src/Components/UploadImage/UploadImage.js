@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import './UploadImage.scss';
+// import './UploadImage.scss';
 // import UploadService from "./FileUploadService";
 import axios from "axios";
 
