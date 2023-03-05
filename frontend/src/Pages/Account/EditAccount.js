@@ -47,7 +47,7 @@ const fields = {
 
 function validate(value, fieldName, formValues = {}) {
     switch (fieldName) {
-        //TODO: password requirements from signup
+      //TODO: password requirements from signup
         case fields.confirm.id:
             return !passwordsEqual(value, formValues[fields.new.id])
         default:
@@ -64,6 +64,7 @@ function getInitialFormValues() {
 
 export default function EditAccount() {
     const authCtx = useContext(AuthContext);
+    console.log(authCtx)
     const navigate = useNavigate();
     const [showAlert, setShowAlert] = useState(false);
     const [alertType, setAlertType] = useState('error');
@@ -131,7 +132,7 @@ export default function EditAccount() {
         
     };
     
-    const ChanePasswordElement = () => {
+    const UpdatePasswordElement = () => {
         const textField = (field, errorMessage) => {
             const error = validate(passwordFormValues[field.id], field.id, passwordFormValues);
             console.log(passwordFormValues[field.id])
@@ -149,7 +150,7 @@ export default function EditAccount() {
                 />
             </Grid>
         }
-    
+        
         return (
           <>
               <Box component="form" noValidate onSubmit={submit} sx={{ mt: 1 }}>
@@ -161,7 +162,15 @@ export default function EditAccount() {
               </Box>
           </>
         );
+        
+    }
     
+    const UpdateImageElement = () => {
+        return (
+          <>
+              <UploadImage selectedImage={image} setSelectedImage={setImage}/>
+          </>
+        );
     }
     
     return (
@@ -181,8 +190,8 @@ export default function EditAccount() {
               <Grid container spacing={4}>
                   <Grid item xs={6}>
                       <Grid container direction="column" rowSpacing={4}>
-                          <AccountEditCard header="Photo"/>
-                          <AccountEditCard header="Password" element={ChanePasswordElement()}/>
+                          <AccountEditCard header="Photo" element={UpdateImageElement()}/>
+                          <AccountEditCard header="Password" element={UpdatePasswordElement()}/>
                       </Grid>
                   </Grid>
                   <AccountEditCard header="Partners"/>
@@ -197,7 +206,7 @@ export default function EditAccount() {
                       Update
                   </Button>
               </Grid>
-    
+          
           </ThemeProvider>
       </>
     );
