@@ -1,5 +1,5 @@
 // import * as React from 'react';
-import React from 'react'
+import React, {useEffect} from 'react'
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,6 +19,10 @@ import { useNavigate } from "react-router-dom";
 import UploadImage from '../../Components/UploadImage/UploadImage';
 import AlertModal from "../../Components/Alerts/AlertModal";
 import AccountEditCard from "../../Components/EditAccount/AccountEditCard";
+import PartnersList from "../../Components/Forms/PartnersList";
+import {Formik} from "formik";
+import * as Yup from "yup";
+import {confirmPasswordValidation, emailValidation, nameValidation, passwordValidation} from "../../Components/Forms/FormikValidations";
 
 function Copyright(props) {
     return (
@@ -62,6 +66,17 @@ function getInitialFormValues() {
     }, {});
 }
 
+async function getAccount(id) {
+    const response = await axios.get(`http://localhost:27017/Account/${id}`);
+    return response.data;
+}
+
+async function getPartnersFromDB(accountId) {
+    const account = await getAccount(accountId);
+    console.log("ACCOUNT AFTER AWAIT = " + JSON.stringify(account));
+    return await account?.partners || [];
+}
+
 export default function EditAccount() {
     const authCtx = useContext(AuthContext);
     console.log(authCtx)
@@ -72,10 +87,24 @@ export default function EditAccount() {
     
     const [passwordFormValues, setPasswordFormValues] = useState(getInitialFormValues());
     const [image, setImage] = useState(null);
+    console.log(authCtx.accountDetails)
+    const [partners, setPartners] = useState([])
+    useEffect(() => {
+        async function fetch() {
+            const savedPartners = await getPartnersFromDB(authCtx.id);
+            console.log("SAVED PARTNERS = " + JSON.stringify(savedPartners))
+            setPartners(savedPartners.map(partner => {return {
+                partnerFirstName: partner.firstName,
+                partnerLastName: partner.lastName,
+                partnerEmail: partner.email
+            }}));
+        }
+        fetch();
+    }, []);
     
     
-    const  handleChange = (e) => {
-        const { name, value } = e.target;
+    const handleChange = (e) => {
+        const {name, value} = e.target;
         console.log('field: [' + name + "], value: [" + value + "], current values: [" + JSON.stringify(passwordFormValues) + "]");
         
         setPasswordFormValues(previousFormValues => {
@@ -153,8 +182,8 @@ export default function EditAccount() {
         
         return (
           <>
-              <Box component="form" noValidate onSubmit={submit} sx={{ mt: 1 }}>
-                  <Grid container spacing={2} style={{ alignItems: 'center', marginLeft: 0 }}>
+              <Box component="form" noValidate onSubmit={submit} sx={{mt: 1}}>
+                  <Grid container spacing={2} style={{alignItems: 'center', marginLeft: 0}}>
                       {textField(fields.current, 'Invalid password')}
                       {textField(fields.new, 'Invalid password')}
                       {textField(fields.confirm, 'Passwords don\'t match')}
@@ -171,6 +200,47 @@ export default function EditAccount() {
               <UploadImage selectedImage={image} setSelectedImage={setImage}/>
           </>
         );
+    }
+    
+    const UpdatePartnersElement = () => {
+        
+        const validationSchema = Yup.object().shape({
+            // firstName: nameValidation,
+            // lastName: nameValidation,
+            // email: emailValidation,
+            password: passwordValidation,
+            confirmPassword: confirmPasswordValidation,
+            partners: Yup.array(
+              Yup.object({
+                  partnerFirstName: nameValidation,
+                  partnerLastName: nameValidation,
+                  partnerEmail: emailValidation,
+              })
+            ).min(1),
+        });
+        
+        return (
+          <>
+              <Formik
+                initialValues={{
+                    partners: partners,
+                }}
+                // values={{partners: partners}}
+                enableReinitialize={true}
+                validationSchema={validationSchema}
+                onSubmit={(values, {setSubmitting}) => {
+                    saveHandler(values).then(r => console.log("completed save account with response: " + r));
+                    setTimeout(() => {
+                        // alert(JSON.stringify(values, null, 2));
+                        setSubmitting(false);
+                    }, 400);
+                }}
+              >
+                  {({ values }) => (
+                    <PartnersList partners={values.partners}/>
+                  )}
+              </Formik>
+          </>)
     }
     
     return (
@@ -194,15 +264,15 @@ export default function EditAccount() {
                           <AccountEditCard header="Password" element={UpdatePasswordElement()}/>
                       </Grid>
                   </Grid>
-                  <AccountEditCard header="Partners"/>
+                  <AccountEditCard header="Partners" element={UpdatePartnersElement()}/>
               </Grid>
-              <Grid container sx={{ mt: 3, mb: 2, justifyContent: "center" }}>
+              <Grid container sx={{mt: 3, mb: 2, justifyContent: "center"}}>
                   <Button
                     type="submit"
                     color="secondary"
                     variant="contained"
                     onClick={submit}
-                    sx={{ mt: 3, mb: 2, justifyContent: "center" }}>
+                    sx={{mt: 3, mb: 2, justifyContent: "center"}}>
                       Update
                   </Button>
               </Grid>
