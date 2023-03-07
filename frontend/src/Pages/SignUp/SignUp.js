@@ -17,6 +17,8 @@ import { useContext, useState } from 'react';
 import  AuthContext from '../../store/auth-context';
 import { useNavigate } from "react-router-dom";
 import AlertModal from "../../Components/Alerts/AlertModal";
+import PartnersList from "../../Components/Forms/PartnersList"
+import {confirmPasswordValidation, emailValidation, nameValidation, passwordValidation} from "../../Components/Forms/FormikValidations";
 
 function Copyright(props) {
   return (
@@ -40,43 +42,19 @@ const theme = createTheme();
 
 const nameRegex = /^[A-Za-z]+$/;
 
+
 const validationSchema = Yup.object().shape({
-  account: Yup.string()
-    .matches(nameRegex, "Only English letters")
-    .min(2, "Minimum 2 characters")
-    .max(50, "Maximum 50 characters")
-    .required("Required"),
-  firstName: Yup.string()
-    .matches(nameRegex, "Only English letters")
-    .min(2, "Minimum 2 characters")
-    .max(50, "Maximum 50 characters")
-    .required("Required"),
-  lastName: Yup.string()
-    .matches(nameRegex, "Only English letters")
-    .min(2, "Minimum 2 characters")
-    .max(50, "Maximum 50 characters")
-    .required("Required"),
-  email: Yup.string().email("Invalid email").required("Required"),
-  password: Yup.string()
-    .min(4, "Minimum 4 characters")
-    .max(50, "Maximum 50 characters")
-    .required("Required"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref("password"), null], "Passwords must match")
-    .required("Required"),
+  account: nameValidation,
+  firstName: nameValidation,
+  lastName: nameValidation,
+  email: emailValidation,
+  password: passwordValidation,
+  confirmPassword: confirmPasswordValidation,
   partners: Yup.array(
     Yup.object({
-      partnerFirstName: Yup.string()
-        .matches(nameRegex, "Only English letters")
-        .required("Required")
-        .min(2, "Minimum 2 characters")
-        .max(50, "Maximum 50 characters"),
-      partnerLastName: Yup.string()
-        .matches(nameRegex, "Only English letters")
-        .required("Required")
-        .min(2, "Minimum 2 characters")
-        .max(50, "Maximum 50 characters"),
-      partnerEmail: Yup.string().email("Invalid email").required("Required"),
+      partnerFirstName: nameValidation,
+      partnerLastName: nameValidation,
+      partnerEmail: emailValidation,
     })
   ),
 });
@@ -86,12 +64,6 @@ export default function SignUp() {
   const authCtx = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const partnersGroup = {
-    partnerFirstName: "",
-    partnerLastName: "",
-    partnerEmail: "",
-  };
-  
   const mapPartner = (values) => {
     return {
       firstName: values.partnerFirstName,
@@ -248,74 +220,7 @@ export default function SignUp() {
                             type="password"
                           />
                         </Grid>
-                        <FieldArray name="partners">
-                          {({ push, remove }) => (
-                            <Grid
-                              container
-                              spacing={2}
-                              sx={{ marginTop: 2, paddingX: 2 }}
-                            >
-                              {values.partners.map((_, index) => (
-                                <>
-                                  <Grid item xs={12} sm={6}>
-                                    <Field
-                                      fullWidth
-                                      name={`partners.${index}.partnerFirstName`}
-                                      component={TextField}
-                                      label="First Name"
-                                    />
-                                  </Grid>
-                                  <Grid item xs={12} sm={6}>
-                                    <Field
-                                      fullWidth
-                                      name={`partners.${index}.partnerLastName`}
-                                      component={TextField}
-                                      label="Last Name"
-                                    />
-                                  </Grid>
-                                  <Grid item xs={12} sm={9}>
-                                    <Field
-                                      fullWidth
-                                      name={`partners.${index}.partnerEmail`}
-                                      component={TextField}
-                                      label="Email Address"
-                                      type="email"
-                                    />
-                                  </Grid>
-                                  <Grid
-                                    container
-                                    item
-                                    xs={12}
-                                    sm={3}
-                                    justifyContent="flex-end"
-                                  >
-                                    <Button
-                                      variant="outlined"
-                                      color="error"
-                                      onClick={() => remove(index)}
-                                    >
-                                      Delete
-                                    </Button>
-                                  </Grid>
-                                </>
-                              ))}{" "}
-                              <Grid
-                                container
-                                item
-                                xs={12}
-                                justifyContent="center"
-                              >
-                                <Button
-                                  variant="outlined"
-                                  color="success"
-                                  onClick={() => push(partnersGroup)}
-                                >
-                                  Add Another Account Partner
-                                </Button>
-                              </Grid>
-                            </Grid>
-                          )}
-                        </FieldArray>
+                        <PartnersList partners={values.partners}/>
                         <Grid container item xs={12}>
                           <Button
                             type="submit"

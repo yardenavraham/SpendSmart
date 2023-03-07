@@ -22,9 +22,12 @@ import TextField from '@mui/material/TextField';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { ExportToCsv } from 'export-to-csv';
+import Download from "@mui/icons-material/Download";
 
 
 const tableIcons = {
+  Download: forwardRef((props, ref) => <Download {...props} ref={ref} />),
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
   Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
@@ -81,19 +84,19 @@ const CashFlowTable = props => {
   }
 
   const [addOrEdit, setAddOrEdit] = useState('add');
-  const [selectedRow, setSelectedRow] = useState(null);  
+  const [selectedRow, setSelectedRow] = useState(null);
   const now = new Date();
   const firstDayOfCurrMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const [datePickerValue, setDatePickerValue] = useState(dayjs(firstDayOfCurrMonth));
-  
+
   const tableRef = useRef();
-  
+
   const onDelete = props.onDelete;
   const tableText = props.tableType //=== myTableType.Incomes ? "Incomes" : "Expenses"
   console.log('props.madeBy', JSON.stringify(props.madeBy));
-  const madeByFilter = props.madeBy !== undefined ? arrayToObjectPairs(props.madeBy): [];
+  const madeByFilter = props.madeBy !== undefined ? arrayToObjectPairs(props.madeBy) : [];
   const categoryFilter = arrayToObjectPairs(props.category);
-  
+
   const handleDatePickerChanged = (newDate) => {
     const newDateVal = new Date(newDate);
     const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
@@ -105,12 +108,42 @@ const CashFlowTable = props => {
     }));
   }
 
+  const cashFlowData = props.cashFlowList.map((transaction) => ({
+    description: transaction.description,
+    category: transaction.category,
+    amount: transaction.amount,
+    frequency: transaction.frequency,
+    date: transaction.date, //{`${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`}
+    madeBy: transaction.madeBy
+  }))
+
+  const downloadCSV = (data) => {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalSeparator: '.',
+      showLabels: true,
+      showTitle: true,
+      title: 'Cash Flow CSV',
+      useTextFile: false,
+      useBom: true,
+      useKeysAsHeaders: true,
+    };
+
+    const csvExporter = new ExportToCsv(options);
+
+    csvExporter.generateCsv(data);
+
+  }
+
+
+
   console.log('madeBy ' + props.madeBy);
   const { madeBy } = props;
 
   return (
     <>
-    <MaterialTable
+      <MaterialTable
         title={tableText + " Information"}
         icons={tableIcons}
         actions={[
@@ -131,6 +164,12 @@ const CashFlowTable = props => {
               </LocalizationProvider>
             ),
             isFreeAction: true  //Independent actions that will not on row' actions section
+          },
+          {
+            icon: tableIcons.Download,
+            tooltip: "Download CSV",
+            isFreeAction: true, //Independent actions that will not on row' actions section
+            onClick: () => { downloadCSV(cashFlowData) }
           },
           {
             icon: tableIcons.Add,

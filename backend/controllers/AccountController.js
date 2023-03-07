@@ -98,18 +98,16 @@ export const generateToken = (account) => {
     }
 }
 
-
-export const getAccountByName = async (req, res) => {
+export const getAccountById = async (req, res) => {
     console.log(req)
     try {
-        const item = await Account.findOne({name: req.name});
+        const item = await Account.findOne({id: req.id});
         res.status(200).json(item);
     } catch (error) {
         console.error(error)
         res.status(404).json({message: error.message});
     }
 }
-
 
 export const signIntoAccount = async (req, res) => {
     // console.log('Signing into account ' + JSON.stringify(req.body));
