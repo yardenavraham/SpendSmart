@@ -4,28 +4,20 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import multer from 'multer';
 
-const DIR = './uploads';//'../uploads/';//'/Users/adi.mansbach/Documents/SpendSmartNew/SpendSmart/backend/uploads';
+const DIR = '../backend/uploads';
 let image1;
 
-const storage = 
-console.log('in multer');    
+const multerStorage = 
 multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log('destination');
-        if (!fs.existsSync(DIR)) {
-            console.log('nottt');
-            fs.mkdirSync(DIR);
-        }
-        console.log('storage');
         cb(null, DIR);
     },
     filename: (req, file, cb) => {
         console.log('file.originalname', file.originalname);
-        // const fileName = file.originalname.toLowerCase().split(' ').join('-');
         // cb(null, uuidv4() + '-' + fileName)
         cb(null, file.originalname + '-' + Date.now())
-
     }
+
 });
 
 // Multer Filter
@@ -39,8 +31,11 @@ multer.diskStorage({
 //   };
 
 const upload = multer({
-    storage
-    // limits: { fileSize: 1000000 * 5 },
+
+    storage: multerStorage,
+    // dest: DIR
+
+    limits: { fileSize: 1000000 * 5 },
     // fileFilter: multerFilter
   });//.single(image1);
 
@@ -51,14 +46,7 @@ export const uploadImage = async (req, res) => {
         }
         res.send(req.file);
         console.log('req.file', req.file);
-
-        // console.log(req.file.mimetype);
-        // console.log(req.file.path);
         console.log('req.body', req.body);
-
-                   
-
-        // console.log('res', res);
     })
     
 }
@@ -157,14 +145,6 @@ export const signIntoAccount = async (req, res) => {
         res.status(404).json({message: error.message});
     }
 }
-
-const uu = async(image) => {
-    console.log('uu');
-    return image.name;
-}
-
-
-
 
 export const updateAccount = async (req, res) => {
     console.log('before');

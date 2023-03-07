@@ -28,7 +28,7 @@ const UploadImage = (props) => {
 
   return (
     <div>
-      <form encType="multipart/form">
+      <form action="http://localhost:27017/uploadimage" method="post" encType="multipart/form-data">
 
       {selectedImage && (
         <div>
