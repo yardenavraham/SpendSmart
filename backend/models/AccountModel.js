@@ -34,23 +34,8 @@ const Account = mongoose.Schema({
 
 export async function encryptPassword(password) {
     const salt = await bcrypt.genSalt(12);
-    return await bcrypt.hash(password, salt)
+    return await bcrypt.hash(password, salt);
 }
-
-Account.pre("save", function (next) {
-    const account = this
-
-    if (this.isModified("password") || this.isNew) {
-        try {
-            account.password = encryptPassword(account.password);
-            return next()
-        } catch (err) {
-            return next(err)
-        }
-    } else {
-        return next()
-    }
-})
 
 Account.methods.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
