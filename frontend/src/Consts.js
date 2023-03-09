@@ -13,6 +13,7 @@ export const incomeCategory = [
 export const expenseCategory = [
     'Food',
     'Clothes',
+    'Saving',
     'Other'
 ];
 
