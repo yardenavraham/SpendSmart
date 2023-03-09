@@ -13,7 +13,7 @@ const partnersGroup = {
 
 
 const PartnersList = (props) => {
-  console.log("PARTNERS=" + props.partners)
+  // console.log("PARTNERS=" + JSON.stringify(props.partners))
   return (
     <>
       <FieldArray name="partners">

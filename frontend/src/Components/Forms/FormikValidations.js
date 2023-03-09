@@ -12,9 +12,7 @@ export const emailValidation = Yup.string().email("Invalid email").required("Req
 
 export const passwordValidation = Yup.string()
   .min(4, "Minimum 4 characters")
-  .max(50, "Maximum 50 characters")
-  .required("Required");
+  .max(50, "Maximum 50 characters");
 
 export const confirmPasswordValidation = Yup.string()
-  .oneOf([Yup.ref("password"), null], "Passwords must match")
-  .required("Required");
+  .oneOf([Yup.ref("password"), null], "Passwords must match");

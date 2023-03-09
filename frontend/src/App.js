@@ -15,7 +15,6 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import AppFooter from "./Components/AppFooter/AppFooter";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
@@ -23,10 +22,9 @@ import EditAccount from "./Pages/Account/EditAccount";
 import LogOut from './Pages/Logout/Logout';
 import PrivateRoute from "./Routes/PrivateRoute";
 import Account from "./Pages/Account/Account";
-// import PublicRoute from "./Routes/PublicRoute";
 
 export default function App() {
-
+  
   const theme = createTheme({
     palette: {
       primary: {
@@ -39,49 +37,33 @@ export default function App() {
       },
     },
   });
-
+  
   return (
     <div className="App">
       <ThemeProvider theme={theme}>
-      <Container maxWidth="xl">
-        <Box sx={{ bgcolor: "#fff", height: "100vh" }}>
-          <Toolbar />
-          <BrowserRouter>
-            <AppHeader />
-            <Box component="div" sx={{ p: 3 }}>
-            <Routes>
-              <Route exact path='/' element={<PrivateRoute/>}>
-                <Route path="/" element={<Home />} />
-              </Route>
-              <Route exact path='/' element={<PrivateRoute/>}>
-                <Route path="incomes" element={<CashFlow transactionType={myTableType.Incomes} categoriesList={incomeCategory} />} />
-              </Route>
-              <Route exact path='/' element={<PrivateRoute/>}>
-                <Route path="expenses" element={<CashFlow transactionType={myTableType.Expenses} categoriesList={expenseCategory} />} />
-              </Route>
-              <Route exact path='/' element={<PrivateRoute/>}>
-                <Route path="dashboard" element={<Dashboard />} />
-              </Route>
-              {/* <Route exact path='/' element={<PublicRoute/>}> */}
-                <Route path="signin" element={<SignIn />} />
-              {/* </Route> */}
-              {/* <Route exact path='/' element={<PrivateRoute/>}> */}
-                <Route path="signup" element={<SignUp />} />
-              {/* </Route> */}
-              <Route exact path='/' element={<PrivateRoute/>}>
-                <Route path="logout" element={<LogOut/>} />
-              </Route>
-              <Route exact path='/' element={<PrivateRoute/>}>
-                <Route path="account" element={<Account/>} />
-               </Route>
-              <Route exact path='/' element={<PrivateRoute/>}>
-                <Route path="editaccount" element={<EditAccount/>} />
-               </Route>
-            </Routes>
-             </Box>
-          </BrowserRouter>
-        </Box>
-      </Container>
+        <Container maxWidth="xl">
+          <Box sx={{ bgcolor: "#fff", height: "100vh" }}>
+            <Toolbar />
+            <BrowserRouter>
+              <AppHeader />
+              <Box component="div" sx={{ p: 3 }}>
+                <Routes>
+                  <Route exact path='/' element={<PrivateRoute/>}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="incomes" element={<CashFlow transactionType={myTableType.Incomes} categoriesList={incomeCategory} />} />
+                    <Route path="expenses" element={<CashFlow transactionType={myTableType.Expenses} categoriesList={expenseCategory} />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="logout" element={<LogOut/>} />
+                    <Route path="account" element={<Account/>} />
+                    <Route path="editaccount" element={<EditAccount/>} />
+                  </Route>
+                  <Route path="signin" element={<SignIn />} />
+                  <Route path="signup" element={<SignUp />} />
+                </Routes>
+              </Box>
+            </BrowserRouter>
+          </Box>
+        </Container>
       </ThemeProvider>
     </div>
   );
