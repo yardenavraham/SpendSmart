@@ -24,7 +24,8 @@ export const AuthContextProvider = (props) => {
             // 'firstName': decodedToken.firstName,
             // 'lastName': decodedToken.lastName,
             // 'email': decodedToken.email,
-            'users': decodedToken.users
+            'users': decodedToken.users,
+            'image': decodedToken.image
             // 'partners': decodedToken.partners.map(user => user.firstName)
         });
     }

@@ -11,6 +11,10 @@ const Account = mongoose.Schema({
         type: String,
         required: true
     },
+    image: {
+        type: String,
+        required: false
+    },
     partners: [{
         firstName: {
             type: String,
@@ -24,11 +28,7 @@ const Account = mongoose.Schema({
             type: String,
             required: true,
             index: true
-        },
-        image: {
-            type: Buffer, // casted to MongoDB's BSON type: binData
-            required: false
-        }
+        }        
     }]
 });
 

@@ -79,11 +79,13 @@ async function getPartnersFromDB(accountId) {
 
 export default function EditAccount() {
     
-    const [image, setImage] = useState(null);
-    const [imageName, setImageName] = useState('');
-
+    const [file, setFile] = useState(null);
     const authCtx = useContext(AuthContext);
-    console.log(authCtx)
+    console.log('authCtx', JSON.stringify(authCtx.accountDetails));
+    const [image, setImage] = useState(authCtx.accountDetails.image);
+    console.log('image', image);
+    const [a, aetA] = useState("aaaaaaaa");
+
     const navigate = useNavigate();
     const [showAlert, setShowAlert] = useState(false);
     const [alertType, setAlertType] = useState('error');
@@ -93,17 +95,21 @@ export default function EditAccount() {
     console.log(authCtx.accountDetails)
     const [partners, setPartners] = useState([])
     useEffect(() => {
+        setImage(authCtx.image);
         async function fetch() {
+            console.log('authCtx.id', authCtx.id);
             const savedPartners = await getPartnersFromDB(authCtx.id);
+        
             console.log("SAVED PARTNERS = " + JSON.stringify(savedPartners))
             setPartners(savedPartners.map(partner => {return {
+                key: partner.email,
                 partnerFirstName: partner.firstName,
                 partnerLastName: partner.lastName,
                 partnerEmail: partner.email
             }}));
         }
         fetch();
-    }, []);
+    }, [authCtx.id, authCtx.image]);
     
     
     const handleChange = (e) => {
@@ -125,32 +131,34 @@ export default function EditAccount() {
             console.log('account.id', JSON.stringify(account.id));
 
             const data = {};
-            const fd = new FormData()
-
-            fd.append('file', image, image.name)
-
+            // data.name = 'hhhh';
+            // const form = new FormData();
         
-            if (passwordFormValues[fields.confirm.id] !== '') {
-                data.oldPassword = passwordFormValues[fields.current.id];
-                data.password = passwordFormValues[fields.confirm.id];
-            }
+            // if (passwordFormValues[fields.confirm.id] !== '') {
+            //     // data.oldPassword = passwordFormValues[fields.current.id];
+            //     // data.password = passwordFormValues[fields.confirm.id];
+            //     form.append('oldPassword', passwordFormValues[fields.current.id]);
+            //     form.append('password', passwordFormValues[fields.confirm.id]);
+            // }
             
-            console.log('image', image);
-            data.image = image;
-            console.log(JSON.stringify('data', JSON.stringify(data)));
+            // console.log('file', file);
+            // //console.log(JSON.stringify('data', JSON.stringify(data)));
 
-            const form = new FormData();
-            form.append('image', image);
-            for (const value of form.values()) {
-                console.log('fd val', value);
-              }
-            const config = {     
-                headers: { 'content-type': 'multipart/form-data' }
-            }
-            
+            // form.append('image', file);
+
+            // for (const value of form.values()) {
+            //     console.log('fd val', value);
+            //   }
+            // const config = {     
+            //     headers: { 'content-type': 'multipart/form-data' }
+            // }
+            console.log('file', file);
+            data.image = file;
             const response = await axios.patch(`http://localhost:27017/Account/${account.id}`,
-                form, config //data???
+                //form//, config //data???
+                data
             );
+            authCtx.onLogin(response.data.token);
             console.log(response);
             setShowAlert(true)
             setAlertType('success')
@@ -174,10 +182,8 @@ export default function EditAccount() {
             setAlertType('error');
             setMessage("Confirmation does not match the new password")
             return;
-        }
-        
-        saveHandler();
-        
+        }        
+        saveHandler();        
     };
     
     const UpdatePasswordElement = () => {
@@ -212,11 +218,13 @@ export default function EditAccount() {
         );
         
     }
-    
+
     const UpdateImageElement = () => {
+        console.log('image before21 ', image);
+
         return (
           <>
-              <UploadImage selectedImage={image} setSelectedImage={setImage}/>
+              {authCtx.accountDetails.image !== undefined && <UploadImage selectedImage={image} setSelectedImage={setImage} setFile={setFile} a={a}/>}
           </>
         );
     }

@@ -3,9 +3,8 @@ import Account, {encryptPassword} from "../models/AccountModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import multer from 'multer';
-
+//import a from '../../frontend/public/uploads'
 const DIR = '../backend/uploads';
-let image1;
 
 const multerStorage = 
 multer.diskStorage({
@@ -34,23 +33,19 @@ const upload = multer({
 
     storage: multerStorage,
     // dest: DIR
-
     limits: { fileSize: 1000000 * 5 },
     // fileFilter: multerFilter
-  });//.single(image1);
+  });
 
 export const uploadImage = async (req, res) => {
     upload.single('file')(req, res, (err) => {
         if(err) {
             res.status(400).send("Something went wrong!");
         }
-        res.send(req.file);
         console.log('req.file', req.file);
-        console.log('req.body', req.body);
-    })
-    
+        res.status(200).json({file: req.file.path});
+    })    
 }
-
 
 export const createAccount = async (req, res) => {
     // console.log('Saving account ' + JSON.stringify(req.body));
@@ -58,7 +53,7 @@ export const createAccount = async (req, res) => {
     try {
         const account = {name: req.body.name, password: req.body.password, partners: req.body.partners};
         const { name } = account;
-        const { firstName, lastName, email, image } = account.partners[0];
+        const { firstName, lastName, email } = account.partners[0];
         console.log('Saving account ' + name);
         
         if (await Account.exists({name: name})) {
@@ -67,6 +62,7 @@ export const createAccount = async (req, res) => {
             res.status(409).json({message: message})
             return
         }
+        account.image = '';
         const createdAccount = await new Account(account).save();
         const token = generateToken(createdAccount);
         console.log("token is " + token)
@@ -89,6 +85,7 @@ export const generateToken = (account) => {
             // firstName: account.partners[0].firstName,
             // lastName: account.partners[0].lastName,
             // email: account.partners[0].email,
+            image: account.image,
             users: account.partners.map(item => item.firstName)
         };
         return jwt.sign(fieldsForToken, TOKEN_KEY, {expiresIn: "7d"});
@@ -99,9 +96,11 @@ export const generateToken = (account) => {
 }
 
 export const getAccountById = async (req, res) => {
-    console.log(req)
+    // console.log(req)
+    console.log('getAccountById');
     try {
         const item = await Account.findOne({id: req.id});
+        console.log('item', item);
         res.status(200).json(item);
     } catch (error) {
         console.error(error)
@@ -145,161 +144,50 @@ export const signIntoAccount = async (req, res) => {
 }
 
 export const updateAccount = async (req, res) => {
-    console.log('before');
-    console.log('res.data ', res.data);
-    //const {image} = req.body;
-
-    image1 = req.image;
-    console.log('image1', image1);
-//     handleMultipartData(req, res, (err) => {
-//         console.log('after');
-//         if(err) {
-//        res.status(400).send("Something went wrong!");
-//      }
-//     //  console.log('res', res);
-//      res.send(req.file);
-//    });
-
-    upload.single(req.image)(req, res, function (err) {
-        console.log('after');
-        if (err instanceof multer.MulterError) {
-            console.log('err1', err);
-            // A Multer error occurred when uploading.
-        } else if (err) {
-            console.log('err2');
-
-            res.send(err)
-
-            // An unknown error occurred when uploading.
+    try{
+        console.log('updateAccount');
+        const updatedFields = req.body;
+        console.log('req.body ' + JSON.stringify(updatedFields));
+        
+        if (updatedFields.password != null) {
+            if (updatedFields.oldPassword == null) {
+                res.status(400).json({message: "Old password was not provided"});
+                return;
+            }
+            
+            const account = await Account.findOne({_id:req.params.id});
+            // console.log("found " + JSON.stringify(account))
+            const isMatch = await account.comparePassword(updatedFields.oldPassword);
+            // console.log("password match = " + isMatch)
+            if (!isMatch) {
+                res.status(400).json({message: "Old password does not match"});
+                return;
+            }
+            
+            try {
+                updatedFields.password = await encryptPassword(updatedFields.password);
+                console.log("Encrypted password " + updatedFields.password)
+            } catch (error) {
+                console.error(error)
+                res.status(501).json({message: error.message});
+                return
+            }
         }
-        else{
-            //res.send("Success, Image uploaded!")
-
-            console.log('req', req.body);
-
-            // const imagePath = '/uploads/' + req.file.filename;
-
-            // console.log('imagePath ', imagePath);
-        }
-        // Everything went fine. 
-        // next()
-    })
-
- };
-
-// export const updateAccount = async (req, res) => {
-    // try{
-    //     console.log('req.body ' + JSON.stringify(req.body));
-
-
-    //     const updatedFields = req.body;
-                
-        // if (updatedFields.password != null) {
-        //     if (updatedFields.oldPassword == null) {
-        //         res.status(400).json({message: "Old password was not provided"});
-        //         return;
-        //     }
-            
-        //     const account = await Account.findOne({_id:req.params.id});
-        //     // console.log("found " + JSON.stringify(account))
-        //     const isMatch = await account.comparePassword(updatedFields.oldPassword);
-        //     // console.log("password match = " + isMatch)
-        //     if (!isMatch) {
-        //         res.status(400).json({message: "Old password does not match"});
-        //         return;
-        //     }
-            
-        //     try {
-        //         updatedFields.password = await encryptPassword(updatedFields.password);
-        //         console.log("Encrypted password " + updatedFields.password)
-        //     } catch (error) {
-        //         console.error(error)
-        //         res.status(501).json({message: error.message});
-        //         return
-        //     }
-        // }
-
-        // console.log('before');
-        // const res = await upload.single(req.body.image);
-        // console.log('req.file', JSON.stringify(req.file));
-        //upload.single(req.body.image), function (req, res, error){//(req, res, async (error) => {
-    //         uu (req, res, async (error) => {//(req, res, async (error) => {
-    //         console.log('after');
-    //     //handleMultipartData(req, res, async (err) => {
-    //         if (error) {
-    //           res.json({ msgs: error.message });
-    //         }
         
-    //         res.json({
-    //           body: req.body,
-    //           file: req.file,
-    //         });
-    //         console.log('res ' + res.file);
+        const updatedAccount = await Account.findOneAndUpdate({_id:req.params.id}, {$set: updatedFields}, {new: true});
+        console.log('here after update ' + JSON.stringify(updatedAccount));
 
-
-    //         updatedFields.image = res.file;
-    //         console.log('updatedFields1 ' + JSON.stringify(updatedFields));
-
-
-
-    //         //const updatedItem = await Account.findOneAndUpdate({_id:req.params.id}, {$set: updatedFields}, {new: true});
-    //         // console.log('here after update ' + JSON.stringify(updatedItem));
-    //         // res.status(200).json(updatedItem);
-
-
-    //    });
-    
+        const token = generateToken(updatedAccount);
+        console.log("token is " + token)
+        return res.status(201).json({token: token});
+        // res.status(200).json(updatedItem);
         
         
-//     } catch (error) {
-//         console.error('error ' + JSON.stringify(error));
-//         res.status(400).json({message: error.message});
-//     }
-    
-// }
-
-
-// export const updateAccount = async (req, res) => {
-//     try{
-//         const updatedFields = req.body;
-//         // console.log('req.body ' + JSON.stringify(updatedFields));
-        
-//         if (updatedFields.password != null) {
-//             if (updatedFields.oldPassword == null) {
-//                 res.status(400).json({message: "Old password was not provided"});
-//                 return;
-//             }
-            
-//             const account = await Account.findOne({_id:req.params.id});
-//             // console.log("found " + JSON.stringify(account))
-//             const isMatch = await account.comparePassword(updatedFields.oldPassword);
-//             // console.log("password match = " + isMatch)
-//             if (!isMatch) {
-//                 res.status(400).json({message: "Old password does not match"});
-//                 return;
-//             }
-            
-//             try {
-//                 updatedFields.password = await encryptPassword(updatedFields.password);
-//                 console.log("Encrypted password " + updatedFields.password)
-//             } catch (error) {
-//                 console.error(error)
-//                 res.status(501).json({message: error.message});
-//                 return
-//             }
-//         }
-        
-//         const updatedItem = await Account.findOneAndUpdate({_id:req.params.id}, {$set: updatedFields}, {new: true});
-//         console.log('here after update ' + JSON.stringify(updatedItem));
-//         res.status(200).json(updatedItem);
-        
-        
-//     } catch (error) {
-//         console.error('error ' + JSON.stringify(error));
-//         res.status(400).json({message: error.message});
-//     }
-    
-// }
+    } catch (error) {
+        console.error('error ' + JSON.stringify(error));
+        res.status(400).json({message: error.message});
+    }   
+}
 
 export const saveUser = async (req, res) => {
 

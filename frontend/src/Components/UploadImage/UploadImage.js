@@ -1,13 +1,14 @@
 import React, { useState, useContext } from "react";
 // import './UploadImage.scss';
-// import UploadService from "./FileUploadService";
 import axios from "axios";
 
 const UploadImage = (props) => {
 
-  const {selectedImage, setSelectedImage, name, setName} = props;
+  const {selectedImage, setSelectedImage, setFile} = props;
+  console.log('props', props);
 
-  const fileUploadHandler = (event) => {
+  async function fileUploadHandler (event) {
+    console.log('fileUploadHandler');
 
     event.preventDefault();
 
@@ -17,14 +18,16 @@ const UploadImage = (props) => {
     const config = {     
         headers: { 'content-type': 'multipart/form-data' }
     }
-    console.log(formData);
+    console.log('formData', formData);
 
-    axios.post("http://localhost:27017/uploadimage", formData, config)
-    .then (res => {
-        console.log(res.data);
-        //console.log(this.state.filename);
-    })
+    const response = await axios.post("http://localhost:27017/uploadimage", formData, config);
+    console.log('response', response.data.file);
+    setFile(response.data.file);
+
 }
+
+const headd = 'http://localhost:27017/';
+const path = 'uploads/Screen Shot 2023-02-05 at 21.57.57.png-1678431197348';
 
   return (
     <div>
@@ -35,7 +38,7 @@ const UploadImage = (props) => {
           <img
             alt="not found"
             width={"250px"}
-            src={URL.createObjectURL(selectedImage)}
+            src={headd+path}//{URL.createObjectURL(selectedImage)}
             onClick={() => setSelectedImage(null)}
           />
           <br />
@@ -53,7 +56,7 @@ const UploadImage = (props) => {
         onChange={(event) => {
           console.log('file', event.target.files[0].name);
           setSelectedImage(event.target.files[0]);
-          setName(document.getElementById('file').value);
+          // setName(document.getElementById('file').value);
         }}
       />
       <br /><button className="submitBtn" type="submit" onClick={fileUploadHandler}>Add File</button>
