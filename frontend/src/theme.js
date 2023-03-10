@@ -18,6 +18,10 @@ const theme = createTheme({
       },
       success: {
         main: '#4caf50'
+      },
+      dark: {
+        main: '#005689',
+        contrastText: '#eef7ff'
       }
     },
     typography: {
