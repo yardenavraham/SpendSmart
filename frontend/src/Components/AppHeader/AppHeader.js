@@ -148,6 +148,11 @@ export default function AppHeader(props) {
   );
 
   const container = window !== undefined ? () => window().document.body : undefined;
+  const head = 'http://localhost:27017/uploads/';
+  const avatarImg = authCtx.accountDetails.image ? 
+    <Avatar alt={authCtx.accountDetails.accountName} src={head+authCtx.accountDetails.image} />
+    : <Avatar alt={authCtx.accountDetails.accountName} src="/static/images/avatar/2.jpg" />;
+
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -205,7 +210,7 @@ export default function AppHeader(props) {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt={authCtx.accountDetails.accountName} src="/static/images/avatar/2.jpg" />
+                {avatarImg}
               </IconButton>
             </Tooltip>
             <Menu

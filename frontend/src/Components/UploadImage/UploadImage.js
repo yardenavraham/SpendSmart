@@ -42,50 +42,15 @@ const UploadImage = (props) => {
     }
   }
 
-  // const headd = 'http://localhost:27017/';
-  // const path = 'uploads/Screen Shot 2022-10-04 at 10.43.43.png-1678451568386';
-
   const head = 'http://localhost:27017/uploads/';
   const [existingImage, setExistingImage] = useState(head+authCtxImage);
   console.log('existingImage', existingImage);
-
-// const getUrlExtension = (url) => {
-//   return url
-//     .split(/[#?]/)[0]
-//     .split(".")
-//     .pop()
-//     .trim();
-// }
-
-// const onImageEdit = async (imgUrl) => {
-//   console.log('onImageEdit');
-//   console.log('imgUrl', imgUrl);
-
-//   var imgExt = getUrlExtension(imgUrl);
-//   console.log('imgExt', imgExt);
-
-//   const response = await fetch(imgUrl);
-//   const blob = await response.blob();
-//   const file = new File([blob], "profileImage." + imgExt, {
-//     type: blob.type,
-//   });
-//   console.log('file222', file);
-//   console.log('type file', typeof file);
-
-//   return file;
-// }
-
-// const file1 = onImageEdit(src1);
-// console.log('type file1', typeof file1);
-
-// console.log('file1', file1);
 
   const [preview, setPreview] = useState(existingImage ? existingImage : selectedImage ? URL.createObjectURL(selectedImage): null);
   const [showPreview, setShowPreview] = useState(existingImage ? true : false);
 
   return (
     <div>
-      {/* <img src ={src1} alt="not found" /> */}
       <form action="http://localhost:27017/uploadimage" method="post" encType="multipart/form-data">
 
         {showPreview && (
@@ -106,9 +71,9 @@ const UploadImage = (props) => {
         <br />
         
         <input
-        type="file" 
-        name="file" 
-        id="file" 
+          type="file" 
+          name="file" 
+          id="file" 
           onChange={(event) => {
             console.log('file', event.target.files[0].name);
             setSelectedImage(event.target.files[0]);
