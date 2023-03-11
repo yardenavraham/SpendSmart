@@ -79,7 +79,9 @@ export const generateToken = (account) => {
 
 export const getAccountById = async (req, res) => {
     try {
-        const item = await Account.findOne({id: req.id});
+        // console.log(req)
+        const item = await Account.findById(req.params.id);
+        console.log("current = " + JSON.stringify(item))
         res.status(200).json(item);
     } catch (error) {
         console.error(error)
@@ -125,7 +127,7 @@ export const signIntoAccount = async (req, res) => {
 export const updateAccount = async (req, res) => {
     try{
         const updatedFields = req.body;
-        // console.log('req.body ' + JSON.stringify(updatedFields));
+        console.log('req.body ' + JSON.stringify(updatedFields));
         
         if (updatedFields.password != null) {
             if (updatedFields.oldPassword == null) {
@@ -152,6 +154,7 @@ export const updateAccount = async (req, res) => {
             }
         }
         
+        console.log("updated fields = " + JSON.stringify(updatedFields))
         const updatedItem = await Account.findOneAndUpdate({_id:req.params.id}, {$set: updatedFields}, {new: true});
         console.log('here after update ' + JSON.stringify(updatedItem));
         res.status(200).json(updatedItem);
