@@ -4,12 +4,12 @@ import axios from "axios";
 
 const UploadImage = (props) => {
 
-  const {selectedImage, setSelectedImage, setFile} = props;
-  console.log('props', props);
+  const {selectedImage, setSelectedImage, setFile, authCtxImage} = props;
+  // console.log('props', props);
 
   async function fileUploadHandler (event) {
     console.log('fileUploadHandler');
-
+    console.log('selectedImage', selectedImage);
     event.preventDefault();
 
     let formData = new FormData();
@@ -30,18 +30,24 @@ const UploadImage = (props) => {
     event.preventDefault();
     console.log('removeClicked');
     console.log('selectedImage', selectedImage);
-    if (selectedImage === undefined) {
-      setPreview(selectedImage);
+    if (existingImage) {
+      console.log('here1');
+      setShowPreview(false);
+      setExistingImage(null);
     }
     else {
+      console.log('here2');
       setSelectedImage(null);
+      setShowPreview(false);
     }
   }
 
-  const headd = 'http://localhost:27017/';
-  const path = 'uploads/Screen Shot 2022-10-04 at 10.43.43.png-1678451568386';
-  let src1 = headd+path;
-  console.log('src1', src1);
+  // const headd = 'http://localhost:27017/';
+  // const path = 'uploads/Screen Shot 2022-10-04 at 10.43.43.png-1678451568386';
+
+  const head = 'http://localhost:27017/uploads/';
+  const [existingImage, setExistingImage] = useState(head+authCtxImage);
+  console.log('existingImage', existingImage);
 
 // const getUrlExtension = (url) => {
 //   return url
@@ -74,14 +80,15 @@ const UploadImage = (props) => {
 
 // console.log('file1', file1);
 
-  const [preview, setPreview] = useState(selectedImage === undefined ? src1 : URL.createObjectURL(selectedImage));
+  const [preview, setPreview] = useState(existingImage ? existingImage : selectedImage ? URL.createObjectURL(selectedImage): null);
+  const [showPreview, setShowPreview] = useState(existingImage ? true : false);
 
   return (
     <div>
       {/* <img src ={src1} alt="not found" /> */}
       <form action="http://localhost:27017/uploadimage" method="post" encType="multipart/form-data">
 
-        { (
+        {showPreview && (
           <div>
             <img
               className='upload-image-preview'
@@ -105,6 +112,8 @@ const UploadImage = (props) => {
           onChange={(event) => {
             console.log('file', event.target.files[0].name);
             setSelectedImage(event.target.files[0]);
+            setPreview(URL.createObjectURL(event.target.files[0]));
+            setShowPreview(true);
           }}
         />
         <br/><button className="submitBtn" type="submit" onClick={fileUploadHandler}>Add File</button>

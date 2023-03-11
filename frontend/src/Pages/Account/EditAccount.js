@@ -83,8 +83,6 @@ export default function EditAccount() {
     const authCtx = useContext(AuthContext);
     console.log('authCtx', JSON.stringify(authCtx.accountDetails));
     const [image, setImage] = useState(authCtx.accountDetails.image);
-    console.log('image', image);
-    const [a, aetA] = useState("aaaaaaaa");
 
     const navigate = useNavigate();
     const [showAlert, setShowAlert] = useState(false);
@@ -220,11 +218,11 @@ export default function EditAccount() {
     }
 
     const UpdateImageElement = () => {
-        console.log('image before21 ', image);
+        //console.log('image before21 ', image);
 
         return (
           <>
-              {authCtx.accountDetails.image !== undefined && <UploadImage selectedImage={image} setSelectedImage={setImage} setFile={setFile} a={a}/>}
+              {authCtx.accountDetails.image !== undefined && <UploadImage selectedImage={image} setSelectedImage={setImage} setFile={setFile} authCtxImage={authCtx.accountDetails.image}/>}
           </>
         );
     }
