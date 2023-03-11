@@ -43,7 +43,7 @@ export const uploadImage = async (req, res) => {
             res.status(400).send("Something went wrong!");
         }
         console.log('req.file', req.file);
-        res.status(200).json({file: req.file.path});
+        res.status(200).json({file: req.file.filename}); //was: req.file.path
     })    
 }
 
@@ -100,7 +100,7 @@ export const getAccountById = async (req, res) => {
     console.log('getAccountById');
     try {
         const item = await Account.findOne({id: req.id});
-        console.log('item', item);
+        // console.log('item', item);
         res.status(200).json(item);
     } catch (error) {
         console.error(error)
