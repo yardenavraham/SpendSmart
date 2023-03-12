@@ -61,7 +61,7 @@ export const createAccount = async (req, res) => {
             res.status(409).json({message: message})
             return
         }
-        account.image = '';
+        account.image = null;
         account.password = await encryptPassword(account.password);
         const createdAccount = await new Account(account).save();
         const token = generateToken(createdAccount);
