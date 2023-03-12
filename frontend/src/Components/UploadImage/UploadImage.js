@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const UploadImage = (props) => {
 
-  const {selectedImage, setSelectedImage, setImageName, currentImageName, setImageNotUploadedErr} = props;
+  const {selectedImage, setSelectedImage, currentImageName} = props;
   //selectedImage: The image that the user choose
   //setSelectedImage: state function for 'selectedImage'
   //setImageName: state function for 'imageName' that is used in EditAccount component
@@ -20,24 +20,24 @@ const UploadImage = (props) => {
   const [inputText, setInputText] = useState('');
   const inputRef = useRef('');
 
-  async function fileUploadHandler (event) {
-    event.preventDefault();
-    setImageNotUploadedErr(false);
+  // async function fileUploadHandler (event) {
+  //   event.preventDefault();
+  //   setImageNotUploadedErr(false);
 
 
-    let formData = new FormData();
-    formData.append('file', selectedImage);
+  //   let formData = new FormData();
+  //   formData.append('file', selectedImage);
 
-    const config = {     
-        headers: { 'content-type': 'multipart/form-data' }
-    }
-    console.log('formData', formData);
+  //   const config = {     
+  //       headers: { 'content-type': 'multipart/form-data' }
+  //   }
+  //   console.log('formData', formData);
 
-    const response = await axios.post("http://localhost:27017/uploadimage", formData, config);
-    // console.log('response', response.data.file);
-    setImageName(response.data.file);
+  //   const response = await axios.post("http://localhost:27017/uploadimage", formData, config);
+  //   // console.log('response', response.data.file);
+  //   setImageName(response.data.file);
 
-  }
+  // }
 
   const removeClicked = (event) => {
     event.preventDefault();
@@ -45,7 +45,6 @@ const UploadImage = (props) => {
     setCurrentImage(null);
     setSelectedImage(null);
     setInputText('');
-    setImageNotUploadedErr(false);
     inputRef.current.calue = '';
     // if (currentImage) {
     //   setShowPreview(false);
@@ -125,21 +124,20 @@ const UploadImage = (props) => {
             setPreview(URL.createObjectURL(event.target.files[0]));
             setShowPreview(true);
             setInputText(event.target.files[0].name)
-            setImageNotUploadedErr(true);
             console.log('inputRef ', inputRef.current.value)
           }}/>
       </Button>
     </div>
 
 
-        <br/>
+        {/* <br/>
           <Button 
             className="submitBtn" 
             type="submit" 
             variant="contained" 
             onClick={fileUploadHandler}>
               Upload Image
-          </Button>
+          </Button> */}
       </form>
 
     </div>

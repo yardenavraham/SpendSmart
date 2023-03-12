@@ -61,8 +61,6 @@ export default function EditAccount() {
     // console.log('authCtx', JSON.stringify(authCtx.accountDetails));
     //UploadImage states
     const [image, setImage] = useState(authCtx.accountDetails.image);
-    const [imageName, setImageName] = useState(null);
-    const [imageNotUploadedErr, setImageNotUploadedErr] = useState(false);
 
     const navigate = useNavigate();
     const [showAlert, setShowAlert] = useState(false);
@@ -100,18 +98,31 @@ export default function EditAccount() {
     
 
     const saveHandler = async (values) => {
-        try {
-           
+        try {           
             const account = authCtx.accountDetails;
-            // console.log(JSON.stringify(account));
             const data = {}
+
+            if (image !== null) {
+                let formData = new FormData();
+                formData.append('file', image);
+            
+                const config = {     
+                    headers: { 'content-type': 'multipart/form-data' }
+                }
+                console.log('formData', formData);
+            
+                const res = await axios.post("http://localhost:27017/uploadimage", formData, config);
+                data.image = res.data.file;
+            }
+            else {
+                data.image = null;
+            }
             
             if (values[fields.confirm.id] !== '') {
                 data.oldPassword = values[fields.current.id];
                 data.password = values[fields.confirm.id];
             }
             
-            data.image = imageName;
     
             const mapPartner = (values) => {
                 return {
@@ -167,7 +178,7 @@ export default function EditAccount() {
 
         return (
           <>
-              {authCtx.accountDetails.image !== undefined && <UploadImage selectedImage={image} setSelectedImage={setImage} setImageName={setImageName} currentImageName={authCtx.accountDetails.image} setImageNotUploadedErr={setImageNotUploadedErr}/>}
+              {authCtx.accountDetails.image !== undefined && <UploadImage selectedImage={image} setSelectedImage={setImage} currentImageName={authCtx.accountDetails.image}/>}
           </>
         );
     }
