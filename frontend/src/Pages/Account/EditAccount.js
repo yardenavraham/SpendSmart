@@ -79,7 +79,7 @@ async function getPartnersFromDB(accountId) {
 
 export default function EditAccount() {
     
-    const [file, setFile] = useState(null);
+    const [imageName, setImageName] = useState(null);
     const authCtx = useContext(AuthContext);
     console.log('authCtx', JSON.stringify(authCtx.accountDetails));
     const [image, setImage] = useState(authCtx.accountDetails.image);
@@ -129,31 +129,9 @@ export default function EditAccount() {
             console.log('account.id', JSON.stringify(account.id));
 
             const data = {};
-            // data.name = 'hhhh';
-            // const form = new FormData();
-        
-            // if (passwordFormValues[fields.confirm.id] !== '') {
-            //     // data.oldPassword = passwordFormValues[fields.current.id];
-            //     // data.password = passwordFormValues[fields.confirm.id];
-            //     form.append('oldPassword', passwordFormValues[fields.current.id]);
-            //     form.append('password', passwordFormValues[fields.confirm.id]);
-            // }
-            
-            // console.log('file', file);
-            // //console.log(JSON.stringify('data', JSON.stringify(data)));
-
-            // form.append('image', file);
-
-            // for (const value of form.values()) {
-            //     console.log('fd val', value);
-            //   }
-            // const config = {     
-            //     headers: { 'content-type': 'multipart/form-data' }
-            // }
-            console.log('file', file);
-            data.image = file;
+            console.log('imageName', imageName);
+            data.image = imageName;
             const response = await axios.patch(`http://localhost:27017/Account/${account.id}`,
-                //form//, config //data???
                 data
             );
             authCtx.onLogin(response.data.token);
@@ -222,7 +200,7 @@ export default function EditAccount() {
 
         return (
           <>
-              {authCtx.accountDetails.image !== undefined && <UploadImage selectedImage={image} setSelectedImage={setImage} setFile={setFile} authCtxImage={authCtx.accountDetails.image}/>}
+              {authCtx.accountDetails.image !== undefined && <UploadImage selectedImage={image} setSelectedImage={setImage} setImageName={setImageName} currentImageName={authCtx.accountDetails.image}/>}
           </>
         );
     }

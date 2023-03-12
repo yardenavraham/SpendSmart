@@ -4,8 +4,11 @@ import axios from "axios";
 
 const UploadImage = (props) => {
 
-  const {selectedImage, setSelectedImage, setFile, authCtxImage} = props;
-  // console.log('props', props);
+  const {selectedImage, setSelectedImage, setImageName, currentImageName} = props;
+  //selectedImage: The image that the user choose
+  //setSelectedImage: state function for 'selectedImage'
+  //setImageName: state function for 'imageName' that is used in EditAccount component
+  //currentImageName: current image name that is tored in DB
 
   async function fileUploadHandler (event) {
     console.log('fileUploadHandler');
@@ -22,7 +25,7 @@ const UploadImage = (props) => {
 
     const response = await axios.post("http://localhost:27017/uploadimage", formData, config);
     console.log('response', response.data.file);
-    setFile(response.data.file);
+    setImageName(response.data.file);
 
   }
 
@@ -30,24 +33,24 @@ const UploadImage = (props) => {
     event.preventDefault();
     console.log('removeClicked');
     console.log('selectedImage', selectedImage);
-    if (existingImage) {
+    if (currentImage) {
       console.log('here1');
       setShowPreview(false);
-      setExistingImage(null);
+      setCurrentImage(null);
     }
     else {
       console.log('here2');
-      setSelectedImage(null);
       setShowPreview(false);
+      setSelectedImage(null);
     }
   }
 
   const head = 'http://localhost:27017/uploads/';
-  const [existingImage, setExistingImage] = useState(head+authCtxImage);
-  console.log('existingImage', existingImage);
+  const [currentImage, setCurrentImage] = useState(head+currentImageName);
+  console.log('currentImage', currentImage);
 
-  const [preview, setPreview] = useState(existingImage ? existingImage : selectedImage ? URL.createObjectURL(selectedImage): null);
-  const [showPreview, setShowPreview] = useState(existingImage ? true : false);
+  const [preview, setPreview] = useState(currentImage ? currentImage : selectedImage ? URL.createObjectURL(selectedImage): null);
+  const [showPreview, setShowPreview] = useState(currentImage ? true : false);
 
   return (
     <div>
@@ -75,7 +78,6 @@ const UploadImage = (props) => {
           name="file" 
           id="file" 
           onChange={(event) => {
-            console.log('file', event.target.files[0].name);
             setSelectedImage(event.target.files[0]);
             setPreview(URL.createObjectURL(event.target.files[0]));
             setShowPreview(true);
