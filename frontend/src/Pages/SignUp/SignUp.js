@@ -173,7 +173,7 @@ export default function SignUp() {
                             fullWidth
                             component={TextField}
                             name="account"
-                            label="Account Name"
+                            label="Profile Name"
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>

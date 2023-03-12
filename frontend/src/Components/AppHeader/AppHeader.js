@@ -31,7 +31,7 @@ const settingsToRoute = [
   {
     isLoggedIn: true,
     name: 'Profile',
-    path: './account'
+    path: './profile'
   }, 
   {
     isLoggedIn: true,

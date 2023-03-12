@@ -22,7 +22,7 @@ function Copyright(props) {
     return (
       <Typography variant="body2" color="text.secondary" align="center" {...props}>
           {'Copyright © '}
-          <Link color="inherit" href="/">
+          <Link color="inherit" href="/Users/icarmon/dev/30hrs/SpendSmart/frontend/src/Pages">
               SpendSmart
           </Link>{' '}
           {new Date().getFullYear()}
@@ -55,7 +55,7 @@ async function getPartnersFromDB(accountId) {
     return await account?.partners || [];
 }
 
-export default function EditAccount() {
+export default function Profile() {
     
     const authCtx = useContext(AuthContext);
     // console.log('authCtx', JSON.stringify(authCtx.accountDetails));
@@ -178,7 +178,9 @@ export default function EditAccount() {
 
         return (
           <>
-              {authCtx.accountDetails.image !== undefined && <UploadImage selectedImage={image} setSelectedImage={setImage} currentImageName={authCtx.accountDetails.image}/>}
+              {
+                  // authCtx.accountDetails.image !== undefined &&
+                <UploadImage selectedImage={image} setSelectedImage={setImage} currentImageName={authCtx.accountDetails.image}/>}
           </>
         );
     }

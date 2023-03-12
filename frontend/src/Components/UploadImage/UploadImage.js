@@ -14,7 +14,7 @@ const UploadImage = (props) => {
   //currentImageName: current image name that is tored in DB
 
   const domainAndDir = 'http://localhost:27017/uploads/';
-  const [currentImage, setCurrentImage] = useState(currentImageName !== null ? domainAndDir+currentImageName : null);
+  const [currentImage, setCurrentImage] = useState(currentImageName !== undefined && currentImageName !== null ? domainAndDir+currentImageName : null);
   const [preview, setPreview] = useState(currentImage ? currentImage : selectedImage ? URL.createObjectURL(selectedImage): null);
   const [showPreview, setShowPreview] = useState(currentImage ? true : false);
   const [inputText, setInputText] = useState('');
