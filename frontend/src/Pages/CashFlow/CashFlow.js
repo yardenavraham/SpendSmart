@@ -30,7 +30,7 @@ const CashFlow = (props) => {
     setInitialCashFlowList(response.data);
     setCashFlowList(response.data.filter(item => {
       const formattedDate = new Date(item.date);
-      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && (item.type === transactionType)
+      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && (item.type === transactionType) && item.category !='Saving'
     })
       .sort((a, b) => new Date(a.date) - new Date(b.date)));
 
