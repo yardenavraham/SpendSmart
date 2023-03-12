@@ -1,19 +1,29 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useRef } from "react";
 // import './UploadImage.scss';
 import axios from "axios";
+import { Button, Input, TextField } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const UploadImage = (props) => {
 
-  const {selectedImage, setSelectedImage, setImageName, currentImageName} = props;
+  const {selectedImage, setSelectedImage, setImageName, currentImageName, setImageNotUploadedErr} = props;
   //selectedImage: The image that the user choose
   //setSelectedImage: state function for 'selectedImage'
   //setImageName: state function for 'imageName' that is used in EditAccount component
   //currentImageName: current image name that is tored in DB
 
+  const domainAndDir = 'http://localhost:27017/uploads/';
+  const [currentImage, setCurrentImage] = useState(domainAndDir+currentImageName);
+  const [preview, setPreview] = useState(currentImage ? currentImage : selectedImage ? URL.createObjectURL(selectedImage): null);
+  const [showPreview, setShowPreview] = useState(currentImage ? true : false);
+  const [inputText, setInputText] = useState('');
+  const inputRef = useRef('');
+
   async function fileUploadHandler (event) {
-    console.log('fileUploadHandler');
-    console.log('selectedImage', selectedImage);
     event.preventDefault();
+    setImageNotUploadedErr(false);
+
 
     let formData = new FormData();
     formData.append('file', selectedImage);
@@ -24,33 +34,28 @@ const UploadImage = (props) => {
     console.log('formData', formData);
 
     const response = await axios.post("http://localhost:27017/uploadimage", formData, config);
-    console.log('response', response.data.file);
+    // console.log('response', response.data.file);
     setImageName(response.data.file);
 
   }
 
   const removeClicked = (event) => {
     event.preventDefault();
-    console.log('removeClicked');
-    console.log('selectedImage', selectedImage);
-    if (currentImage) {
-      console.log('here1');
-      setShowPreview(false);
-      setCurrentImage(null);
-    }
-    else {
-      console.log('here2');
-      setShowPreview(false);
-      setSelectedImage(null);
-    }
+    setShowPreview(false);
+    setCurrentImage(null);
+    setSelectedImage(null);
+    setInputText('');
+    setImageNotUploadedErr(false);
+    inputRef.current.calue = '';
+    // if (currentImage) {
+    //   setShowPreview(false);
+    //   setCurrentImage(null);
+    // }
+    // else {
+    //   setShowPreview(false);
+    //   setSelectedImage(null);
+    // }
   }
-
-  const head = 'http://localhost:27017/uploads/';
-  const [currentImage, setCurrentImage] = useState(head+currentImageName);
-  console.log('currentImage', currentImage);
-
-  const [preview, setPreview] = useState(currentImage ? currentImage : selectedImage ? URL.createObjectURL(selectedImage): null);
-  const [showPreview, setShowPreview] = useState(currentImage ? true : false);
 
   return (
     <div>
@@ -66,14 +71,31 @@ const UploadImage = (props) => {
               onClick={() => setSelectedImage(null)}
             />
             <br />
-            <button onClick={(event) => removeClicked(event)}>Remove</button>
+            <div>
+        <TextField 
+          disabled 
+          fullWidth 
+          variant="standard" 
+          InputProps={{ disableUnderline: true, 
+            inputProps: {
+            style: { textAlign: "center" },
+            }  
+          }} 
+          value={inputText}
+        />
+      </div>
+            <Button 
+              variant="outlined" 
+              onClick={(event) => removeClicked(event)}>
+                <DeleteIcon />Remove
+            </Button>
           </div>
         )}
 
         <br />
         <br />
         
-        <input
+        {/* <Input
           type="file" 
           name="file" 
           id="file" 
@@ -82,9 +104,44 @@ const UploadImage = (props) => {
             setPreview(URL.createObjectURL(event.target.files[0]));
             setShowPreview(true);
           }}
-        />
-        <br/><button className="submitBtn" type="submit" onClick={fileUploadHandler}>Add File</button>
+        /> */}
+
+    <div>
+      <Button 
+        variant="outlined" 
+        component="label" 
+        color="primary">
+        {/* {" "} */}
+        <AddIcon/> Browse Image
+        <input 
+          type="file" 
+          name="file" 
+          id="file" 
+          hidden
+          ref={inputRef}
+          onChange={(event) => {
+            console.log('hereee', event.target.files[0]);
+            setSelectedImage(event.target.files[0]);
+            setPreview(URL.createObjectURL(event.target.files[0]));
+            setShowPreview(true);
+            setInputText(event.target.files[0].name)
+            setImageNotUploadedErr(true);
+            console.log('inputRef ', inputRef.current.value)
+          }}/>
+      </Button>
+    </div>
+
+
+        <br/>
+          <Button 
+            className="submitBtn" 
+            type="submit" 
+            variant="contained" 
+            onClick={fileUploadHandler}>
+              Upload Image
+          </Button>
       </form>
+
     </div>
   );
 };

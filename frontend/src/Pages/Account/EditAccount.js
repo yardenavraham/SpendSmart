@@ -79,10 +79,12 @@ async function getPartnersFromDB(accountId) {
 
 export default function EditAccount() {
     
-    const [imageName, setImageName] = useState(null);
     const authCtx = useContext(AuthContext);
-    console.log('authCtx', JSON.stringify(authCtx.accountDetails));
+    // console.log('authCtx', JSON.stringify(authCtx.accountDetails));
+    //UploadImage states
     const [image, setImage] = useState(authCtx.accountDetails.image);
+    const [imageName, setImageName] = useState(null);
+    const [imageNotUploadedErr, setImageNotUploadedErr] = useState(false);
 
     const navigate = useNavigate();
     const [showAlert, setShowAlert] = useState(false);
@@ -124,6 +126,7 @@ export default function EditAccount() {
     
     const saveHandler = async () => {
         try {
+           
             const account = authCtx.accountDetails;
             console.log('account', JSON.stringify(account));
             console.log('account.id', JSON.stringify(account.id));
@@ -200,7 +203,7 @@ export default function EditAccount() {
 
         return (
           <>
-              {authCtx.accountDetails.image !== undefined && <UploadImage selectedImage={image} setSelectedImage={setImage} setImageName={setImageName} currentImageName={authCtx.accountDetails.image}/>}
+              {authCtx.accountDetails.image !== undefined && <UploadImage selectedImage={image} setSelectedImage={setImage} setImageName={setImageName} currentImageName={authCtx.accountDetails.image} setImageNotUploadedErr={setImageNotUploadedErr}/>}
           </>
         );
     }
@@ -275,6 +278,7 @@ export default function EditAccount() {
                     color="secondary"
                     variant="contained"
                     onClick={submit}
+                    // disabled={imageNotUploadedErr}
                     sx={{mt: 3, mb: 2, justifyContent: "center"}}>
                       Update
                   </Button>
