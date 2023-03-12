@@ -36,6 +36,7 @@
     "react-double-scrollbar": "^0.0.15",
     "react-router-dom": "^6.8.0",
     "react-scripts": "5.0.1",
+    "react-spinner-overlay": "^0.1.33",
     "recharts": "^2.3.2",
     "sass": "^1.57.1",
     "validator": "^13.9.0",

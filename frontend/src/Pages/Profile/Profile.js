@@ -1,8 +1,6 @@
 import React, {useEffect} from 'react'
 import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/material/styles';
 import { useState, useContext } from "react";
 import axios from "axios";
@@ -17,19 +15,7 @@ import * as Yup from "yup";
 import { TextField } from "formik-mui";
 import {confirmPasswordValidation, emailValidation, nameValidation, passwordValidation} from "../../Components/Forms/FormikValidations";
 import theme from "../../theme";
-
-function Copyright(props) {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-          {'Copyright © '}
-          <Link color="inherit" href="/Users/icarmon/dev/30hrs/SpendSmart/frontend/src/Pages">
-              SpendSmart
-          </Link>{' '}
-          {new Date().getFullYear()}
-          {'.'}
-      </Typography>
-    );
-}
+import { DotLoaderOverlay } from 'react-spinner-overlay'
 
 const fields = {
     current: {id: 'current', text: 'Current Password'},
@@ -61,13 +47,13 @@ export default function Profile() {
     // console.log('authCtx', JSON.stringify(authCtx.accountDetails));
     //UploadImage states
     const [image, setImage] = useState(authCtx.accountDetails.image);
-
+    
     const navigate = useNavigate();
     const [showAlert, setShowAlert] = useState(false);
     const [alertType, setAlertType] = useState('error');
     const [message, setMessage] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     
-    const [passwordFormValues, setPasswordFormValues] = useState(getInitialFormValues());
     console.log(authCtx.accountDetails)
     const [partners, setPartners] = useState([])
     useEffect(() => {
@@ -87,7 +73,10 @@ export default function Profile() {
                 }));
             }
         }
-        fetch().then(() => console.log("Loaded partner from DB"));
+        fetch().then(() => {
+            console.log("Loaded partner from DB")
+            setIsLoading(false)
+        });
     }, [authCtx]);
     
     const alert = (type, message) => {
@@ -96,21 +85,21 @@ export default function Profile() {
         setMessage(message)
     }
     
-
+    
     const saveHandler = async (values) => {
-        try {           
+        try {
             const account = authCtx.accountDetails;
             const data = {}
-
+            
             if (image !== null) {
                 let formData = new FormData();
                 formData.append('file', image);
-            
-                const config = {     
+                
+                const config = {
                     headers: { 'content-type': 'multipart/form-data' }
                 }
                 console.log('formData', formData);
-            
+                
                 const res = await axios.post("http://localhost:27017/uploadimage", formData, config);
                 data.image = res.data.file;
             }
@@ -123,7 +112,7 @@ export default function Profile() {
                 data.password = values[fields.confirm.id];
             }
             
-    
+            
             const mapPartner = (values) => {
                 return {
                     firstName: values.partnerFirstName,
@@ -134,7 +123,7 @@ export default function Profile() {
             data.partners = values.partners.map(p => mapPartner(p))
             
             const response = await axios.patch(`http://localhost:27017/Account/${account.id}`,
-                data
+              data
             );
             authCtx.onLogin(response.data.token);
             console.log(response);
@@ -172,15 +161,15 @@ export default function Profile() {
           </>
         )
     }
-
+    
     const UpdateImageElement = () => {
         //console.log('image before21 ', image);
-
+        
         return (
           <>
               {
                   // authCtx.accountDetails.image !== undefined &&
-                <UploadImage selectedImage={image} setSelectedImage={setImage} currentImageName={authCtx.accountDetails.image}/>}
+                  <UploadImage selectedImage={image} setSelectedImage={setImage} currentImageName={authCtx.accountDetails.image}/>}
           </>
         );
     }
@@ -214,6 +203,7 @@ export default function Profile() {
             />
           )}
           <ThemeProvider theme={theme}>
+              <DotLoaderOverlay loading={isLoading} size={28} color="#005689"/>
               {/*<div className="third-color" style={{ height: '100%', left: '0px', width: '100%' }}>*/}
               {/*    <Container component="main" maxWidth="sm" style={{ backgroundColor: 'white', borderRadius: 10 }}>*/}
               {/*        <CssBaseline />*/}
@@ -224,7 +214,7 @@ export default function Profile() {
                       }}
                       enableReinitialize={true}
                       validationSchema={validationSchema}
-                      onSubmit={(values, setSubmitting) => {
+                      onSubmit={(values) => {
                           saveHandler(values).then(r => console.log("completed save account with response: " + r));
                           setTimeout(() => {
                               // alert(JSON.stringify(values, null, 2));
@@ -256,10 +246,8 @@ export default function Profile() {
                             </Grid>
                         </Form>
                     </>
-                  
                   )}
               </Formik>
-          
           </ThemeProvider>
       </>
     );
