@@ -100,8 +100,8 @@ export default function AppHeader(props) {
       name: 'Dashboard'
     },
     { 
-      to: '/financialgoals',
-      name: 'Financial Goals'
+      to: '/savings',
+      name: 'Savings'
     },
     // { 
     //   to: '/editinformation',

@@ -20,7 +20,7 @@ import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
 import EditAccount from "./Pages/Account/EditAccount";
 import LogOut from './Pages/Logout/Logout';
-import FinancialGoals from './Pages/FinancialGoals/FinancialGoals';
+import Savings from './Pages/Savings/Savings';
 import PrivateRoute from "./Routes/PrivateRoute";
 import Account from "./Pages/Account/Account";
 
@@ -54,7 +54,7 @@ export default function App() {
                     <Route path="incomes" element={<CashFlow transactionType={myTableType.Incomes} categoriesList={incomeCategory} />} />
                     <Route path="expenses" element={<CashFlow transactionType={myTableType.Expenses} categoriesList={expenseCategory} />} />
                     <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="financialgoals" element={<FinancialGoals />} />
+                    <Route path="savings" element={<Savings />} />
                     <Route path="logout" element={<LogOut/>} />
                     <Route path="account" element={<Account/>} />
                     <Route path="editaccount" element={<EditAccount/>} />
