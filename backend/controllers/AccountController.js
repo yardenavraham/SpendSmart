@@ -1,6 +1,5 @@
 import CashFlow from "../models/CashFlowModel.js";
 import Account, {encryptPassword} from "../models/AccountModel.js";
-import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import multer from 'multer';
 //import a from '../../frontend/public/uploads'
@@ -63,6 +62,7 @@ export const createAccount = async (req, res) => {
             return
         }
         account.image = '';
+        account.password = await encryptPassword(account.password);
         const createdAccount = await new Account(account).save();
         const token = generateToken(createdAccount);
         console.log("token is " + token)
@@ -96,11 +96,10 @@ export const generateToken = (account) => {
 }
 
 export const getAccountById = async (req, res) => {
-    // console.log(req)
-    console.log('getAccountById');
     try {
-        const item = await Account.findOne({id: req.id});
-        // console.log('item', item);
+        // console.log(req)
+        const item = await Account.findById(req.params.id);
+        console.log("current = " + JSON.stringify(item))
         res.status(200).json(item);
     } catch (error) {
         console.error(error)

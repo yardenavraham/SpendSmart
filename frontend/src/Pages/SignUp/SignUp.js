@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./SignUp.css";
-import { Form, Formik, Field, FieldArray } from "formik";
+import { Form, Formik, Field } from "formik";
 import { TextField } from "formik-mui";
 import * as Yup from "yup";
 import axios from "axios";
@@ -40,16 +40,13 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-const nameRegex = /^[A-Za-z]+$/;
-
-
 const validationSchema = Yup.object().shape({
   account: nameValidation,
   firstName: nameValidation,
   lastName: nameValidation,
   email: emailValidation,
-  password: passwordValidation,
-  confirmPassword: confirmPasswordValidation,
+  password: passwordValidation.required("Required"),
+  confirmPassword: confirmPasswordValidation.required("Required"),
   partners: Yup.array(
     Yup.object({
       partnerFirstName: nameValidation,

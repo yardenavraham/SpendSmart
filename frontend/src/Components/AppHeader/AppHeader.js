@@ -99,6 +99,10 @@ export default function AppHeader(props) {
       to: '/dashboard',
       name: 'Dashboard'
     },
+    { 
+      to: '/financialgoals',
+      name: 'Financial Goals'
+    },
     // { 
     //   to: '/editinformation',
     //   name: 'EditInformation'

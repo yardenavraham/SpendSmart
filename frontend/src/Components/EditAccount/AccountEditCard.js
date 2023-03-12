@@ -7,7 +7,7 @@ function AccountEditCard(props) {
       <Grid item xs={6}>
         <Card elevation={5}>
           <CardContent>
-            <Typography>{props.header}</Typography>
+            <Typography variant="h4" color="dark.main">{props.header}</Typography>
             {props.element}
           </CardContent>
         </Card>
