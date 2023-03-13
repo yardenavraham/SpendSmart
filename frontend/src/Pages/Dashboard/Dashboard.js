@@ -82,16 +82,36 @@ function Dashboard() {
 
     // here we will send query the db with the selected month to bring the data
     switch (value) {
-      case monthOptions.prev:
-        // props.setCashFlowList(props.initialCashFlowList.filter(item => {
-        //   const formattedDate = new Date(item.date);
-        //   console.log('item ', `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}`);
-        //   return `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}` === newDateValFormatted;
-        // }));
+      case monthOptions.PREVIOUSE:
+        // console.log('prev');
+        // console.log('initialCashFlowList', JSON.stringify(initialCashFlowList));
+        const previousMonth = `${newDateVal.getMonth()}/${newDateVal.getFullYear()}`;
+        console.log('previousMonth', previousMonth);
+
+
+        setCashFlowList(initialCashFlowList.filter(item => {
+          const formattedDate = new Date(item.date);
+          // console.log('item ', `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}`);
+          return `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}` === previousMonth;
+        }));
         return;
       case monthOptions.NEXT:
+        console.log('next');
+        const nextMonth = `${newDateVal.getMonth() + 2}/${newDateVal.getFullYear()}`;
+        console.log('nextMonth', nextMonth);
+        setCashFlowList(initialCashFlowList.filter(item => {
+          const formattedDate = new Date(item.date);
+          // console.log('item ', `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}`);
+          return `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}` === nextMonth;
+        }));
         return;
       default:
+        setCashFlowList(initialCashFlowList.filter(item => {
+          const formattedDate = new Date(item.date);
+          return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && item.category !=='Saving'
+        })
+          .sort((a, b) => new Date(a.date) - new Date(b.date)));
+    
         return false;
     }
   }
