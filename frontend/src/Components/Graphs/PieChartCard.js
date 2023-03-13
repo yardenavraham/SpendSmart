@@ -15,6 +15,18 @@ import * as d3 from "d3";
 function PieChartCard(props) {
   const theme = useTheme();
   const colors = d3.schemeSet2;
+const RADIAN = Math.PI / 180;
+const percentage = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+  const x = cx + radius * Math.cos(-midAngle * RADIAN);
+  const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+  return (
+    <text x={x} y={y} fill="white" textAnchor="middle" dominantBaseline="central">
+      {`${(percent * 100).toFixed(0)}%`}
+    </text>
+  );
+};
 
   return (
     <Grid item xs={4}>
@@ -35,6 +47,8 @@ function PieChartCard(props) {
                 fill={theme.palette.primary.main}
                 legendType="circle"
                 height={36}
+                labelLine={false}
+                label={percentage}
               >
                 {props.data.map((entry, index) => (
                   <Cell
