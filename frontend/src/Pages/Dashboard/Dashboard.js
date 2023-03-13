@@ -1,11 +1,14 @@
+import React, { useState, useEffect, useContext } from 'react';
 import { Grid } from "@material-ui/core";
 import { responsiveFontSizes } from "@mui/material/styles";
 import { ThemeProvider } from "@mui/styles";
-import React from "react";
 import BarChartCard from "../../Components/Graphs/BarChartCard";
 import SelectButton from "../../Components/Graphs/SelectButton";
 import PieChartCard from "../../Components/Graphs/PieChartCard";
 import theme from "../../theme";
+import axios from "axios";
+import AuthContext from '../../store/auth-context';
+
 function Dashboard() {
   const data = [
     {
@@ -86,6 +89,33 @@ function Dashboard() {
       date: new Date(2022, 12, 30),
     },
   ];
+  
+  
+  const authCtx = useContext(AuthContext);
+  const account = authCtx.accountDetails.accountName
+
+  const newDateVal = new Date(new Date());
+  const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
+
+  const [initialCashFlowList, setInitialCashFlowList] = useState([]);
+  const [cashFlowList, setCashFlowList] = useState([]);
+
+  useEffect(() => {
+    getCashFlow();
+  }, [account]);
+
+  const getCashFlow = async () => {
+    console.log('getCashFlow', account);
+    const response = await axios.get(`http://localhost:27017/CashFlow/${account}`);
+    setInitialCashFlowList(response.data);
+    setCashFlowList(response.data.filter(item => {
+      const formattedDate = new Date(item.date);
+      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === 3
+      .) && item.category !=='Saving'
+    })
+      .sort((a, b) => new Date(a.date) - new Date(b.date)));
+
+  };
 
   const monthOptions = {
     PREVIOUSE: "Previous Month",
@@ -133,6 +163,11 @@ function Dashboard() {
     // here we will send query the db with the selected month to bring the data
     switch (value) {
       case monthOptions.prev:
+        // props.setCashFlowList(props.initialCashFlowList.filter(item => {
+        //   const formattedDate = new Date(item.date);
+        //   console.log('item ', `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}`);
+        //   return `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}` === newDateValFormatted;
+        // }));
         return;
       case monthOptions.NEXT:
         return;
