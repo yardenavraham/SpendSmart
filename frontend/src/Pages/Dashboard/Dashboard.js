@@ -10,86 +10,6 @@ import axios from "axios";
 import AuthContext from '../../store/auth-context';
 
 function Dashboard() {
-  const data = [
-    {
-      type: "Expense",
-      category: "Rent",
-      amount: 4000,
-      user: "X",
-      date: new Date(2023, 1, 1),
-    },
-    {
-      type: "Expense",
-      category: "Rent",
-      amount: 4000,
-      user: "X",
-      date: new Date(2022, 12, 1),
-    },
-    {
-      type: "Expense",
-      category: "Rent",
-      amount: 4000,
-      user: "X",
-      date: new Date(2022, 11, 1),
-    },
-    {
-      type: "Expense",
-      category: "Food",
-      amount: 1250,
-      user: "X",
-      date: new Date(2022, 12, 20),
-    },
-    {
-      type: "Expense",
-      category: "Food",
-      amount: 800,
-      user: "Y",
-      date: new Date(2022, 12, 20),
-    },
-    {
-      type: "Expense",
-      category: "Food",
-      amount: 800,
-      user: "Y",
-      date: new Date(2023, 2, 2),
-    },
-    {
-      type: "Income",
-      category: "Salary",
-      amount: 10000,
-      user: "Y",
-      date: new Date(2023, 1, 9),
-    },
-    {
-      type: "Income",
-      category: "Salary",
-      amount: 10000,
-      user: "Y",
-      date: new Date(2022, 12, 9),
-    },
-    {
-      type: "Income",
-      category: "Salary",
-      amount: 10000,
-      user: "Y",
-      date: new Date(2022, 11, 9),
-    },
-    {
-      type: "Expense",
-      category: "Insurance",
-      amount: 100,
-      user: "Y",
-      date: new Date(2022, 11, 30),
-    },
-    {
-      type: "Expense",
-      category: "Insurance",
-      amount: 100,
-      user: "X",
-      date: new Date(2022, 12, 30),
-    },
-  ];
-  
   
   const authCtx = useContext(AuthContext);
   const account = authCtx.accountDetails.accountName
@@ -110,8 +30,7 @@ function Dashboard() {
     setInitialCashFlowList(response.data);
     setCashFlowList(response.data.filter(item => {
       const formattedDate = new Date(item.date);
-      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === 3
-      .) && item.category !=='Saving'
+      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && item.category !=='Saving'
     })
       .sort((a, b) => new Date(a.date) - new Date(b.date)));
 
@@ -124,15 +43,15 @@ function Dashboard() {
   };
 
   function numberOfExpensesByCategory() {
-    const result = data
-      .filter((item) => item.type === "Expense")
+    const result = cashFlowList
+      .filter((item) => item.type === "Expenses")
       .map((item) => item.category)
       .reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map());
     return Array.from(result).map(([name, value]) => ({ name, value }));
   }
 
   function expensesVsIncomes() {
-    const result = data.reduce(
+    const result = cashFlowList.reduce(
       (acc, e) => acc.set(e.type, (acc.get(e.type) || 0) + e.amount),
       new Map()
     );
@@ -140,16 +59,17 @@ function Dashboard() {
   }
 
   function expensesByUser() {
-    const result = data
-      .filter((item) => item.type === "Expense")
-      .map((item) => item.user)
+    const result = cashFlowList
+      .filter((item) => item.type === "Expenses")
+      .map((item) => item.madeBy)
       .reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map());
+      console.log('result', JSON.stringify(result));
     return Array.from(result).map(([name, value]) => ({ name, value }));
   }
 
   function expensesByCategory() {
-    const result = data
-      .filter((item) => item.type === "Expense")
+    const result = cashFlowList
+      .filter((item) => item.type === "Expenses")
       .reduce(
         (acc, e) => acc.set(e.category, (acc.get(e.category) || 0) + e.amount),
         new Map()
