@@ -71,7 +71,7 @@ const Savings = () => {
 
   useEffect(() => {
     getSavingsItems();
-  }, []);
+  }, [account]);
 
   return (
     <>
