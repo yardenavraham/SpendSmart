@@ -60,6 +60,16 @@ export const income = {
 }
 
 
+export const ModolLabelsSavingAdd = {
+    action: "Add Saving",
+    alertMessage: "Saving has been added successfully",
+    addOrEditIcon: <AddIcon />
+}
 
+export const ModolLabelsSavingEdit = {
+    action: "Edit Saving",
+    alertMessage: "Saving has been updated successfully",
+    addOrEditIcon: <EditIcon />
+}
 
 
