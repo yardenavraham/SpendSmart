@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import CashFlowRoute from "./routes/CashFlowRoute.js";
 import AccountRoute from "./routes/AccountRoute.js";
+import SavingRoute from "./routes/SavingRoute.js";
 
 const app = express();
 mongoose.set("strictQuery", false);
@@ -23,6 +24,8 @@ app.use(cors());
 app.use(express.json());
 app.use(CashFlowRoute);
 app.use(AccountRoute);
+app.use(SavingRoute);
+
 app.use('/uploads', express.static('uploads'));
 
 app.listen(27017, () => console.log('Server up and running...'));

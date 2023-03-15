@@ -1,6 +1,6 @@
 import Saving from "../models/SavingModel.js";
  
-export const getSaving = async (req, res) => { //getSavings
+export const getSaving = async (req, res) => { //getSaving
     try {
         console.log('getSaving');
         console.log('req.params  ' + JSON.stringify(req.params ));

@@ -49,6 +49,7 @@ const Savings = () => {
   const getSavingsItems = async () => {
     try {
       console.log("getSavingItem");
+      console.log(`http://localhost:27017/Saving/${account}`);
       const response = await axios.get(`http://localhost:27017/Saving/${account}`);
       setSavingsList(response.data.filter(item => item.type == 'Expenses' && item.category == 'Saving'))
       console.log('getSavings', savingsList);
