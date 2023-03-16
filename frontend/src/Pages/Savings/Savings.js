@@ -1,11 +1,16 @@
 import React, { Component, useState, useContext, useEffect } from 'react'
-import { Typography, Box, Button, Card, CardContent, CardActions, Modal } from '@mui/material';
+import { Typography, Box, Avatar, Button, Card, CardContent, CardActions, Modal } from '@mui/material';
 import axios from "axios";
 import dayjs from "dayjs";
 import AuthContext from '../../store/auth-context';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import { styled } from '@mui/material/styles';
 import AddEditSaving from '../../Components/AddEditSaving/AddEditSaving'
+import IconButton from '@mui/material/IconButton';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 
 const style = {
   position: 'absolute',
@@ -81,15 +86,35 @@ const Savings = () => {
     }
   };
 
+  const deleteSaving = async (id) => {
+    console.log("im in delete saving")
+    try {
+      console.log('id to delete ' + id);
+      await axios.delete(`http://localhost:27017/Saving/${id}`);
+      getSavingsItems();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     getSavingsItems();
   }, [account]);
 
   return (
     <>
-      <Typography align="center" variant="h4" component="h2">My savings</Typography>
-      <div>
-        <Button variant="outlined" onClick={() => { setOpen(true); setAddOrEdit('add') }}>Add saving</Button>
+      <div style={{ display: "flex" }}>
+        <Typography variant="h4" component="h2">My savings</Typography>
+        <IconButton onClick={() => { setOpen(true); setAddOrEdit('add') }} color="primary" aria-label="add saving">
+          <AddBoxIcon fontSize='large' />
+        </IconButton>
+      </div>
+      <div style={{
+        display: "flex",
+        justifyContent: "space-between",
+        flexWrap: "wrap",
+        gap: "20px 30px"
+      }}>
         {savingsList.map(item => (
           <Card sx={{ maxWidth: 345 }} style={{
             border: "3px solid orange",
@@ -98,8 +123,8 @@ const Savings = () => {
           }}>
             <CardContent>
               <div>
-                {/* <Avatar style={{ float: "right" }} sx={{ bgcolor: orange[500], fontSize: 40 }}>
-                  <HomeIcon sx={{ fontSize: 40 }} />
+                {/* <Avatar style={{ float: "right" }} >
+                  <EditIcon/>
                 </Avatar> */}
                 <div style={{ textAlign: "start" }}>
                   <Typography gutterBottom variant="h5" component="div">
@@ -118,8 +143,13 @@ const Savings = () => {
                 {/* {dayjs(item.date).format('DD/MM/YYYY')} */}
               </Typography>
             </CardContent>
-            <CardActions>
-              <Button onClick= {() => { setOpen(true); setAddOrEdit('edit'); setSelectedCard(item);  }} size="small">Edit</Button>
+            <CardActions disableSpacing>
+              <IconButton  onClick={() => { setOpen(true); setAddOrEdit('edit'); setSelectedCard(item); }} >
+                <EditIcon  />
+              </IconButton>
+              <IconButton  onClick={() => { deleteSaving(item._id) }} >
+                <DeleteIcon/>
+              </IconButton>
             </CardActions>
           </Card>
 
@@ -132,7 +162,7 @@ const Savings = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <AddEditSaving addOrEdit={addOrEdit} callbackAddSaving={saving => addSaving(saving)} callbackEditSaving={(id, saving) => editSaving(id, saving)} handleClose={handleClose} selectedCard={selectedCard}/>
+          <AddEditSaving addOrEdit={addOrEdit} callbackAddSaving={saving => addSaving(saving)} callbackEditSaving={(id, saving) => editSaving(id, saving)} handleClose={handleClose} selectedCard={selectedCard} />
         </Box>
       </Modal>
 
