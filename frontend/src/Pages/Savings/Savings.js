@@ -37,6 +37,7 @@ const Savings = () => {
   const account = authCtx.accountDetails.accountName
 
   const [savingsList, setSavingsList] = useState([]);
+  const [selectedCard, setSelectedCard] = useState();
   const [open, setOpen] = useState(false);
   const [addOrEdit, setAddOrEdit] = useState('add');
 
@@ -62,6 +63,18 @@ const Savings = () => {
       console.log('newSaving ' + JSON.stringify(newSaving));
       await axios.post(`http://localhost:27017/Saving/${account}`,
         newSaving
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editSaving = async (id, saving) => {
+    try {
+      console.log('id ' + id);
+      console.log('saving ' + JSON.stringify(saving));
+      await axios.patch(`http://localhost:27017/Saving/${id}`,
+        saving
       );
     } catch (error) {
       console.log(error);
@@ -110,7 +123,7 @@ const Savings = () => {
               </Typography>
             </CardContent>
             <CardActions>
-              {/* <Button size="small">Share</Button> */}
+              <Button onClick= {() => { setOpen(true); setAddOrEdit('edit'); setSelectedCard(item);  }} size="small">Edit</Button>
             </CardActions>
           </Card>
 
@@ -123,7 +136,7 @@ const Savings = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <AddEditSaving addOrEdit={addOrEdit} callbackAddSaving={saving => addSaving(saving)} handleClose={handleClose} />
+          <AddEditSaving addOrEdit={addOrEdit} callbackAddSaving={saving => addSaving(saving)} callbackEditSaving={(id, saving) => editSaving(id, saving)} handleClose={handleClose} selectedCard={selectedCard}/>
         </Box>
       </Modal>
 

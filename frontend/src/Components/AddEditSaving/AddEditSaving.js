@@ -43,14 +43,14 @@ const validationSchema = Yup.object().shape({
 
 export default function AddEditSaving(props) {
 
-    const { addOrEdit, selectedRow } = props;
+    const { addOrEdit, selectedCard } = props;
     const theme = createTheme();
     const labels = addOrEdit === 'add' ? consts.ModolLabelsSavingAdd : consts.ModolLabelsSavingEdit
 
     const initialValues = (addOrEdit === 'edit') ? {
-        goal: selectedRow.goal,
-        description: selectedRow.description,
-        date: selectedRow.date
+        goal: selectedCard.goal,
+        description: selectedCard.description,
+        date: selectedCard.date
     } : {
         goal: "",
         description: "",
@@ -117,7 +117,7 @@ export default function AddEditSaving(props) {
                                         } else {
                                             props.addOrEdit === "add"
                                                 ? props.callbackAddSaving(values)
-                                                : props.callbackEditSaving(selectedRow._id, values);
+                                                : props.callbackEditSaving(selectedCard._id, values);
                                             setMessage(labels.alertMessage);
                                             setAlertType('success');
                                             setShowAlert(true);
