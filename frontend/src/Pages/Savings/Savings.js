@@ -48,10 +48,8 @@ const Savings = () => {
 
   const getSavingsItems = async () => {
     try {
-      console.log("getSavingItem");
-      console.log(`http://localhost:27017/Saving/${account}`);
       const response = await axios.get(`http://localhost:27017/Saving/${account}`);
-      setSavingsList(response.data.filter(item => item.type == 'Expenses' && item.category == 'Saving'))
+      setSavingsList(response.data);
       console.log('getSavings', savingsList);
     }
     catch (error) {
@@ -107,7 +105,7 @@ const Savings = () => {
                 15,000
               </Typography>
               <Typography style={{ display: "inline", float: "right" }} variant="h6" >
-                Goal: {item.amount}
+                Goal: {item.goal}
                 {/* {dayjs(item.date).format('DD/MM/YYYY')} */}
               </Typography>
             </CardContent>
