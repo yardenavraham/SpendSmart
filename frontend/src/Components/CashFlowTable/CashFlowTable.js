@@ -28,6 +28,7 @@ import Typography from "@material-ui/core/Typography";
 import { ThemeProvider } from '@mui/material/styles';
 import theme from "../../theme";
 import { withStyles } from "@material-ui/core/styles";
+import './CashFlowTable.scss';
 
 const tableIcons = {
   Download: forwardRef((props, ref) => <Download {...props} ref={ref} />),
@@ -78,8 +79,7 @@ const arrayToObjectPairs = (arr) => {
 
 const ColorTypography = withStyles({
   root: {
-    color: "#800000"
-    fontWeight: "bold"
+    color: "#800000",
   }
 })(Typography);
 
@@ -314,12 +314,12 @@ const CashFlowTable = props => {
           }}
         />
       </ThemeProvider>
-      <table>
+      {/* <table>
         <tr>
           <td>aaa</td>
           <td>aaa</td>
         </tr>
-      </table>
+      </table> */}
       <Modal
         open={open}
         onClose={handleClose}
