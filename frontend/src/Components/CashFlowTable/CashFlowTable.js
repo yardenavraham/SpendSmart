@@ -77,9 +77,9 @@ const arrayToObjectPairs = (arr) => {
   return obj;
 }
 
-const ColorTypography = withStyles({
+const ColorTypography = props => withStyles({
   root: {
-    color: "#800000",
+    color: "#800000"
   }
 })(Typography);
 
