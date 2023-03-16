@@ -153,7 +153,7 @@ const Savings = () => {
                     Until {dayjs(item.date).format('MM/YYYY')}
                   </Typography></div></div>
 
-              <BorderLinearProgress variant="determinate" value={50} />
+              <BorderLinearProgress variant="determinate" value={50} />{/*getAmount(item.description) / item.goal*/}
               <Typography style={{ display: "inline", float: "left" }} variant="h6" >  {/* getAmount(item.description)*/}
                 15,000 
               </Typography>
