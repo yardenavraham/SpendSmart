@@ -103,7 +103,7 @@ const Savings = () => {
 
   return (
     <>
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", marginBottom:"20px" }}>
         <Typography variant="h4" component="h2">My savings</Typography>
         <IconButton onClick={() => { setOpen(true); setAddOrEdit('add') }} color="primary" aria-label="add saving">
           <AddBoxIcon fontSize='large' />
@@ -111,7 +111,7 @@ const Savings = () => {
       </div>
       <div style={{
         display: "flex",
-        justifyContent: "space-between",
+        justifyContent: "start",
         flexWrap: "wrap",
         gap: "20px 30px"
       }}>
