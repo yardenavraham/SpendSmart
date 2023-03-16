@@ -88,11 +88,7 @@ const Savings = () => {
   return (
     <>
       <Typography align="center" variant="h4" component="h2">My savings</Typography>
-      <div style={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center"
-      }}>
+      <div>
         <Button variant="outlined" onClick={() => { setOpen(true); setAddOrEdit('add') }}>Add saving</Button>
         {savingsList.map(item => (
           <Card sx={{ maxWidth: 345 }} style={{
@@ -110,7 +106,7 @@ const Savings = () => {
                     {item.description}
                   </Typography>
                   <Typography gutterBottom variant="h7" component="div">
-                    2 Months left
+                    Until {dayjs(item.date).format('MM/YYYY')}
                   </Typography></div></div>
 
               <BorderLinearProgress variant="determinate" value={50} />
