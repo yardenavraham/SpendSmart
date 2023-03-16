@@ -45,6 +45,7 @@ const Savings = () => {
   const [selectedCard, setSelectedCard] = useState();
   const [open, setOpen] = useState(false);
   const [addOrEdit, setAddOrEdit] = useState('add');
+  const [cashFlowSavingList, setCashFlowSavingList] = useState();
 
 
   const handleClose = () => {
@@ -97,8 +98,26 @@ const Savings = () => {
     }
   };
 
+  const getSavingAmountFromCashFlow = async () =>{
+        
+    const response = await axios.get(`http://localhost:27017/CashFlow/${account}`);
+    setCashFlowSavingList(response.data.filter(item => {
+      return ((item.type ==="Expenses") && (item.category === "Saving") )
+    }));
+
+  };
+
+  const getAmount = (savingDesc) => {
+    const tempList = cashFlowSavingList.filter(item => item.description == savingDesc);
+    const sum = tempList.filter(item => item.amount).reduce((accumulator, value) => {
+      return accumulator + value;
+    }, 0);
+    return sum;
+  }
+
   useEffect(() => {
     getSavingsItems();
+    // getSavingAmountFromCashFlow();
   }, [account]);
 
   return (
@@ -135,8 +154,8 @@ const Savings = () => {
                   </Typography></div></div>
 
               <BorderLinearProgress variant="determinate" value={50} />
-              <Typography style={{ display: "inline", float: "left" }} variant="h6" >
-                15,000
+              <Typography style={{ display: "inline", float: "left" }} variant="h6" >  {/* getAmount(item.description)*/}
+                15,000 
               </Typography>
               <Typography style={{ display: "inline", float: "right" }} variant="h6" >
                 Goal: {item.goal}
