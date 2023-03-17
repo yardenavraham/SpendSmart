@@ -193,10 +193,10 @@ const Savings = () => {
             </CardContent>
             <CardActions disableSpacing>
               <IconButton  onClick={() => { setOpen(true); setAddOrEdit('edit'); setSelectedCard(item); }} >
-                <EditIcon  />
+                <EditIcon style={{ color: '#318CE7' }}/>
               </IconButton>
               <IconButton  onClick={() => { deleteSaving(item._id) }} >
-                <DeleteIcon/>
+                <DeleteIcon style={{ color: '#318CE7' }}/>
               </IconButton>
             </CardActions>
           </Card>
