@@ -24,7 +24,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ExportToCsv } from 'export-to-csv';
 import Download from "@mui/icons-material/Download";
-import Typography from "@material-ui/core/Typography";
+import Typography from '@mui/material/Typography';
 import { ThemeProvider } from '@mui/material/styles';
 import theme from "../../theme";
 import { withStyles } from "@material-ui/core/styles";
