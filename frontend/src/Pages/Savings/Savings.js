@@ -129,16 +129,18 @@ const Savings = () => {
         </IconButton>
       </div>
       <div style={{
-        display: "flex",
-        justifyContent: "start",
-        flexWrap: "wrap",
-        gap: "20px 30px"
-      }}>
+          display: "flex",
+          justifyContent: "start",
+          flexWrap: "wrap",
+          gap: "20px 30px"
+        }}>
         {savingsList.map(item => (
           <Card sx={{ maxWidth: 345 }} style={{
-            border: "3px solid orange",
+            border: "3px solid #6CB4EE",
             margin: "2px",
-            width: 300
+            width: 300,
+            borderRadius: "30px",
+            boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
           }}>
             <CardContent>
               <div>
