@@ -149,7 +149,15 @@ const Savings = () => {
       <div style={{ display: "flex", marginBottom:"20px", justifyContent:'center' }}>
         <NewTitle variant="h4" component="h2" text='My savings'></NewTitle>
       </div>
-      <div style={{ display: "flex", marginBottom:"20px", justifyContebt:'start' }}>
+      <div style={{ 
+          display: "flex", 
+          marginBottom:"20px", 
+          justifyContebt:'start', 
+          width:'fit-content', 
+          borderRadius: '25px', 
+          backgroundColor: '#F0F8FF',
+          padding: '3px'
+        }}>
         <IconButton onClick={() => { setOpen(true); setAddOrEdit('add') }} color="primary" aria-label="add saving">
           <AddBoxIcon fontSize='large'/>
           <div>Add New Saving</div>
