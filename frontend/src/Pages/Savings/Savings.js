@@ -36,6 +36,26 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
+const expensesTypography = {
+  root: {
+    color: '#6CB4EE'
+  }
+};
+
+// const NewTitle = ({ text, variant }) => (
+//   <ColorTypography
+//     variant={variant}
+//     style={{
+//       whiteSpace: "nowrap",
+//       overflow: "hidden",
+//       textOverflow: "ellipsis",
+//       fontWeight: 700
+//     }}
+//   >
+//     {text}
+//   </ColorTypography>
+// );
+
 const Savings = () => {
 
   const authCtx = useContext(AuthContext);
@@ -119,6 +139,8 @@ const Savings = () => {
     getSavingsItems();
     // getSavingAmountFromCashFlow();
   }, [account]);
+
+
 
   return (
     <>
