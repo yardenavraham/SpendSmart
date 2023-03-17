@@ -146,7 +146,7 @@ const Savings = () => {
 
   return (
     <>
-      <div style={{ display: "flex", marginBottom:"20px", justifyContebt:'center' }}>
+      <div style={{ display: "flex", marginBottom:"20px", justifyContent:'center' }}>
         <NewTitle variant="h4" component="h2" text='My savings'></NewTitle>
       </div>
       <div style={{ display: "flex", marginBottom:"20px", justifyContebt:'start' }}>
