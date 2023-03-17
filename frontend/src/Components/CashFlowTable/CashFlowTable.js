@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import MaterialTable, { MTableBody } from "material-table";
+import MaterialTable, { MTableBody } from '@material-table/core';
 import { forwardRef, useState, useRef } from "react";
 import AddBox from "@mui/icons-material/AddBox";
 import ArrowDownward from "@mui/icons-material/ArrowDownward";
@@ -29,6 +29,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import theme from "../../theme";
 import { withStyles } from "@material-ui/core/styles";
 import './CashFlowTable.scss';
+import { makeStyles } from '@mui/styles';
 
 const tableIcons = {
   Download: forwardRef((props, ref) => <Download {...props} ref={ref} />),
@@ -77,26 +78,56 @@ const arrayToObjectPairs = (arr) => {
   return obj;
 }
 
-const ColorTypography = props => withStyles({
+const incomesTypography = {
   root: {
-    color: "#800000"
+    color: '#66c2a5',
+    // fontWeight: 1500
   }
-})(Typography);
+};
 
-const NewTitle = ({ text, variant }) => (
-  <ColorTypography
-    variant={variant}
-    style={{
-      whiteSpace: "nowrap",
-      overflow: "hidden",
-      textOverflow: "ellipsis"
-    }}
-  >
-    {text}
-  </ColorTypography>
-);
+const expensesTypography = {
+  root: {
+    color: "#fc8d62"
+  }
+};
+
+
+
+// const ColorTypography = withStyles({
+//   root: {
+//     color: "#800000"
+//   }
+// })(Typography);
+
+
+
+
+// const useStyles = makeStyles({
+//   root: {
+//     color: "#800000"
+//   },
+// });
+
 
 const CashFlowTable = props => {
+
+  // const classes = useStyles();
+  const ColorTypography = props.tableType === 'Expenses' ? withStyles(expensesTypography)(Typography) : withStyles(incomesTypography)(Typography);
+
+  const NewTitle = ({ text, variant }) => (
+    <ColorTypography
+      variant={variant}
+      style={{
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        fontWeight: 700
+      }}
+    >
+      {text}
+    </ColorTypography>
+  );
+
   //console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
   console.log("my table type" + props.tableType)
   const [open, setOpen] = useState(false);
@@ -113,9 +144,6 @@ const CashFlowTable = props => {
   const [datePickerValue, setDatePickerValue] = useState(dayjs(firstDayOfCurrMonth));
 
   const tableRef = useRef();
-  const total = tableRef.current && tableRef.current.state.data.reduce((accumulator, currentValue) => accumulator = accumulator + currentValue.amount, 0);
-
-
   const onDelete = props.onDelete;
   const tableText = props.tableType //=== myTableType.Incomes ? "Incomes" : "Expenses"
   console.log('props.madeBy', JSON.stringify(props.madeBy));
@@ -218,7 +246,9 @@ const CashFlowTable = props => {
           ]}
           options={{
             actionsColumnIndex: -1,
-            filtering: true
+            filtering: true,
+            headerStyle: {fontWeight: 800, fontSize: '16px'}
+            // headerStyle: {color: props.tableType === 'Expenses' ? '#fc8d62' : '#66c2a5'},
           }}
           columns={[
             { title: "_id", field: "_id", hidden: true },
@@ -305,8 +335,10 @@ const CashFlowTable = props => {
                 <MTableBody {...props} />
                 <tfoot>
                   <div className="incomes-material_total">
-                    <div>{<NewTitle variant="h5" text="Total" />}</div>
-                    <div>{<NewTitle variant="h5" text={total} />}</div>
+                    <div className="incomes-material_total_item">Total:</div>
+                    <div className="incomes-material_total_item">{tableRef.current && tableRef.current.state.data.reduce((accumulator, currentValue) => accumulator = accumulator + currentValue.amount, 0)}</div>
+                    {/* <div>{<NewTitle variant="h5" text="Total:" />}</div>
+                    <div>{<NewTitle variant="h5" text={tableRef.current && tableRef.current.state.data.reduce((accumulator, currentValue) => accumulator = accumulator + currentValue.amount, 0)} />}</div> */}
                   </div>
                 </tfoot>
               </>
