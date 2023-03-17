@@ -31,30 +31,7 @@ import { withStyles } from "@material-ui/core/styles";
 import './CashFlowTable.scss';
 import { makeStyles } from '@mui/styles';
 
-const tableIcons = {
-  Download: forwardRef((props, ref) => <Download {...props} ref={ref} />),
-  Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-  DetailPanel: forwardRef((props, ref) => (
-    <ChevronRight {...props} ref={ref} />
-  )),
-  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-  Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props, ref) => (
-    <ChevronLeft {...props} ref={ref} />
-  )),
-  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-  ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-};
+
 
 const style = {
   position: 'absolute',
@@ -81,13 +58,12 @@ const arrayToObjectPairs = (arr) => {
 const incomesTypography = {
   root: {
     color: '#66c2a5',
-    // fontWeight: 1500
   }
 };
 
 const expensesTypography = {
   root: {
-    color: "#fc8d62"
+    color: '#fc8d62'
   }
 };
 
@@ -110,6 +86,33 @@ const expensesTypography = {
 
 
 const CashFlowTable = props => {
+
+  const iconsColor = props.tableType === 'Expenses' ? '#fc8d62' : '#66c2a5';
+
+  const tableIcons = {
+    Download: forwardRef((props, ref) => <Download {...props} ref={ref} style={{ color: iconsColor }}/>),
+    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} style={{ color: iconsColor }} />),
+    Check: forwardRef((props, ref) => <Check {...props} ref={ref} style={{ color: iconsColor }}/>),
+    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} style={{ color: iconsColor }}/>),
+    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} style={{ color: iconsColor }} />),
+    DetailPanel: forwardRef((props, ref) => (
+      <ChevronRight {...props} ref={ref} style={{ color: iconsColor }}/>
+    )),
+    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} style={{ color: iconsColor }}/>),
+    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} style={{ color: iconsColor }} />),
+    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref) => (
+      <ChevronLeft {...props} ref={ref} />
+    )),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} style={{ color: iconsColor }}/>),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref} style={{ color: iconsColor }} />),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} style={{ color: iconsColor }} />),
+    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} style={{ color: iconsColor }}/>),
+    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} style={{ color: iconsColor }}/>)
+  };
 
   // const classes = useStyles();
   const ColorTypography = props.tableType === 'Expenses' ? withStyles(expensesTypography)(Typography) : withStyles(incomesTypography)(Typography);
@@ -198,7 +201,6 @@ const CashFlowTable = props => {
       <ThemeProvider theme={theme}>
 
         <MaterialTable
-          // title={tableText + " Information"}
           title={<NewTitle variant="h4" text={tableText + " Information"} />}
           icons={tableIcons}
           actions={[
@@ -230,13 +232,13 @@ const CashFlowTable = props => {
               icon: tableIcons.Add,
               tooltip: "Add",
               isFreeAction: true, //Independent actions that will not on row' actions section
-              onClick: () => { setOpen(true); setAddOrEdit('add') }
+              onClick: () => { setOpen(true); setAddOrEdit('add') },
             },
 
             rowData => ({
               icon: tableIcons.Edit,
               tooltip: 'Edit',
-              onClick: () => { setOpen(true); setAddOrEdit('edit'); setSelectedRow(rowData) }
+              onClick: () => { setOpen(true); setAddOrEdit('edit'); setSelectedRow(rowData) },
             }),
             rowData => ({
               icon: tableIcons.Delete,
@@ -346,12 +348,6 @@ const CashFlowTable = props => {
           }}
         />
       </ThemeProvider>
-      {/* <table>
-        <tr>
-          <td>aaa</td>
-          <td>aaa</td>
-        </tr>
-      </table> */}
       <Modal
         open={open}
         onClose={handleClose}
