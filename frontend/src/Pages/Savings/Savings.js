@@ -10,7 +10,7 @@ import IconButton from '@mui/material/IconButton';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-
+import { withStyles } from "@material-ui/core/styles";
 
 const style = {
   position: 'absolute',
@@ -36,25 +36,27 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   },
 }));
 
-const expensesTypography = {
+const savingsTypography = {
   root: {
-    color: '#6CB4EE'
+    color: '#318CE7'
   }
 };
 
-// const NewTitle = ({ text, variant }) => (
-//   <ColorTypography
-//     variant={variant}
-//     style={{
-//       whiteSpace: "nowrap",
-//       overflow: "hidden",
-//       textOverflow: "ellipsis",
-//       fontWeight: 700
-//     }}
-//   >
-//     {text}
-//   </ColorTypography>
-// );
+const ColorTypography = withStyles(savingsTypography)(Typography);
+
+const NewTitle = ({ text, variant }) => (
+  <ColorTypography
+    variant={variant}
+    style={{
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+      fontWeight: 700
+    }}
+  >
+    {text}
+  </ColorTypography>
+);
 
 const Savings = () => {
 
@@ -144,10 +146,13 @@ const Savings = () => {
 
   return (
     <>
-      <div style={{ display: "flex", marginBottom:"20px" }}>
-        <Typography variant="h4" component="h2">My savings</Typography>
+      <div style={{ display: "flex", marginBottom:"20px", justifyContebt:'center' }}>
+        <NewTitle variant="h4" component="h2" text='My savings'></NewTitle>
+      </div>
+      <div style={{ display: "flex", marginBottom:"20px", justifyContebt:'start' }}>
         <IconButton onClick={() => { setOpen(true); setAddOrEdit('add') }} color="primary" aria-label="add saving">
-          <AddBoxIcon fontSize='large' />
+          <AddBoxIcon fontSize='large'/>
+          <div>Add New Saving</div>
         </IconButton>
       </div>
       <div style={{
@@ -158,7 +163,7 @@ const Savings = () => {
         }}>
         {savingsList.map(item => (
           <Card sx={{ maxWidth: 345 }} style={{
-            border: "3px solid #6CB4EE",
+            border: "3px solid #318CE7",
             margin: "2px",
             width: 300,
             borderRadius: "30px",
