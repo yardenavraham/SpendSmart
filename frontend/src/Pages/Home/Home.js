@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import Typography from '@mui/material/Typography';
 import AuthContext from '../../store/auth-context';
-import './Home.scss';
+// import './Home.scss';
 
 const Home = () => {
 
