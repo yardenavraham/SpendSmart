@@ -90,8 +90,9 @@ export default function Profile() {
         try {
             const account = authCtx.accountDetails;
             const data = {}
+            console.log('image', image);
             
-            if (image !== null) {
+            if (image !== null && image !== undefined && image !== 'empty') {
                 let formData = new FormData();
                 formData.append('file', image);
                 
@@ -103,7 +104,7 @@ export default function Profile() {
                 const res = await axios.post("http://localhost:27017/uploadimage", formData, config);
                 data.image = res.data.file;
             }
-            else {
+            else if (image === 'empty'){
                 data.image = null;
             }
             

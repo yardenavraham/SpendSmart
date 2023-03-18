@@ -15,7 +15,7 @@ const UploadImage = (props) => {
 
   const domainAndDir = 'http://localhost:27017/uploads/';
   const [currentImage, setCurrentImage] = useState(currentImageName !== undefined && currentImageName !== null ? domainAndDir+currentImageName : null);
-  const [preview, setPreview] = useState(currentImage ? currentImage : selectedImage ? URL.createObjectURL(selectedImage): null);
+  const [preview, setPreview] = useState(currentImage ? currentImage : selectedImage && selectedImage !== 'empty' ? URL.createObjectURL(selectedImage): null);
   const [showPreview, setShowPreview] = useState(currentImage ? true : false);
   const [inputText, setInputText] = useState('');
   const inputRef = useRef('');
@@ -43,7 +43,7 @@ const UploadImage = (props) => {
     event.preventDefault();
     setShowPreview(false);
     setCurrentImage(null);
-    setSelectedImage(null);
+    setSelectedImage('empty');
     setInputText('');
     inputRef.current.calue = '';
     // if (currentImage) {
