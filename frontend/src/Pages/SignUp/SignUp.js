@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+// import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./SignUp.css";
 import { Form, Formik, Field } from "formik";
 import { TextField } from "formik-mui";
@@ -38,7 +38,7 @@ function Copyright(props) {
   );
 }
 
-const theme = createTheme();
+// const theme = createTheme();
 
 const validationSchema = Yup.object().shape({
   account: nameValidation,
@@ -113,7 +113,7 @@ export default function SignUp() {
         />
       )}
       
-    <ThemeProvider theme={theme}>
+    {/* <ThemeProvider theme={theme}> */}
       <div
         className="back"
         style={{
@@ -247,7 +247,7 @@ export default function SignUp() {
           <Copyright sx={{ mt: 5, paddingBottom: 3 }} />
         </Container>
       </div>
-    </ThemeProvider>
+    {/* </ThemeProvider> */}
     </>
   );
 }

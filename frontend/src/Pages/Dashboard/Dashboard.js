@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { Grid } from "@material-ui/core";
-import { responsiveFontSizes } from "@mui/material/styles";
-import { ThemeProvider } from "@mui/styles";
 import BarChartCard from "../../Components/Graphs/BarChartCard";
 import SelectButton from "../../Components/Graphs/SelectButton";
 import PieChartCard from "../../Components/Graphs/PieChartCard";
-import theme from "../../theme";
 import axios from "axios";
 import AuthContext from '../../store/auth-context';
 
@@ -117,7 +114,7 @@ function Dashboard() {
   }
 
   return (
-    <ThemeProvider theme={responsiveFontSizes(theme)}>
+     <>
       <SelectButton
         prev="Previous Month"
         curr="Current Month"
@@ -141,7 +138,7 @@ function Dashboard() {
           data={expensesByCategory()}
         />
       </Grid>
-    </ThemeProvider>
+      </>
   );
 }
 

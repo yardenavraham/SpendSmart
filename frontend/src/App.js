@@ -22,21 +22,23 @@ import Profile from "./Pages/Profile/Profile";
 import LogOut from './Pages/Logout/Logout';
 import Savings from './Pages/Savings/Savings';
 import PrivateRoute from "./Routes/PrivateRoute";
+import theme from "../src/theme";
+
 
 export default function App() {
   
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#005689',
-      },
-      secondary: {
-        light: '#0066ff',
-        main: '#212121',
-        contrastText: '#ffcc00',
-      },
-    },
-  });
+  // const theme = createTheme({
+  //   palette: {
+  //     primary: {
+  //       main: '#005689',
+  //     },
+  //     secondary: {
+  //       light: '#0066ff',
+  //       main: '#212121',
+  //       contrastText: '#ffcc00',
+  //     },
+  //   },
+  // });
   
   return (
     <div className="App">

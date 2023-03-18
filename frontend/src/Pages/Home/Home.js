@@ -1,13 +1,18 @@
-import React, { Component } from 'react'
+import React, { useContext } from 'react'
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import AuthContext from '../../store/auth-context';
+import './Home.scss';
 
 const Home = () => {
+
+   const authCtx = useContext(AuthContext);
+   const accountName = authCtx.accountDetails.accountName;
+
     return (
-      <>
-        <Typography align="left" variant="h4" component="h2">Welcome User!</Typography>
-        <Typography align="left">Here you will find your summary</Typography>
-      </>
+      <div className='home'>
+        <Typography variant="h4" component="h2">Welcome {accountName}</Typography>
+        <Typography>It's time to start your journey for savings!</Typography>
+      </div>
     )
 }
 export default Home;

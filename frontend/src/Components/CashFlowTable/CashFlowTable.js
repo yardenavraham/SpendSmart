@@ -25,14 +25,8 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ExportToCsv } from 'export-to-csv';
 import Download from "@mui/icons-material/Download";
 import Typography from '@mui/material/Typography';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from "../../theme";
 import { withStyles } from "@material-ui/core/styles";
 import './CashFlowTable.scss';
-import { makeStyles } from '@mui/styles';
-
-
-
 const style = {
   position: 'absolute',
   top: '50%',
@@ -66,23 +60,6 @@ const expensesTypography = {
     color: '#fc8d62'
   }
 };
-
-
-
-// const ColorTypography = withStyles({
-//   root: {
-//     color: "#800000"
-//   }
-// })(Typography);
-
-
-
-
-// const useStyles = makeStyles({
-//   root: {
-//     color: "#800000"
-//   },
-// });
 
 
 const CashFlowTable = props => {
@@ -198,156 +175,151 @@ const CashFlowTable = props => {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
+      <MaterialTable
+        title={<NewTitle variant="h3" text={tableText + " Information"} />}
+        icons={tableIcons}
+        actions={[
+          {
+            icon: props => (
+              <LocalizationProvider
+                dateAdapter={AdapterDayjs}
+              >
+                <DatePicker
+                  views={['month', 'year']}
+                  label="Month and Year"
+                  minDate={dayjs('2000-03-01')}
+                  maxDate={dayjs(now.setFullYear(now.getFullYear() + 200))}
+                  value={datePickerValue}
+                  onChange={handleDatePickerChanged}
+                  renderInput={(params) => <TextField {...params} helperText={null} />}
+                />
+              </LocalizationProvider>
+            ),
+            isFreeAction: true  //Independent actions that will not on row' actions section
+          },
+          {
+            icon: tableIcons.Download,
+            tooltip: "Download CSV",
+            isFreeAction: true, //Independent actions that will not on row' actions section
+            onClick: () => { downloadCSV(cashFlowData) }
+          },
+          {
+            icon: tableIcons.Add,
+            tooltip: "Add",
+            isFreeAction: true, //Independent actions that will not on row' actions section
+            onClick: () => { setOpen(true); setAddOrEdit('add') },
+          },
 
-        <MaterialTable
-          title={<NewTitle variant="h4" text={tableText + " Information"} />}
-          icons={tableIcons}
-          actions={[
-            {
-              icon: props => (
-                <LocalizationProvider
-                  dateAdapter={AdapterDayjs}
-                >
-                  <DatePicker
-                    views={['month', 'year']}
-                    label="Month and Year"
-                    minDate={dayjs('2000-03-01')}
-                    maxDate={dayjs(now.setFullYear(now.getFullYear() + 200))}
-                    value={datePickerValue}
-                    onChange={handleDatePickerChanged}
-                    renderInput={(params) => <TextField {...params} helperText={null} />}
-                  />
-                </LocalizationProvider>
-              ),
-              isFreeAction: true  //Independent actions that will not on row' actions section
+          rowData => ({
+            icon: tableIcons.Edit,
+            tooltip: 'Edit',
+            onClick: () => { setOpen(true); setAddOrEdit('edit'); setSelectedRow(rowData) },
+          }),
+          rowData => ({
+            icon: tableIcons.Delete,
+            tooltip: 'Delete',
+            onClick: (event, rowData) => { console.log('rowData ' + JSON.stringify(rowData)); onDelete(rowData._id) }
+          })
+        ]}
+        options={{
+          actionsColumnIndex: -1,
+          filtering: true,
+          headerStyle: {fontWeight: 800, fontSize: '16px'}
+          // headerStyle: {color: props.tableType === 'Expenses' ? '#fc8d62' : '#66c2a5'},
+        }}
+        columns={[
+          { title: "_id", field: "_id", hidden: true },
+          {
+            title: "Description", field: "description", filtering: true,
+            cellStyle: {
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
+              fontSize: '16px'
             },
-            {
-              icon: tableIcons.Download,
-              tooltip: "Download CSV",
-              isFreeAction: true, //Independent actions that will not on row' actions section
-              onClick: () => { downloadCSV(cashFlowData) }
-            },
-            {
-              icon: tableIcons.Add,
-              tooltip: "Add",
-              isFreeAction: true, //Independent actions that will not on row' actions section
-              onClick: () => { setOpen(true); setAddOrEdit('add') },
-            },
-
-            rowData => ({
-              icon: tableIcons.Edit,
-              tooltip: 'Edit',
-              onClick: () => { setOpen(true); setAddOrEdit('edit'); setSelectedRow(rowData) },
-            }),
-            rowData => ({
-              icon: tableIcons.Delete,
-              tooltip: 'Delete',
-              onClick: (event, rowData) => { console.log('rowData ' + JSON.stringify(rowData)); onDelete(rowData._id) }
-            })
-          ]}
-          options={{
-            actionsColumnIndex: -1,
-            filtering: true,
-            headerStyle: {fontWeight: 800, fontSize: '16px'}
-            // headerStyle: {color: props.tableType === 'Expenses' ? '#fc8d62' : '#66c2a5'},
-          }}
-          columns={[
-            { title: "_id", field: "_id", hidden: true },
-            {
-              title: "Description", field: "description", filtering: true,
-              cellStyle: {
-                backgroundColor: '#FFFFFF',
-                color: '#00000',
-                fontSize: '16px'
-              },
-              headerStyle: {
-                backgroundColor: '#FFFFFF',
-              }
-            },
-            {
-              title: "Category", field: "category", filtering: true, lookup: categoryFilter,
-              cellStyle: {
-                backgroundColor: '#FFFFFF',
-                color: '#00000',
-                fontSize: '16px'
-              },
-              headerStyle: {
-                backgroundColor: '#FFFFFF',
-              }
-            },
-            {
-              title: "Amount", field: "amount", filtering: true,
-              cellStyle: {
-                backgroundColor: '#FFFFFF',
-                color: '#00000',
-                fontSize: '16px'
-              },
-              headerStyle: {
-                backgroundColor: '#FFFFFF',
-              }
-            },
-            {
-              title: "Frequency", field: "frequency", filtering: true,
-              cellStyle: {
-                backgroundColor: '#FFFFFF',
-                color: '#00000',
-                fontSize: '16px'
-              },
-              headerStyle: {
-                backgroundColor: '#FFFFFF',
-              }
-            },
-            {
-              title: "Date", field: "date", type: "date", filtering: true,
-              cellStyle: {
-                backgroundColor: '#FFFFFF',
-                color: '#00000',
-                fontSize: '16px'
-              },
-              headerStyle: {
-                backgroundColor: '#FFFFFF',
-              }
-            },
-            {
-              title: "Made By", field: "madeBy", filtering: true, lookup: madeByFilter,
-              cellStyle: {
-                backgroundColor: '#FFFFFF',
-                color: '#00000',
-                fontSize: '16px'
-              },
-              headerStyle: {
-                backgroundColor: '#FFFFFF',
-              }
+            headerStyle: {
+              backgroundColor: '#FFFFFF',
             }
-          ]}
-          data={props.cashFlowList.map((transaction) => ({
-            _id: transaction._id,
-            description: transaction.description,
-            category: transaction.category,
-            amount: transaction.amount,
-            frequency: transaction.frequency,
-            date: transaction.date, //{`${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`}
-            madeBy: transaction.madeBy
-          }))}
-          tableRef={tableRef}
-          components={{
-            Body: (props) => (
-              <>
-                <MTableBody {...props} />
-                <tfoot>
-                  <div className="incomes-material_total">
-                    <div className="incomes-material_total_item">Total:</div>
-                    <div className="incomes-material_total_item">{tableRef.current && tableRef.current.state.data.reduce((accumulator, currentValue) => accumulator = accumulator + currentValue.amount, 0)}</div>
-                    {/* <div>{<NewTitle variant="h5" text="Total:" />}</div>
-                    <div>{<NewTitle variant="h5" text={tableRef.current && tableRef.current.state.data.reduce((accumulator, currentValue) => accumulator = accumulator + currentValue.amount, 0)} />}</div> */}
-                  </div>
-                </tfoot>
-              </>
-            )
-          }}
-        />
-      </ThemeProvider>
+          },
+          {
+            title: "Category", field: "category", filtering: true, lookup: categoryFilter,
+            cellStyle: {
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
+              fontSize: '16px'
+            },
+            headerStyle: {
+              backgroundColor: '#FFFFFF',
+            }
+          },
+          {
+            title: "Amount", field: "amount", filtering: true,
+            cellStyle: {
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
+              fontSize: '16px'
+            },
+            headerStyle: {
+              backgroundColor: '#FFFFFF',
+            }
+          },
+          {
+            title: "Frequency", field: "frequency", filtering: true,
+            cellStyle: {
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
+              fontSize: '16px'
+            },
+            headerStyle: {
+              backgroundColor: '#FFFFFF',
+            }
+          },
+          {
+            title: "Date", field: "date", type: "date", filtering: true,
+            cellStyle: {
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
+              fontSize: '16px'
+            },
+            headerStyle: {
+              backgroundColor: '#FFFFFF',
+            }
+          },
+          {
+            title: "Made By", field: "madeBy", filtering: true, lookup: madeByFilter,
+            cellStyle: {
+              backgroundColor: '#FFFFFF',
+              color: '#00000',
+              fontSize: '16px'
+            },
+            headerStyle: {
+              backgroundColor: '#FFFFFF',
+            }
+          }
+        ]}
+        data={props.cashFlowList.map((transaction) => ({
+          _id: transaction._id,
+          description: transaction.description,
+          category: transaction.category,
+          amount: transaction.amount,
+          frequency: transaction.frequency,
+          date: transaction.date, //{`${row.date.getDate()}/${row.date.getMonth()+1}/${row.date.getFullYear()}`}
+          madeBy: transaction.madeBy
+        }))}
+        tableRef={tableRef}
+        components={{
+          Body: (props) => (
+            <>
+              <MTableBody {...props} />
+              <tfoot>
+                <div className="incomes-material_total">
+                  <div className="incomes-material_total_item">Total:</div>
+                  <div className="incomes-material_total_item">{tableRef.current && tableRef.current.state.data.reduce((accumulator, currentValue) => accumulator = accumulator + currentValue.amount, 0)}</div>
+                </div>
+              </tfoot>
+            </>
+          )
+        }}
+      />
       <Modal
         open={open}
         onClose={handleClose}

@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import { ThemeProvider } from '@mui/material/styles';
+// import { ThemeProvider } from '@mui/material/styles';
 import { useState, useContext } from "react";
 import axios from "axios";
 import  AuthContext from '../../store/auth-context';
@@ -14,7 +14,7 @@ import {Field, Formik, Form} from "formik";
 import * as Yup from "yup";
 import { TextField } from "formik-mui";
 import {confirmPasswordValidation, emailValidation, nameValidation, passwordValidation} from "../../Components/Forms/FormikValidations";
-import theme from "../../theme";
+// import theme from "../../theme";
 import { DotLoaderOverlay } from 'react-spinner-overlay'
 
 const fields = {
@@ -202,7 +202,7 @@ export default function Profile() {
               setOpen={setShowAlert}
             />
           )}
-          <ThemeProvider theme={theme}>
+          {/* <ThemeProvider theme={theme}> */}
               <DotLoaderOverlay loading={isLoading} size={28} color="#005689"/>
               {/*<div className="third-color" style={{ height: '100%', left: '0px', width: '100%' }}>*/}
               {/*    <Container component="main" maxWidth="sm" style={{ backgroundColor: 'white', borderRadius: 10 }}>*/}
@@ -248,7 +248,7 @@ export default function Profile() {
                     </>
                   )}
               </Formik>
-          </ThemeProvider>
+          {/* </ThemeProvider> */}
       </>
     );
 }
