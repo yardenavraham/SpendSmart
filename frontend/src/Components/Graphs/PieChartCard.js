@@ -8,7 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { ThemeProvider } from "@mui/material/styles";
+// import { ThemeProvider } from "@mui/material/styles";
 import { useTheme } from "@mui/styles";
 import * as d3 from "d3";
 
@@ -32,9 +32,9 @@ const percentage = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index
     <Grid item xs={4}>
       <Card elevation="0">
         <CardContent>
-          <ThemeProvider theme={props.theme}>
+          {/* <ThemeProvider theme={props.theme}> */}
             <Typography variant="h6">{props.header}</Typography>
-          </ThemeProvider>
+          {/* </ThemeProvider> */}
           <ResponsiveContainer height={200}>
             <PieChart width={150} height={200}>
               <Pie

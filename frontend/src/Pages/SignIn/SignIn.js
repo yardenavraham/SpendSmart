@@ -11,7 +11,7 @@ import Box from '@mui/material/Box';
 import { useState } from "react";
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+// import { createTheme, ThemeProvider } from '@mui/material/styles';
 import './SignIn.css';
 import  AuthContext from '../../store/auth-context';
 import axios from "axios";
@@ -31,7 +31,7 @@ function Copyright(props) {
     );
 }
 
-const theme = createTheme();
+// const theme = createTheme();
 
 export default function SignIn() {
     
@@ -116,7 +116,7 @@ export default function SignIn() {
               setOpen={setShowAlert}
             />
           )}
-          <ThemeProvider theme={theme}>
+          {/* <ThemeProvider theme={theme}> */}
               {/* <div className="first" style={{ height: '100%',   left: '0px', width: '100%' }}> */}
               
               <Container component="main" maxWidth="xs" style={{ backgroundColor: 'white', borderRadius: 10 }}>
@@ -189,7 +189,7 @@ export default function SignIn() {
                   <Copyright sx={{ mt: 8, mb: 4 }} />
               </Container>
               {/* </div> */}
-          </ThemeProvider>
+          {/* </ThemeProvider> */}
       </>
     );
 }

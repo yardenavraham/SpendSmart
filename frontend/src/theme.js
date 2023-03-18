@@ -5,16 +5,13 @@ import { purple } from '@mui/material/colors';
 const theme = createTheme({
     palette: {
       primary: {
-        main: '#1976d2',
-        firstColor: '#005689',
-        secondColor: '#007cb9',
-        thirdColor: '#d5eeff',
-        forthColor: '#ff895d',
-        a: purple
-
+        main: '#005689',
+        light: '#fc8d62'
       },
       secondary: {
-        main: '#ff895d'
+        main: '#ff895d', 
+        light: '#66c2a5', //green - income
+        dark: '#fc8d62', //orange - expense
       },
       success: {
         main: '#4caf50'
@@ -25,13 +22,18 @@ const theme = createTheme({
       }
     },
     typography: {
+      // fontFamily: 'Quicksand',
+      // fontWeightLight: 400,
+      // fontWeightRegular: 500,
+      // fontWeightMedium: 600,
+      // fontWeightBold: 700,
       fontSize: 16,
       h3: {
         fontWeight: 700,
-        fontSize: '2.2rem'
+        fontSize: '1.9rem'
       },
       h4: {
-        fontWeight: 700,
+        fontWeight: 500,
         fontSize: '1.75rem'
       },
       h5: {
