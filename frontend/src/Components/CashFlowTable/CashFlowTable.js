@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import MaterialTable, { MTableBody } from "material-table";
+import MaterialTable, { MTableBody } from '@material-table/core';
 import { forwardRef, useState, useRef } from "react";
 import AddBox from "@mui/icons-material/AddBox";
 import ArrowDownward from "@mui/icons-material/ArrowDownward";
@@ -24,33 +24,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { ExportToCsv } from 'export-to-csv';
 import Download from "@mui/icons-material/Download";
-
-
-const tableIcons = {
-  Download: forwardRef((props, ref) => <Download {...props} ref={ref} />),
-  Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-  DetailPanel: forwardRef((props, ref) => (
-    <ChevronRight {...props} ref={ref} />
-  )),
-  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-  Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props, ref) => (
-    <ChevronLeft {...props} ref={ref} />
-  )),
-  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-  SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-  ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-};
-
+import Typography from '@mui/material/Typography';
+import { withStyles } from "@material-ui/core/styles";
+import './CashFlowTable.scss';
 const style = {
   position: 'absolute',
   top: '50%',
@@ -73,7 +49,65 @@ const arrayToObjectPairs = (arr) => {
   return obj;
 }
 
+const incomesTypography = {
+  root: {
+    color: '#66c2a5',
+  }
+};
+
+const expensesTypography = {
+  root: {
+    color: '#fc8d62'
+  }
+};
+
+
 const CashFlowTable = props => {
+
+  const iconsColor = props.tableType === 'Expenses' ? '#fc8d62' : '#66c2a5';
+
+  const tableIcons = {
+    Download: forwardRef((props, ref) => <Download {...props} ref={ref} style={{ color: iconsColor }}/>),
+    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} style={{ color: iconsColor }} />),
+    Check: forwardRef((props, ref) => <Check {...props} ref={ref} style={{ color: iconsColor }}/>),
+    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} style={{ color: iconsColor }}/>),
+    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} style={{ color: iconsColor }} />),
+    DetailPanel: forwardRef((props, ref) => (
+      <ChevronRight {...props} ref={ref} style={{ color: iconsColor }}/>
+    )),
+    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} style={{ color: iconsColor }}/>),
+    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} style={{ color: iconsColor }} />),
+    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref) => (
+      <ChevronLeft {...props} ref={ref} />
+    )),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} style={{ color: iconsColor }}/>),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref} style={{ color: iconsColor }} />),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} style={{ color: iconsColor }} />),
+    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} style={{ color: iconsColor }}/>),
+    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} style={{ color: iconsColor }}/>)
+  };
+
+  // const classes = useStyles();
+  const ColorTypography = props.tableType === 'Expenses' ? withStyles(expensesTypography)(Typography) : withStyles(incomesTypography)(Typography);
+
+  const NewTitle = ({ text, variant }) => (
+    <ColorTypography
+      variant={variant}
+      style={{
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        fontWeight: 700
+      }}
+    >
+      {text}
+    </ColorTypography>
+  );
+
   //console.log('props.initialIncomesList ' + JSON.stringify(props.initialIncomesList));
   console.log("my table type" + props.tableType)
   const [open, setOpen] = useState(false);
@@ -90,7 +124,6 @@ const CashFlowTable = props => {
   const [datePickerValue, setDatePickerValue] = useState(dayjs(firstDayOfCurrMonth));
 
   const tableRef = useRef();
-
   const onDelete = props.onDelete;
   const tableText = props.tableType //=== myTableType.Incomes ? "Incomes" : "Expenses"
   console.log('props.madeBy', JSON.stringify(props.madeBy));
@@ -137,14 +170,13 @@ const CashFlowTable = props => {
   }
 
 
-
   console.log('madeBy ' + props.madeBy);
   const { madeBy } = props;
 
   return (
     <>
       <MaterialTable
-        title={tableText + " Information"}
+        title={<NewTitle variant="h3" text={tableText + " Information"} />}
         icons={tableIcons}
         actions={[
           {
@@ -175,13 +207,13 @@ const CashFlowTable = props => {
             icon: tableIcons.Add,
             tooltip: "Add",
             isFreeAction: true, //Independent actions that will not on row' actions section
-            onClick: () => { setOpen(true); setAddOrEdit('add') }
+            onClick: () => { setOpen(true); setAddOrEdit('add') },
           },
 
           rowData => ({
             icon: tableIcons.Edit,
             tooltip: 'Edit',
-            onClick: () => { setOpen(true); setAddOrEdit('edit'); setSelectedRow(rowData) }
+            onClick: () => { setOpen(true); setAddOrEdit('edit'); setSelectedRow(rowData) },
           }),
           rowData => ({
             icon: tableIcons.Delete,
@@ -191,7 +223,9 @@ const CashFlowTable = props => {
         ]}
         options={{
           actionsColumnIndex: -1,
-          filtering: true
+          filtering: true,
+          headerStyle: {fontWeight: 800, fontSize: '16px'}
+          // headerStyle: {color: props.tableType === 'Expenses' ? '#fc8d62' : '#66c2a5'},
         }}
         columns={[
           { title: "_id", field: "_id", hidden: true },
@@ -276,11 +310,11 @@ const CashFlowTable = props => {
           Body: (props) => (
             <>
               <MTableBody {...props} />
-              <tfoot className="incomes-material_table_total">
-                <tr>
-                  <td>TOTAL</td>
-                  <td>{tableRef.current && tableRef.current.state.data.reduce((accumulator, currentValue) => accumulator = accumulator + currentValue.amount, 0)}</td>
-                </tr>
+              <tfoot>
+                <div className="incomes-material_total">
+                  <div className="incomes-material_total_item">Total:</div>
+                  <div className="incomes-material_total_item">{tableRef.current && tableRef.current.state.data.reduce((accumulator, currentValue) => accumulator = accumulator + currentValue.amount, 0)}</div>
+                </div>
               </tfoot>
             </>
           )

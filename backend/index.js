@@ -26,6 +26,7 @@ app.use(CashFlowRoute);
 app.use(AccountRoute);
 app.use(SavingRoute);
 
+// Static Middleware
 app.use('/uploads', express.static('uploads'));
 
 app.listen(27017, () => console.log('Server up and running...'));

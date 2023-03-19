@@ -1,3 +1,6 @@
+
+// @use 'variables';
+
 .incomes {
     //background-color: #d5eeff;
 }
@@ -67,6 +70,13 @@
     
 }
 
-.incomes-material_table_total {
+.incomes-material_total {
+    display: flex;
+    justify-content: center;
     font-weight: bold;
+    font-size: 24px;
+}
+
+.incomes-material_total_item {
+    padding: 4px;
 }

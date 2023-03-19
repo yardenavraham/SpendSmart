@@ -1,9 +1,7 @@
 import React, {useEffect} from 'react'
 import Button from '@mui/material/Button';
-import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { ThemeProvider } from '@mui/material/styles';
+// import { ThemeProvider } from '@mui/material/styles';
 import { useState, useContext } from "react";
 import axios from "axios";
 import  AuthContext from '../../store/auth-context';
@@ -16,20 +14,8 @@ import {Field, Formik, Form} from "formik";
 import * as Yup from "yup";
 import { TextField } from "formik-mui";
 import {confirmPasswordValidation, emailValidation, nameValidation, passwordValidation} from "../../Components/Forms/FormikValidations";
-import theme from "../../theme";
-
-function Copyright(props) {
-    return (
-      <Typography variant="body2" color="text.secondary" align="center" {...props}>
-          {'Copyright © '}
-          <Link color="inherit" href="/">
-              SpendSmart
-          </Link>{' '}
-          {new Date().getFullYear()}
-          {'.'}
-      </Typography>
-    );
-}
+// import theme from "../../theme";
+import { DotLoaderOverlay } from 'react-spinner-overlay'
 
 const fields = {
     current: {id: 'current', text: 'Current Password'},
@@ -55,16 +41,23 @@ async function getPartnersFromDB(accountId) {
     return await account?.partners || [];
 }
 
-export default function EditAccount() {
+export default function Profile() {
+    
     const authCtx = useContext(AuthContext);
-    //console.log("CTX " + JSON.stringify(authCtx))
+    // console.log('authCtx', JSON.stringify(authCtx.accountDetails));
+    //UploadImage states
+    const [image, setImage] = useState(authCtx.accountDetails.image);
+    
     const navigate = useNavigate();
     const [showAlert, setShowAlert] = useState(false);
     const [alertType, setAlertType] = useState('error');
     const [message, setMessage] = useState('');
-    const [image, setImage] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    
+    console.log(authCtx.accountDetails)
     const [partners, setPartners] = useState([])
     useEffect(() => {
+        setImage(authCtx.image);
         async function fetch() {
             const id = authCtx.accountDetails.id;
             console.log("ACCOUNT ID = " + id)
@@ -80,7 +73,10 @@ export default function EditAccount() {
                 }));
             }
         }
-        fetch().then(() => console.log("Loaded partner from DB"));
+        fetch().then(() => {
+            console.log("Loaded partner from DB")
+            setIsLoading(false)
+        });
     }, [authCtx]);
     
     const alert = (type, message) => {
@@ -89,20 +85,35 @@ export default function EditAccount() {
         setMessage(message)
     }
     
-
+    
     const saveHandler = async (values) => {
         try {
             const account = authCtx.accountDetails;
-            // console.log(JSON.stringify(account));
             const data = {}
+            console.log('image', image);
+            
+            if (image !== null && image !== undefined && image !== 'empty') {
+                let formData = new FormData();
+                formData.append('file', image);
+                
+                const config = {
+                    headers: { 'content-type': 'multipart/form-data' }
+                }
+                console.log('formData', formData);
+                
+                const res = await axios.post("http://localhost:27017/uploadimage", formData, config);
+                data.image = res.data.file;
+            }
+            else if (image === 'empty'){
+                data.image = null;
+            }
             
             if (values[fields.confirm.id] !== '') {
                 data.oldPassword = values[fields.current.id];
                 data.password = values[fields.confirm.id];
             }
             
-            data.image = image;
-    
+            
             const mapPartner = (values) => {
                 return {
                     firstName: values.partnerFirstName,
@@ -115,6 +126,7 @@ export default function EditAccount() {
             const response = await axios.patch(`http://localhost:27017/Account/${account.id}`,
               data
             );
+            authCtx.onLogin(response.data.token);
             console.log(response);
             alert('success', "The account has been updated")
             
@@ -123,12 +135,6 @@ export default function EditAccount() {
             alert('error', error.response.data.message)
         }
     };
-    
-    const UpdateImageElement = () => {
-        return (
-          <UploadImage selectedImage={image} setSelectedImage={setImage}/>
-        );
-    }
     
     const UpdatePasswordElement = () => {
         const passwordField = (field) => {
@@ -155,6 +161,18 @@ export default function EditAccount() {
               </Grid>
           </>
         )
+    }
+    
+    const UpdateImageElement = () => {
+        //console.log('image before21 ', image);
+        
+        return (
+          <>
+              {
+                  // authCtx.accountDetails.image !== undefined &&
+                  <UploadImage selectedImage={image} setSelectedImage={setImage} currentImageName={authCtx.accountDetails.image}/>}
+          </>
+        );
     }
     
     const UpdatePartnersElement = (partners) => {
@@ -185,7 +203,8 @@ export default function EditAccount() {
               setOpen={setShowAlert}
             />
           )}
-          <ThemeProvider theme={theme}>
+          {/* <ThemeProvider theme={theme}> */}
+              <DotLoaderOverlay loading={isLoading} size={28} color="#005689"/>
               {/*<div className="third-color" style={{ height: '100%', left: '0px', width: '100%' }}>*/}
               {/*    <Container component="main" maxWidth="sm" style={{ backgroundColor: 'white', borderRadius: 10 }}>*/}
               {/*        <CssBaseline />*/}
@@ -196,7 +215,7 @@ export default function EditAccount() {
                       }}
                       enableReinitialize={true}
                       validationSchema={validationSchema}
-                      onSubmit={(values, setSubmitting) => {
+                      onSubmit={(values) => {
                           saveHandler(values).then(r => console.log("completed save account with response: " + r));
                           setTimeout(() => {
                               // alert(JSON.stringify(values, null, 2));
@@ -228,11 +247,9 @@ export default function EditAccount() {
                             </Grid>
                         </Form>
                     </>
-                  
                   )}
               </Formik>
-          
-          </ThemeProvider>
+          {/* </ThemeProvider> */}
       </>
     );
 }

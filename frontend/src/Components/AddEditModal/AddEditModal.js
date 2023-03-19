@@ -273,7 +273,23 @@ export default function AddEditModal(props) {
                             </FormControl>
                             {/* <Field
                                                             fullWidth
-                                                            component={TextField}
+                                                            component={Select}
+                                                            name="madeBy"
+                                                            label="Made By"
+                                                        >
+                                                            {madeByOptions.map((name) => (
+                                                                <MenuItem key={name} value={name}>
+                                                                    {name}
+                                                                </MenuItem>
+                                                            ))}
+                                                        </Field>
+                                                    </FormControl>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <FormControl fullWidth>
+                                                        <Field
+                                                            defaultValue={"1"}
+                                                            component={Select}
                                                             name="frequency"
                                                             label="Frequency"
                                                         /> */}

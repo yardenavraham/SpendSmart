@@ -18,26 +18,27 @@ import {
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import SignIn from "./Pages/SignIn/SignIn";
 import SignUp from "./Pages/SignUp/SignUp";
-import EditAccount from "./Pages/Account/EditAccount";
+import Profile from "./Pages/Profile/Profile";
 import LogOut from './Pages/Logout/Logout';
 import Savings from './Pages/Savings/Savings';
 import PrivateRoute from "./Routes/PrivateRoute";
-import Account from "./Pages/Account/Account";
+import theme from "../src/theme";
+
 
 export default function App() {
   
-  const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#005689',
-      },
-      secondary: {
-        light: '#0066ff',
-        main: '#212121',
-        contrastText: '#ffcc00',
-      },
-    },
-  });
+  // const theme = createTheme({
+  //   palette: {
+  //     primary: {
+  //       main: '#005689',
+  //     },
+  //     secondary: {
+  //       light: '#0066ff',
+  //       main: '#212121',
+  //       contrastText: '#ffcc00',
+  //     },
+  //   },
+  // });
   
   return (
     <div className="App">
@@ -56,8 +57,7 @@ export default function App() {
                     <Route path="dashboard" element={<Dashboard />} />
                     <Route path="savings" element={<Savings />} />
                     <Route path="logout" element={<LogOut/>} />
-                    <Route path="account" element={<Account/>} />
-                    <Route path="editaccount" element={<EditAccount/>} />
+                    <Route path="profile" element={<Profile/>} />
                   </Route>
                   <Route path="signin" element={<SignIn />} />
                   <Route path="signup" element={<SignUp />} />

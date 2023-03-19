@@ -1,33 +1,50 @@
 import CashFlow from "../models/CashFlowModel.js";
 import Account, {encryptPassword} from "../models/AccountModel.js";
 import jwt from "jsonwebtoken";
-// import multer from 'multer';
-// const DIR = '../../backend/uploads/';
+import multer from 'multer';
+//import a from '../../frontend/public/uploads'
+const DIR = '../backend/uploads';
 
-// const storage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//         cb(null, DIR);
-//     },
-//     filename: (req, file, cb) => {
-//         const fileName = file.originalname.toLowerCase().split(' ').join('-');
-//         cb(null, uuidv4() + '-' + fileName)
+const multerStorage = 
+multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, DIR);
+    },
+    filename: (req, file, cb) => {
+        console.log('file.originalname', file.originalname);
+        // cb(null, uuidv4() + '-' + fileName)
+        cb(null, file.originalname + '-' + Date.now())
+    }
+
+});
+
+// Multer Filter
+// const multerFilter = (req, file, cb) => {
+//     console.log('file.mimetype ', file.mimetype);
+//     if (file.mimetype.split("/")[1] === "pdf") {
+//       cb(null, true);
+//     } else {
+//       cb(new Error("Not a PDF File!!"), false);
 //     }
-// });
+//   };
 
-// const upload = multer({
-//     storage: storage,
-//     fileFilter: (req, file, cb) => {
-//         if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
-//             cb(null, true);
-//             console.log('storage ' + JSON.stringify(storage));
-//         } else {
-//             cb(null, false);
-//             console.log('storage else ' + JSON.stringify(storage));
+const upload = multer({
 
-//             return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
-//         }
-//     }
-// });
+    storage: multerStorage,
+    // dest: DIR
+    limits: { fileSize: 1000000 * 5 },
+    // fileFilter: multerFilter
+  });
+
+export const uploadImage = async (req, res) => {
+    upload.single('file')(req, res, (err) => {
+        if(err) {
+            res.status(400).send("Something went wrong!");
+        }
+        console.log('req.file', req.file);
+        res.status(200).json({file: req.file.filename}); //was: req.file.path
+    })    
+}
 
 export const createAccount = async (req, res) => {
     // console.log('Saving account ' + JSON.stringify(req.body));
@@ -35,7 +52,7 @@ export const createAccount = async (req, res) => {
     try {
         const account = {name: req.body.name, password: req.body.password, partners: req.body.partners};
         const { name } = account;
-        const { firstName, lastName, email, image } = account.partners[0];
+        const { firstName, lastName, email } = account.partners[0];
         console.log('Saving account ' + name);
         
         if (await Account.exists({name: name})) {
@@ -44,7 +61,7 @@ export const createAccount = async (req, res) => {
             res.status(409).json({message: message})
             return
         }
-
+        account.image = null;
         account.password = await encryptPassword(account.password);
         const createdAccount = await new Account(account).save();
         const token = generateToken(createdAccount);
@@ -68,6 +85,7 @@ export const generateToken = (account) => {
             // firstName: account.partners[0].firstName,
             // lastName: account.partners[0].lastName,
             // email: account.partners[0].email,
+            image: account.image,
             users: account.partners.map(item => item.firstName)
         };
         return jwt.sign(fieldsForToken, TOKEN_KEY, {expiresIn: "7d"});
@@ -126,6 +144,7 @@ export const signIntoAccount = async (req, res) => {
 
 export const updateAccount = async (req, res) => {
     try{
+        console.log('updateAccount');
         const updatedFields = req.body;
         console.log('req.body ' + JSON.stringify(updatedFields));
         
@@ -154,17 +173,19 @@ export const updateAccount = async (req, res) => {
             }
         }
         
-        console.log("updated fields = " + JSON.stringify(updatedFields))
-        const updatedItem = await Account.findOneAndUpdate({_id:req.params.id}, {$set: updatedFields}, {new: true});
-        console.log('here after update ' + JSON.stringify(updatedItem));
-        res.status(200).json(updatedItem);
+        const updatedAccount = await Account.findOneAndUpdate({_id:req.params.id}, {$set: updatedFields}, {new: true});
+        console.log('here after update ' + JSON.stringify(updatedAccount));
+
+        const token = generateToken(updatedAccount);
+        console.log("token is " + token)
+        return res.status(201).json({token: token});
+        // res.status(200).json(updatedItem);
         
         
     } catch (error) {
         console.error('error ' + JSON.stringify(error));
         res.status(400).json({message: error.message});
-    }
-    
+    }   
 }
 
 export const saveUser = async (req, res) => {

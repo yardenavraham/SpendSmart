@@ -1,0 +1,48 @@
+.home {
+    margin-top: 30px;
+    backface-visibility: hidden;
+}
+
+.home-main-header {
+    animation-name: moveInLeft;
+    animation-duration: 3s;
+    // animation-delay: 1s;
+}
+
+.home-secondary-header {
+    animation-name: moveInRight;
+    animation-duration: 3s;
+    // animation-delay: 1s;
+}
+
+@keyframes moveInLeft{
+    0% {
+        opacity: 0;
+        transform: translateX(-100px);
+    }
+
+    80% {
+        transform: translateX(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0); //initial state
+    }
+}
+
+@keyframes moveInRight{
+    0% {
+        opacity: 0;
+        transform: translateX(100px);
+    }
+
+    80% {
+        transform: translateX(-20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translate(0); //initial state
+    }
+}

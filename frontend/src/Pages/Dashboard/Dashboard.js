@@ -1,91 +1,37 @@
+import React, { useState, useEffect, useContext } from 'react';
 import { Grid } from "@material-ui/core";
-import { responsiveFontSizes } from "@mui/material/styles";
-import { ThemeProvider } from "@mui/styles";
-import React from "react";
 import BarChartCard from "../../Components/Graphs/BarChartCard";
 import SelectButton from "../../Components/Graphs/SelectButton";
 import PieChartCard from "../../Components/Graphs/PieChartCard";
-import theme from "../../theme";
+import axios from "axios";
+import AuthContext from '../../store/auth-context';
+
 function Dashboard() {
-  const data = [
-    {
-      type: "Expense",
-      category: "Rent",
-      amount: 4000,
-      user: "X",
-      date: new Date(2023, 1, 1),
-    },
-    {
-      type: "Expense",
-      category: "Rent",
-      amount: 4000,
-      user: "X",
-      date: new Date(2022, 12, 1),
-    },
-    {
-      type: "Expense",
-      category: "Rent",
-      amount: 4000,
-      user: "X",
-      date: new Date(2022, 11, 1),
-    },
-    {
-      type: "Expense",
-      category: "Food",
-      amount: 1250,
-      user: "X",
-      date: new Date(2022, 12, 20),
-    },
-    {
-      type: "Expense",
-      category: "Food",
-      amount: 800,
-      user: "Y",
-      date: new Date(2022, 12, 20),
-    },
-    {
-      type: "Expense",
-      category: "Food",
-      amount: 800,
-      user: "Y",
-      date: new Date(2023, 2, 2),
-    },
-    {
-      type: "Income",
-      category: "Salary",
-      amount: 10000,
-      user: "Y",
-      date: new Date(2023, 1, 9),
-    },
-    {
-      type: "Income",
-      category: "Salary",
-      amount: 10000,
-      user: "Y",
-      date: new Date(2022, 12, 9),
-    },
-    {
-      type: "Income",
-      category: "Salary",
-      amount: 10000,
-      user: "Y",
-      date: new Date(2022, 11, 9),
-    },
-    {
-      type: "Expense",
-      category: "Insurance",
-      amount: 100,
-      user: "Y",
-      date: new Date(2022, 11, 30),
-    },
-    {
-      type: "Expense",
-      category: "Insurance",
-      amount: 100,
-      user: "X",
-      date: new Date(2022, 12, 30),
-    },
-  ];
+  
+  const authCtx = useContext(AuthContext);
+  const account = authCtx.accountDetails.accountName
+
+  const newDateVal = new Date(new Date());
+  const newDateValFormatted = `${newDateVal.getMonth() + 1}/${newDateVal.getFullYear()}`;
+
+  const [initialCashFlowList, setInitialCashFlowList] = useState([]);
+  const [cashFlowList, setCashFlowList] = useState([]);
+
+  useEffect(() => {
+    getCashFlow();
+  }, [account]);
+
+  const getCashFlow = async () => {
+    console.log('getCashFlow', account);
+    const response = await axios.get(`http://localhost:27017/CashFlow/${account}`);
+    setInitialCashFlowList(response.data);
+    setCashFlowList(response.data.filter(item => {
+      const formattedDate = new Date(item.date);
+      return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && item.category !=='Saving'
+    })
+      .sort((a, b) => new Date(a.date) - new Date(b.date)));
+
+  };
 
   const monthOptions = {
     PREVIOUSE: "Previous Month",
@@ -94,15 +40,15 @@ function Dashboard() {
   };
 
   function numberOfExpensesByCategory() {
-    const result = data
-      .filter((item) => item.type === "Expense")
+    const result = cashFlowList
+      .filter((item) => item.type === "Expenses")
       .map((item) => item.category)
       .reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map());
     return Array.from(result).map(([name, value]) => ({ name, value }));
   }
 
   function expensesVsIncomes() {
-    const result = data.reduce(
+    const result = cashFlowList.reduce(
       (acc, e) => acc.set(e.type, (acc.get(e.type) || 0) + e.amount),
       new Map()
     );
@@ -110,16 +56,17 @@ function Dashboard() {
   }
 
   function expensesByUser() {
-    const result = data
-      .filter((item) => item.type === "Expense")
-      .map((item) => item.user)
+    const result = cashFlowList
+      .filter((item) => item.type === "Expenses")
+      .map((item) => item.madeBy)
       .reduce((acc, e) => acc.set(e, (acc.get(e) || 0) + 1), new Map());
+      console.log('result', JSON.stringify(result));
     return Array.from(result).map(([name, value]) => ({ name, value }));
   }
 
   function expensesByCategory() {
-    const result = data
-      .filter((item) => item.type === "Expense")
+    const result = cashFlowList
+      .filter((item) => item.type === "Expenses")
       .reduce(
         (acc, e) => acc.set(e.category, (acc.get(e.category) || 0) + e.amount),
         new Map()
@@ -132,17 +79,42 @@ function Dashboard() {
 
     // here we will send query the db with the selected month to bring the data
     switch (value) {
-      case monthOptions.prev:
+      case monthOptions.PREVIOUSE:
+        // console.log('prev');
+        // console.log('initialCashFlowList', JSON.stringify(initialCashFlowList));
+        const previousMonth = `${newDateVal.getMonth()}/${newDateVal.getFullYear()}`;
+        console.log('previousMonth', previousMonth);
+
+
+        setCashFlowList(initialCashFlowList.filter(item => {
+          const formattedDate = new Date(item.date);
+          // console.log('item ', `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}`);
+          return `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}` === previousMonth;
+        }));
         return;
       case monthOptions.NEXT:
+        console.log('next');
+        const nextMonth = `${newDateVal.getMonth() + 2}/${newDateVal.getFullYear()}`;
+        console.log('nextMonth', nextMonth);
+        setCashFlowList(initialCashFlowList.filter(item => {
+          const formattedDate = new Date(item.date);
+          // console.log('item ', `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}`);
+          return `${parseInt(formattedDate.getMonth()) + 1}/${formattedDate.getFullYear()}` === nextMonth;
+        }));
         return;
       default:
+        setCashFlowList(initialCashFlowList.filter(item => {
+          const formattedDate = new Date(item.date);
+          return (`${formattedDate.getMonth() + 1}/${formattedDate.getFullYear()}` === newDateValFormatted) && item.category !=='Saving'
+        })
+          .sort((a, b) => new Date(a.date) - new Date(b.date)));
+    
         return false;
     }
   }
 
   return (
-    <ThemeProvider theme={responsiveFontSizes(theme)}>
+     <>
       <SelectButton
         prev="Previous Month"
         curr="Current Month"
@@ -166,7 +138,7 @@ function Dashboard() {
           data={expensesByCategory()}
         />
       </Grid>
-    </ThemeProvider>
+      </>
   );
 }
 

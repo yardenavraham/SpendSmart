@@ -1,151 +1,147 @@
-import React, { useState, useEffect } from "react";
-// import UploadService from "./FileUploadService";
+import React, { useState, useRef } from "react";
+// import './UploadImage.scss';
+import axios from "axios";
+import { Button, Input, TextField } from "@mui/material";
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const UploadImage = (props) => {
 
-  const {selectedImage, setSelectedImage} = props;
+  const {selectedImage, setSelectedImage, currentImageName} = props;
+  //selectedImage: The image that the user choose
+  //setSelectedImage: state function for 'selectedImage'
+  //setImageName: state function for 'imageName' that is used in EditAccount component
+  //currentImageName: current image name that is tored in DB
+
+  const domainAndDir = 'http://localhost:27017/uploads/';
+  const [currentImage, setCurrentImage] = useState(currentImageName !== undefined && currentImageName !== null ? domainAndDir+currentImageName : null);
+  const [preview, setPreview] = useState(currentImage ? currentImage : selectedImage && selectedImage !== 'empty' ? URL.createObjectURL(selectedImage): null);
+  const [showPreview, setShowPreview] = useState(currentImage ? true : false);
+  const [inputText, setInputText] = useState('');
+  const inputRef = useRef('');
+
+  // async function fileUploadHandler (event) {
+  //   event.preventDefault();
+  //   setImageNotUploadedErr(false);
+
+
+  //   let formData = new FormData();
+  //   formData.append('file', selectedImage);
+
+  //   const config = {     
+  //       headers: { 'content-type': 'multipart/form-data' }
+  //   }
+  //   console.log('formData', formData);
+
+  //   const response = await axios.post("http://localhost:27017/uploadimage", formData, config);
+  //   // console.log('response', response.data.file);
+  //   setImageName(response.data.file);
+
+  // }
+
+  const removeClicked = (event) => {
+    event.preventDefault();
+    setShowPreview(false);
+    setCurrentImage(null);
+    setSelectedImage('empty');
+    setInputText('');
+    inputRef.current.calue = '';
+    // if (currentImage) {
+    //   setShowPreview(false);
+    //   setCurrentImage(null);
+    // }
+    // else {
+    //   setShowPreview(false);
+    //   setSelectedImage(null);
+    // }
+  }
 
   return (
     <div>
-      {selectedImage && (
-        <div>
-          <img
-            alt="not found"
-            width={"250px"}
-            src={URL.createObjectURL(selectedImage)}
-            onClick={() => setSelectedImage(null)}
-          />
-          <br />
-          <button onClick={() => setSelectedImage(null)}>Remove</button>
-        </div>
-      )}
+      <form action="http://localhost:27017/uploadimage" method="post" encType="multipart/form-data">
 
-      <br />
-      <br />
-      
-      <input
-        type="file"
-        name="myImage"
-        onChange={(event) => {
-          console.log('img', event.target.files[0]);
-          setSelectedImage(event.target.files[0]);
-        }}
-      />
+        {showPreview && (
+          <div>
+            <img
+              className='upload-image-preview'
+              alt="not found"
+              width={"250px"}
+              src={preview}
+              onClick={() => setSelectedImage(null)}
+            />
+            <br />
+            <div>
+              <TextField 
+                disabled 
+                fullWidth 
+                variant="standard" 
+                InputProps={{ disableUnderline: true, 
+                  inputProps: {
+                  style: { textAlign: "center" },
+                  }  
+                }} 
+                value={inputText}
+              />
+            </div>
+            <Button 
+              variant="outlined" 
+              onClick={(event) => removeClicked(event)}>
+                <DeleteIcon />Remove
+            </Button>
+          </div>
+        )}
+
+        <br />
+        <br />
+        
+        {/* <Input
+          type="file" 
+          name="file" 
+          id="file" 
+          onChange={(event) => {
+            setSelectedImage(event.target.files[0]);
+            setPreview(URL.createObjectURL(event.target.files[0]));
+            setShowPreview(true);
+          }}
+        /> */}
+
+    <div>
+      <Button 
+        variant="outlined" 
+        component="label" 
+        color="primary">
+        {/* {" "} */}
+        <AddIcon/> Browse Image
+        <input 
+          type="file" 
+          name="file" 
+          id="file" 
+          hidden
+          ref={inputRef}
+          onChange={(event) => {
+            console.log('hereee', event.target.files[0]);
+            setSelectedImage(event.target.files[0]);
+            setPreview(URL.createObjectURL(event.target.files[0]));
+            setShowPreview(true);
+            setInputText(event.target.files[0].name)
+            console.log('inputRef ', inputRef.current.value)
+          }}/>
+      </Button>
+    </div>
+
+
+        {/* <br/>
+          <Button 
+            className="submitBtn" 
+            type="submit" 
+            variant="contained" 
+            onClick={fileUploadHandler}>
+              Upload Image
+          </Button> */}
+      </form>
+
     </div>
   );
 };
 
 export default UploadImage;
-
-// const ImageUpload = () => {
-//     const [currentFile, setCurrentFile] = useState(undefined);
-//     const [previewImage, setPreviewImage] = useState(undefined);
-//     const [progress, setProgress] = useState(0);
-//     const [message, setMessage] = useState("");
-
-//     const selectFile = (event) => {
-//         setCurrentFile(event.target.files[0]);
-//         setPreviewImage(URL.createObjectURL(event.target.files[0]));
-//         setProgress(0);
-//         setMessage("");
-//       };
-
-//       const upload = () => {
-//         setProgress(0);
-    
-//         UploadService.upload(currentFile, (event) => {
-//           setProgress(Math.round((100 * event.loaded) / event.total));
-//         })
-//           .then((response) => {
-//             setMessage(response.data.message);
-//             return UploadService.getFiles();
-//           })
-//           .then((files) => {
-//             setImageInfos(files.data);
-//           })
-//           .catch((err) => {
-//             setProgress(0);
-    
-//             if (err.response && err.response.data && err.response.data.message) {
-//               setMessage(err.response.data.message);
-//             } else {
-//               setMessage("Could not upload the Image!");
-//             }
-    
-//             setCurrentFile(undefined);
-//           });
-//       };
-
-//       useEffect(() => {
-//         UploadService.getFiles().then((response) => {
-//           setImageInfos(response.data);
-//         });
-//       }, []);
-  
-//     const [imageInfos, setImageInfos] = useState([]);
-//     return (
-//       <div>
-//         <div className="row">
-//           <div className="col-8">
-//             <label className="btn btn-default p-0">
-//               <input type="file" accept="image/*" onChange={selectFile} />
-//             </label>
-//           </div>
-  
-//           <div className="col-4">
-//             <button
-//               className="btn btn-success btn-sm"
-//               disabled={!currentFile}
-//               onClick={upload}
-//             >
-//               Upload
-//             </button>
-//           </div>
-//         </div>
-  
-//         {currentFile && (
-//           <div className="progress my-3">
-//             <div
-//               className="progress-bar progress-bar-info"
-//               role="progressbar"
-//               aria-valuenow={progress}
-//               aria-valuemin="0"
-//               aria-valuemax="100"
-//               style={{ width: progress + "%" }}
-//             >
-//               {progress}%
-//             </div>
-//           </div>
-//         )}
-  
-//         {previewImage && (
-//           <div>
-//             <img className="preview" src={previewImage} alt="" />
-//           </div>
-//         )}
-  
-//         {message && (
-//           <div className="alert alert-secondary mt-3" role="alert">
-//             {message}
-//           </div>
-//         )}
-  
-//         <div className="card mt-3">
-//           <div className="card-header">List of Images</div>
-//           <ul className="list-group list-group-flush">
-//             {imageInfos &&
-//               imageInfos.map((img, index) => (
-//                 <li className="list-group-item" key={index}>
-//                   <p>
-//                     <a href={img.url}>{img.name}</a>
-//                   </p>
-//                   <img src={img.url} alt={img.name} height="80px" />
-//                 </li>
-//               ))}
-//           </ul>
-//         </div>
-//       </div>
-//     );
-//   };
-  
-//   export default ImageUpload;
