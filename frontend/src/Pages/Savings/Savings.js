@@ -201,7 +201,8 @@ const Savings = () => {
                 {/* {dayjs(item.date).format('DD/MM/YYYY')} */}
               </Typography>
             </CardContent>
-            <CardActions disableSpacing>
+            <CardContent/>
+            <CardActions sx={{ right: 0, display: 'flex', justifyContent: 'center', alignItems: 'center' }} disableSpacing>
               <IconButton  onClick={() => { setOpen(true); setAddOrEdit('edit'); setSelectedCard(item); }} >
                 <EditIcon style={{ color: '#318CE7' }}/>
               </IconButton>
