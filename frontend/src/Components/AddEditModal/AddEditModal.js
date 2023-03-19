@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   MenuItem,
@@ -20,6 +20,8 @@ import { Form, Formik, Field } from "formik";
 import { TextField, Select } from "formik-mui";
 import * as Yup from "yup";
 import DatePickerField from "../DatePickerField/DatePickerField";
+import axios from "axios";
+import AuthContext from '../../store/auth-context';
 
 const descriptionRegex = /^[A-Za-z0-9 _]*[A-Za-z0-9][A-Za-z0-9 _]*$/;
 const amountRegex = /^[+]?([.]\d+|\d+[.]?\d*)$/;
@@ -75,6 +77,9 @@ export default function AddEditModal(props) {
   // const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   // const [showErrorAlert, setShowErrorAlert] = useState(false);
 
+  const authCtx = useContext(AuthContext);
+  const account = authCtx.accountDetails.accountName;
+
   const [showAlert, setShowAlert] = useState(false);
   const [message, setMessage] = useState("");
   const [alertType, setAlertType] = useState("");
@@ -83,9 +88,22 @@ export default function AddEditModal(props) {
     .fill(0)
     .map((_, i) => i + 1);
 
-  const savingTypes = ["car", "house", "travel"];
-  const [showSavingsTypeOptions, setShowSavingsTypeOptions] = useState(true);
+  const [savingsTypeOptions, setSavingsTypeOptions] = useState();
   const [savingsTypeHidden, setSavingsTypeHidden] = useState(true);
+
+
+  const getSavingTypesFromAllSavings = async () => {
+    const response = await axios.get(
+      `http://localhost:27017/Saving/${account}`
+    );
+    console.log('response.data', response.data);
+    let listWithDuplicates =  response.data.map((item) => item.description);
+    const withoutDuplicates = [...new Set(listWithDuplicates)];
+    console.log('withoutDuplicates', withoutDuplicates);
+
+    setSavingsTypeOptions(withoutDuplicates);
+    console.log('savingsTypeOptions', savingsTypeOptions);
+  };
 
   const handleCategoryChange = (event) => {
     var category = event.target.value;
@@ -93,6 +111,7 @@ export default function AddEditModal(props) {
     if (category === "Saving") {
       setSavingsTypeHidden(false);
       // call to db to extract the savvings types
+      getSavingTypesFromAllSavings();
     } else {
       setSavingsTypeHidden(true);
     }
@@ -189,8 +208,7 @@ export default function AddEditModal(props) {
                               </Field>
                               </FormControl>
                               </Grid>
-                              {/* {here we need to check if it expenses} */}
-                              {!savingsTypeHidden ? (
+                              {!savingsTypeHidden && savingsTypeOptions ? (
                                 <Grid item xs={12} sm={12}>
                                 <FormControl spacing={2} fullWidth>
                                   <Field
@@ -199,7 +217,7 @@ export default function AddEditModal(props) {
                                   name="savingType"
                                   label="saving Type"
                                   >
-                                  {savingTypes.map((type) => (
+                                  {savingsTypeOptions.map((type) => (
                                       <MenuItem fullWidth key={type} value={type}>
                                       {type}
                                     </MenuItem>
@@ -240,7 +258,6 @@ export default function AddEditModal(props) {
                           </Grid>
                           <Grid item xs={12}>
                             <FormControl fullWidth>
-                              {showSavingsTypeOptions && (
                                 <Field
                                   defaultValue={"1"}
                                   component={Select}
@@ -253,7 +270,6 @@ export default function AddEditModal(props) {
                                     </MenuItem>
                                   ))}
                                 </Field>
-                              )}
                             </FormControl>
                             {/* <Field
                                                             fullWidth
