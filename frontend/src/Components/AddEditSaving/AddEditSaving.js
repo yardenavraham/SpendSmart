@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+// import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
@@ -44,7 +44,7 @@ const validationSchema = Yup.object().shape({
 export default function AddEditSaving(props) {
 
     const { addOrEdit, selectedCard } = props;
-    const theme = createTheme();
+    // const theme = createTheme();
     const labels = addOrEdit === 'add' ? consts.ModolLabelsSavingAdd : consts.ModolLabelsSavingEdit
 
     const initialValues = (addOrEdit === 'edit') ? {
@@ -84,7 +84,7 @@ export default function AddEditSaving(props) {
                     setOpen={setShowAlert}
                 />
             )}
-            <ThemeProvider theme={theme}>
+            {/* <ThemeProvider theme={theme}> */}
                 <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
                     <CloseIcon />
                 </Avatar>
@@ -190,7 +190,7 @@ export default function AddEditSaving(props) {
                         </Box>
                     </Box>
                 </Container>
-            </ThemeProvider>
+            {/* </ThemeProvider> */}
         </>
     );
 }

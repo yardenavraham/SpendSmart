@@ -9,7 +9,7 @@ const theme = createTheme({
         light: '#fc8d62'
       },
       secondary: {
-        main: '#ff895d', 
+        main: '#318CE7',  //loght blue - savings page
         light: '#66c2a5', //green - income
         dark: '#fc8d62', //orange - expense
       },
