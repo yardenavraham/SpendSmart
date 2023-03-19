@@ -1,6 +1,6 @@
 import * as React from "react";
 import { useState, useEffect, useContext } from "react";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+// import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   MenuItem,
   Button,
@@ -45,7 +45,7 @@ const validationSchema = Yup.object().shape({
 export default function AddEditModal(props) {
   const { addOrEdit, madeBy, selectedRow, tableType } = props;
   const [madeByOptions] = useState(madeBy);
-  const theme = createTheme();
+  // const theme = createTheme();
   const dataModel =
     tableType === consts.myTableType.Expenses ? consts.expense : consts.income;
   const labels =
@@ -127,6 +127,7 @@ export default function AddEditModal(props) {
     };
   }, [showAlert]);
 
+  console.log('tableType', tableType);
   return (
     <>
       {showAlert && (
@@ -137,8 +138,8 @@ export default function AddEditModal(props) {
           setOpen={setShowAlert}
         />
       )}
-      <ThemeProvider theme={theme}>
-        <Avatar onClick={props.handleClose} sx={{ m: 2, bgcolor: tableType === consts.myTableType.Expenses ? 'secondary.dark' : 'secondary.light' }}>
+      {/* <ThemeProvider theme={theme}> */}
+        <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
           <CloseIcon />
         </Avatar>
         <Container component="main" maxWidth="xs">
@@ -151,7 +152,7 @@ export default function AddEditModal(props) {
               alignItems: "center",
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <Avatar sx={{ m: 1, bgcolor: tableType === consts.myTableType.Expenses ? 'secondary.dark' : 'secondary.light'}}>
               {labels.addOrEditIcon}
             </Avatar>
             <Typography component="h1" variant="h5">
@@ -321,7 +322,6 @@ export default function AddEditModal(props) {
             </Box>
           </Box>
         </Container>
-      </ThemeProvider>
+      {/* </ThemeProvider> */}
     </>
-  );
-}
+  );}
