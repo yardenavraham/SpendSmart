@@ -138,7 +138,7 @@ export default function AddEditModal(props) {
         />
       )}
       <ThemeProvider theme={theme}>
-        <Avatar onClick={props.handleClose} sx={{ m: 2 }}>
+        <Avatar onClick={props.handleClose} sx={{ m: 2, bgcolor: tableType === consts.myTableType.Expenses ? 'secondary.dark' : 'secondary.light' }}>
           <CloseIcon />
         </Avatar>
         <Container component="main" maxWidth="xs">
