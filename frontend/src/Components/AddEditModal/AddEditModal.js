@@ -59,6 +59,7 @@ export default function AddEditModal(props) {
           madeBy: selectedRow.madeBy,
           frequency: selectedRow.frequency,
           date: selectedRow.date,
+          savingType: selectedRow.savingType
         }
       : {
           type: tableType,
@@ -68,6 +69,7 @@ export default function AddEditModal(props) {
           madeBy: "",
           frequency: 1,
           date: new Date(),
+          savingType: ""
         };
 
   // const [showSuccessAlert, setShowSuccessAlert] = useState(false);

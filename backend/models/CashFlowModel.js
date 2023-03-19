@@ -13,6 +13,10 @@ const CashFlow = mongoose.Schema({
         type: String,
         required: true
     },
+    savingType: {
+        type: String,
+        required: false
+    },
     amount: {
         type: Number,
         required: true

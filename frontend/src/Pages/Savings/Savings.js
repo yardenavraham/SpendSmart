@@ -67,19 +67,32 @@ const Savings = () => {
   const [selectedCard, setSelectedCard] = useState();
   const [open, setOpen] = useState(false);
   const [addOrEdit, setAddOrEdit] = useState('add');
-  const [cashFlowSavingList, setCashFlowSavingList] = useState();
+  // const [cashFlowSavingList, setCashFlowSavingList] = useState();
 
+  useEffect(() => {
+    getSavingsItems();
+  }, [account]);
 
   const handleClose = () => {
     setOpen(false);
     getSavingsItems();
+  
   }
 
   const getSavingsItems = async () => {
     try {
-      const response = await axios.get(`http://localhost:27017/Saving/${account}`);
-      setSavingsList(response.data);
-      console.log('getSavings', savingsList);
+      const savingsResponse = await axios.get(`http://localhost:27017/Saving/${account}`);
+      console.log('savingsResponse', JSON.stringify(savingsResponse.data));
+      const savingsList = savingsResponse.data;
+      const cashFlowSavingsList = await getSavingAmountFromCashFlow();
+      console.log('cashFlowSavingsList', JSON.stringify(cashFlowSavingsList));
+      //update progressBar value according csahFlowSavingsList which have the same savingType as the current saving
+      setSavingsList(savingsList.map(
+        item => ({
+          ...item,
+          progressAmount: getAmount(cashFlowSavingsList, item.description)
+        })
+      ));
     }
     catch (error) {
       console.log(error);
@@ -121,28 +134,17 @@ const Savings = () => {
   };
 
   const getSavingAmountFromCashFlow = async () =>{
-        
     const response = await axios.get(`http://localhost:27017/CashFlow/${account}`);
-    setCashFlowSavingList(response.data.filter(item => {
-      return ((item.type ==="Expenses") && (item.category === "Saving") )
-    }));
-
+    console.log('response.data', response.data);
+    return response.data.filter(item => item.type === "Expenses" && item.category === "Saving");
   };
 
-  const getAmount = (savingDesc) => {
-    const tempList = cashFlowSavingList.filter(item => item.description == savingDesc);
-    const sum = tempList.filter(item => item.amount).reduce((accumulator, value) => {
-      return accumulator + value;
-    }, 0);
+  const getAmount = (cashFlowSavingList, savingDescription) => {
+    const tempList = cashFlowSavingList.filter(item => item.savingType === savingDescription);
+    console.log('tempList', JSON.stringify(tempList));
+    const sum = tempList.reduce((accumulator, currentValue) => accumulator = accumulator + currentValue.amount, 0)
     return sum;
   }
-
-  useEffect(() => {
-    getSavingsItems();
-    // getSavingAmountFromCashFlow();
-  }, [account]);
-
-
 
   return (
     <>
@@ -190,9 +192,9 @@ const Savings = () => {
                     Until {dayjs(item.date).format('MM/YYYY')}
                   </Typography></div></div>
 
-              <BorderLinearProgress variant="determinate" value={50} />{/*getAmount(item.description) / item.goal*/}
-              <Typography style={{ display: "inline", float: "left" }} variant="h6" >  {/* getAmount(item.description)*/}
-                15,000 
+              <BorderLinearProgress variant="determinate" value={ item.progressAmount / item.goal * 100} />
+              <Typography style={{ display: "inline", float: "left" }} variant="h6" > 
+                {item.progressAmount}
               </Typography>
               <Typography style={{ display: "inline", float: "right" }} variant="h6" >
                 Goal: {item.goal}
