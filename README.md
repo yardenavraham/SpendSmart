@@ -1,18 +1,3 @@
-# SpendSmart
-
-
-1 of 12
-Readme - SpendSmart project
-Inbox
-
-Yarden Avraham
-Attachments
-Sun, Apr 16, 2:20 PM (2 days ago)
-to me
-
-
- One attachment
-  •  Scanned by Gmail
 # SpendSmart - manage your money
 
 A budget management application that tracks expenses, incomes and savings. The development was carried out in a group of 8 developers under a team leader's management, using the scrum methodology.
